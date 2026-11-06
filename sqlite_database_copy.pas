@@ -29,7 +29,7 @@ procedure DeleteSQLiteFiles(const FileName: string);
 implementation
 
 uses sqlite3dyn
-  {$IFDEF WINDOWS}, Windows{$ELSE}, BaseUnix{$ENDIF};
+  {$IFDEF WINDOWS}, Windows{$ELSE}, BaseUnix, dynlibs{$ENDIF};
 
 resourcestring
   SSQLiteCopySameFile = 'The database copy and its source must be different files';
@@ -39,6 +39,29 @@ resourcestring
   SSQLiteCopyInvalid = 'The database failed its integrity check: %s';
   SSQLiteCopyFailed = 'Could not copy the database %s: %s (SQLite %d)';
   SSQLiteCopyBusy = 'The database is in use. Its previous contents were preserved. Close the other application and retry: %s';
+
+{$IFNDEF WINDOWS}
+procedure EnsureLinuxSQLiteLibraryName;
+var
+  Lib: TLibHandle;
+begin
+  if SQLiteDefaultLibrary = 'libsqlite3.so' then
+  begin
+    Lib := LoadLibrary('libsqlite3.so');
+    if Lib <> NilHandle then
+      UnloadLibrary(Lib)
+    else
+    begin
+      Lib := LoadLibrary('libsqlite3.so.0');
+      if Lib <> NilHandle then
+      begin
+        UnloadLibrary(Lib);
+        SQLiteDefaultLibrary := 'libsqlite3.so.0';
+      end;
+    end;
+  end;
+end;
+{$ENDIF}
 
 constructor ESQLiteDatabaseCopyError.Create(const MessageText: string;
   ACode: Integer; ADestinationInvalid: Boolean);
@@ -152,7 +175,8 @@ var Database: psqlite3; Code: Integer; Name: string;
 begin
   Name := ExpandFileName(FileName);
   Database := nil;
-  InitializeSQLite('');
+  {$IFNDEF WINDOWS}EnsureLinuxSQLiteLibraryName;{$ENDIF}
+  InitializeSQLite(SQLiteDefaultLibrary);
   try
     Code := sqlite3_open_v2(PAnsiChar(Name), @Database,
       SQLITE_OPEN_READONLY or SQLITE_OPEN_PRIVATECACHE, nil);
@@ -218,7 +242,8 @@ begin
   Backup := nil;
   CreatedDestination := False;
   Completed := False;
-  InitializeSQLite('');
+  {$IFNDEF WINDOWS}EnsureLinuxSQLiteLibraryName;{$ENDIF}
+  InitializeSQLite(SQLiteDefaultLibrary);
   try
     if not Assigned(sqlite3_backup_init) or not Assigned(sqlite3_backup_step) or
       not Assigned(sqlite3_backup_finish) then
@@ -269,4 +294,8 @@ begin
   end;
 end;
 
+{$IFNDEF WINDOWS}
+initialization
+  EnsureLinuxSQLiteLibraryName;
+{$ENDIF}
 end.

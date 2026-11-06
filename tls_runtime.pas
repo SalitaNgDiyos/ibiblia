@@ -8,8 +8,13 @@ uses
   Classes, SysUtils, fphttpclient, ssockets;
 
 const
+  {$IFDEF WINDOWS}
   TLS_SSL_FILE_NAME = 'libssl-3-x64.dll';
   TLS_CRYPTO_FILE_NAME = 'libcrypto-3-x64.dll';
+  {$ELSE}
+  TLS_SSL_FILE_NAME = 'libssl.so.3';
+  TLS_CRYPTO_FILE_NAME = 'libcrypto.so.3';
+  {$ENDIF}
   TLS_CA_FILE_NAME = 'cacert.pem';
 
 type
@@ -50,6 +55,7 @@ type
 var
   InitializationLock: TCriticalSection;
   LoadedRuntimeDirectory: string;
+  LoadedCAFileName: string;
 
 function NormalizeRuntimeDirectory(const Value: string): string;
 begin
@@ -58,6 +64,30 @@ begin
   else
     Result := Value;
   Result := IncludeTrailingPathDelimiter(ExpandFileName(Result));
+end;
+
+function ResolveCAFileName(const DirectoryName: string): string;
+{$IFNDEF WINDOWS}
+const
+  SystemCABundles: array[0..4] of string = (
+    '/etc/ssl/certs/ca-certificates.crt',
+    '/etc/pki/tls/certs/ca-bundle.crt',
+    '/etc/ssl/ca-bundle.pem',
+    '/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem',
+    '/etc/ssl/cert.pem'
+  );
+var
+  Candidate: string;
+{$ENDIF}
+begin
+  Result := DirectoryName + TLS_CA_FILE_NAME;
+  if FileExists(Result) then
+    Exit;
+  {$IFNDEF WINDOWS}
+  for Candidate in SystemCABundles do
+    if FileExists(Candidate) then
+      Exit(Candidate);
+  {$ENDIF}
 end;
 
 constructor ETLSCertificateError.Create(AVerificationCode: Integer);
@@ -70,21 +100,28 @@ end;
 
 procedure EnsureBundledTLSInitialized(const RuntimeDirectory: string);
 var
-  DirectoryName, SSLFileName, CryptoFileName: string;
+  DirectoryName, SSLFileName, CryptoFileName, CAFile: string;
+  {$IFDEF WINDOWS}
   RequiredFile: string;
+  {$ENDIF}
 begin
   DirectoryName := NormalizeRuntimeDirectory(RuntimeDirectory);
   InitializationLock.Enter;
   try
     if LoadedRuntimeDirectory <> '' then
     begin
+      {$IFDEF WINDOWS}
       if not SameFileName(DirectoryName, LoadedRuntimeDirectory) then
         raise ETLSRuntimeError.Create(
           'TLS is already initialized from another runtime directory.');
+      {$ENDIF}
       Exit;
     end;
     SSLFileName := DirectoryName + TLS_SSL_FILE_NAME;
     CryptoFileName := DirectoryName + TLS_CRYPTO_FILE_NAME;
+    CAFile := ResolveCAFileName(DirectoryName);
+
+    {$IFDEF WINDOWS}
     for RequiredFile in [SSLFileName, CryptoFileName,
       DirectoryName + TLS_CA_FILE_NAME] do
       if not FileExists(RequiredFile) then
@@ -105,7 +142,34 @@ begin
       raise ETLSRuntimeError.Create(
         'The bundled OpenSSL 3.5 runtime could not be initialized.');
     end;
+    {$ELSE}
+    if not FileExists(CAFile) then
+      raise ETLSRuntimeError.CreateFmt(
+        'No HTTPS CA certificate bundle was found (%s or /etc/ssl/certs/ca-certificates.crt).',
+        [ExtractFileName(CAFile)]);
+    if not IsSSLLoaded then
+    begin
+      if FileExists(SSLFileName) and FileExists(CryptoFileName) then
+        InitSSLInterface(SSLFileName, CryptoFileName);
+      if not IsSSLLoaded then
+        InitSSLInterface('libssl.so.3', 'libcrypto.so.3');
+      if not IsSSLLoaded then
+        InitSSLInterface('libssl.so.1.1', 'libcrypto.so.1.1');
+      if not IsSSLLoaded then
+        InitSSLInterface;
+      if not IsSSLLoaded then
+        raise ETLSRuntimeError.Create(
+          'The OpenSSL libraries (libssl.so.3 / libcrypto.so.3) could not be loaded.');
+    end;
+    if SslLibraryInit <> 1 then
+    begin
+      DestroySSLInterface;
+      raise ETLSRuntimeError.Create(
+        'The OpenSSL runtime could not be initialized.');
+    end;
+    {$ENDIF}
     LoadedRuntimeDirectory := DirectoryName;
+    LoadedCAFileName := CAFile;
   finally
     InitializationLock.Leave;
   end;
@@ -161,8 +225,11 @@ begin
   try
     Handler.VerifyPeerCert := True;
     Handler.SendHostAsSNI := True;
-    Handler.CertificateData.CertCA.FileName :=
-      FRuntimeDirectory + TLS_CA_FILE_NAME;
+    if LoadedCAFileName <> '' then
+      Handler.CertificateData.CertCA.FileName := LoadedCAFileName
+    else
+      Handler.CertificateData.CertCA.FileName :=
+        ResolveCAFileName(FRuntimeDirectory);
     Result := Handler;
   except
     Handler.Free;
