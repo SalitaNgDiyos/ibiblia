@@ -615,7 +615,7 @@ var
 {$ENDIF}
 begin
   if not Assigned(FDocument) then
-    Exit(Max(1, 2 * FLayoutPadding));
+    Exit(0);
   {$IFDEF MSWINDOWS}
   if EnsureLayout then
   begin
