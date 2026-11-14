@@ -272,6 +272,8 @@ type
     FToolbarIconSizeItems: array[TToolbarIconSize] of TMenuItem;
     FSaveStatusPanel: TPanel;
     FSkinnedForms: TList;
+    FReskinBudget: Integer;
+    FLastReskinTick: QWord;
     FActionReadOnHover: TAction;
     FVoiceSettingsMenuItem: TMenuItem;
     FActionNextFilteredVerse: TAction;
@@ -391,6 +393,8 @@ type
     procedure ActionReadOnHoverExecute(Sender: TObject);
     procedure VoiceSettingsClick(Sender: TObject);
     procedure AppIdleAutoSelect(Sender: TObject; var Done: Boolean);
+    procedure AppIdleSkinCheck(Sender: TObject; var Done: Boolean);
+    procedure StateHeaderPaint(Sender: TObject);
     procedure ActionNextFilteredVerseExecute(Sender: TObject);
     procedure ActionPreviousFilteredVerseExecute(Sender: TObject);
     procedure StepFilteredVerse(Forward: Boolean);
@@ -2003,8 +2007,10 @@ begin
     Height := 34;
     BevelOuter := bvNone;
     ParentColor := False;
+    ParentBackground := False;
     Color := clBtnFace;
     OnResize := @StateHeaderResize;
+    OnPaint := @StateHeaderPaint;
   end;
 
   FHeaderReferenceLabel := CreateStateHeaderLabel(FStateHeaderPanel, True);
@@ -4677,6 +4683,7 @@ begin
   LoadTheWordSyntaxEditorFont(opts);
   ApplyDefaultDictionarySettings(ReadDefaultDictionarySettings(opts));
   Application.AddOnIdleHandler(@AppIdleAutoSelect);
+  Application.AddOnIdleHandler(@AppIdleSkinCheck);
   InitTTS;
   TTSManager.LoadFromIni(opts);
   TWAutomateUtils.LoadTheWordFonts;
@@ -4884,6 +4891,7 @@ begin
   Application.RemoveAsyncCalls(Self);
   FreeAndNil(FSkinnedForms);
   Application.RemoveOnIdleHandler(@AppIdleAutoSelect);
+  Application.RemoveOnIdleHandler(@AppIdleSkinCheck);
   if Assigned(TTSManager) then
     TTSManager.SaveToIni(opts);
   FreeTTS;
@@ -5292,33 +5300,6 @@ begin
   end;
 end;
 
-{ Creates the window handles of every control on a form, including those on
-  tab pages that have not been shown yet. The skin's dark buttons, check
-  boxes and tab pages are painted by hooks that can only be attached to a
-  control that already has its handle. }
-procedure EnsureChildHandles(AParent: TWinControl);
-var
-  I: Integer;
-  Child: TWinControl;
-begin
-  if not Assigned(AParent) or not AParent.HandleAllocated then
-    Exit;
-  for I := 0 to AParent.ControlCount - 1 do
-    if AParent.Controls[I] is TWinControl then
-    begin
-      Child := TWinControl(AParent.Controls[I]);
-      if csDestroying in Child.ComponentState then
-        Continue;
-      try
-        if not Child.HandleAllocated then
-          Child.HandleNeeded;
-      except
-        // a control that cannot create its handle yet simply stays unhooked
-      end;
-      EnsureChildHandles(Child);
-    end;
-end;
-
 { Skins another window once with the current skin.
   A dialog becomes the active form before its window and controls exist. At
   that moment only the colours can be set; the hooks that paint dark buttons,
@@ -5334,8 +5315,6 @@ begin
      (csDestroying in AForm.ComponentState) then
     Exit;
   Ready := AForm.HandleAllocated and AForm.Visible;
-  if Ready then
-    EnsureChildHandles(AForm);
   ApplyDarkModeToWindow(AForm, CurrentSkin.IsDark);
   ApplySkinToForm(AForm, CurrentSkin);
   if Ready then
@@ -5366,8 +5345,100 @@ end;
   that is active now as well. }
 procedure TMainForm.ScreenActiveFormChanged(Sender: TObject; Form: TCustomForm);
 begin
+  FReskinBudget := 12;
   SkinFormOnce(Screen.ActiveCustomForm);
   SkinFormOnce(Form);
+end;
+
+{ A number that changes whenever the set of window handles on a form changes
+  (controls created, handles recreated, another tab page shown) or the skin
+  changes. }
+function SkinSignature(AForm: TCustomForm): PtrUInt;
+var
+  Sig: PtrUInt;
+
+  procedure Walk(AParent: TWinControl);
+  var
+    I: Integer;
+    W: TWinControl;
+  begin
+    for I := 0 to AParent.ControlCount - 1 do
+      if AParent.Controls[I] is TWinControl then
+      begin
+        W := TWinControl(AParent.Controls[I]);
+        if W.HandleAllocated then
+        begin
+          Sig := ((Sig shl 5) or (Sig shr (SizeOf(PtrUInt) * 8 - 5))) xor
+            PtrUInt(W.Handle);
+          Walk(W);
+        end;
+      end;
+  end;
+
+begin
+  Sig := PtrUInt(Ord(CurrentSkin.Id)) + 1;
+  Walk(AForm);
+  if Sig = 0 then
+    Sig := 1;
+  Result := Sig;
+end;
+
+{ Keeps the active dialog skinned.
+  The dark buttons, check boxes and tab pages are painted by hooks attached
+  to each control's window handle. Those hooks are lost, or were never
+  attached, when the handles do not exist yet at the time the skin is
+  applied, when the LCL recreates them, or when a tab page is shown for the
+  first time. So whenever the application goes idle, compare the active
+  dialog's handles with the ones it had when it was last skinned (stored on
+  its window), and apply the skin again if they differ. }
+procedure TMainForm.AppIdleSkinCheck(Sender: TObject; var Done: Boolean);
+{$IFDEF WINDOWS}
+var
+  F: TCustomForm;
+  Sig: PtrUInt;
+  NowTick: QWord;
+begin
+  if ApplicationShuttingDown or (CurrentSkin.Id = skClassic) then
+    Exit;
+  F := Screen.ActiveCustomForm;
+  if (F = nil) or (F = Self) or (csDestroying in F.ComponentState) or
+     not F.HandleAllocated or not F.Visible then
+    Exit;
+  Sig := SkinSignature(F);
+  if PtrUInt(Windows.GetPropW(F.Handle, 'iBibliaSkinSig')) = Sig then
+    Exit;
+  { never more than 12 re-skins a second, in case applying the skin itself
+    makes a control recreate its handle }
+  NowTick := GetTickCount64;
+  if NowTick - FLastReskinTick > 1000 then
+    FReskinBudget := 12;
+  if FReskinBudget <= 0 then
+    Exit;
+  Dec(FReskinBudget);
+  FLastReskinTick := NowTick;
+  ApplyDarkModeToWindow(F, CurrentSkin.IsDark);
+  ApplySkinToForm(F, CurrentSkin);
+  if F.HandleAllocated then
+  begin
+    Windows.SetPropW(F.Handle, 'iBibliaSkinSig', THandle(SkinSignature(F)));
+    F.Invalidate;
+  end;
+end;
+{$ELSE}
+begin
+end;
+{$ENDIF}
+
+{ Paints the state header strip in the skin colour itself, so a partial
+  repaint (a label changing its text) can never show the light Windows
+  background. }
+procedure TMainForm.StateHeaderPaint(Sender: TObject);
+begin
+  if (CurrentSkin.Id = skClassic) or not Assigned(FStateHeaderPanel) then
+    Exit;
+  FStateHeaderPanel.Canvas.Brush.Style := bsSolid;
+  FStateHeaderPanel.Canvas.Brush.Color := UISurfaceColor;
+  FStateHeaderPanel.Canvas.FillRect(FStateHeaderPanel.ClientRect);
 end;
 
 { A freed dialog's address can be reused by the next dialog that is created;

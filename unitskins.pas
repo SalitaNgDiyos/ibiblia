@@ -4191,7 +4191,12 @@ begin
       TPanel(ctrl).Color := ASkin.PanelBg;
       TPanel(ctrl).Font.Color := ASkin.PanelText;
       if ASkin.Id <> skClassic then
+      begin
         TPanel(ctrl).BevelOuter := bvNone;
+        // paint with the skin colour, not the Windows theme's (light)
+        // parent background
+        TPanel(ctrl).ParentBackground := False;
+      end;
     end
     else if ctrl is TCustomSplitter then
     begin
