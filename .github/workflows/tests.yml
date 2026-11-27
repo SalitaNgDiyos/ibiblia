@@ -1,0 +1,53 @@
+name: Tests
+
+# Builds the FPCUnit console test runner (tests/fpcunitibiblia_console.lpi)
+# and runs every test on Windows x64. The test log is kept as a build artifact.
+
+on:
+  push:
+    branches: [Neon]
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: gcarreno/setup-lazarus@v3
+        with:
+          lazarus-version: stable
+          with-cache: false
+      - name: Lazarus packages
+        shell: bash
+        run: |
+          git clone --depth 1 https://github.com/kryslt/KControls.git "$RUNNER_TEMP/KControls"
+          git clone --depth 1 https://github.com/skalogryz/richmemo.git "$RUNNER_TEMP/richmemo"
+          git clone --depth 1 https://github.com/serbod/lazrichview.git "$RUNNER_TEMP/lazrichview"
+          lazbuild --add-package-link "$RUNNER_TEMP/KControls/packages/lazarus/kcontrolsbase.lpk"
+          lazbuild --add-package-link "$RUNNER_TEMP/KControls/packages/lazarus/kcontrolslaz.lpk"
+          lazbuild --add-package-link "$RUNNER_TEMP/richmemo/richmemopackage.lpk"
+          RV=$(find "$RUNNER_TEMP/lazrichview" -iname 'lazrichview.lpk' | head -1)
+          lazbuild --add-package-link "$RV"
+          lazbuild --add-package-link "$(lazbuild --version >/dev/null; find "$(dirname "$(which lazbuild)")" -path '*fpcunit*' -iname 'fpcunittestrunner.lpk' | head -1)" || true
+      - name: Build test runner
+        shell: bash
+        run: |
+          lazbuild --os=win64 --cpu=x86_64 --ws=win32 tests/fpcunitibiblia_console.lpi
+          ls -la tests/fpcunitibiblia_console.exe
+      - name: Run tests
+        shell: bash
+        run: |
+          cp sqlite3.dll pcre64.dll tests/ 2>/dev/null || true
+          cd tests
+          set -o pipefail
+          ./fpcunitibiblia_console.exe --all --format=plain 2>&1 | tee test-results.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results
+          path: tests/test-results.txt
+          if-no-files-found: ignore
