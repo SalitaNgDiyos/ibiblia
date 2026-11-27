@@ -677,13 +677,13 @@ begin
     Editor.Text := 'alpha beta';
     DirectEditor.SetSelection(5, 0);
     AssertEquals('plain Enter is consumed', 0, PressKey(VK_RETURN, []));
-    AssertEquals('Enter inserts structural CM rather than visible text',
-      'alpha<CM> beta', Editor.Text);
+    AssertEquals('Enter inserts structural CI rather than visible text',
+      'alpha<CI> beta', Editor.Text);
     AssertEquals('caret follows the synthetic pilcrow', 6,
       DirectEditor.CaretOffset);
     AssertEquals('Backspace next to pilcrow is consumed', 0,
       PressKey(VK_BACK, []));
-    AssertEquals('Backspace removes the adjacent CM', 'alpha beta',
+    AssertEquals('Backspace removes the adjacent CI', 'alpha beta',
       Editor.Text);
     AssertEquals('caret returns to the document anchor', 5,
       DirectEditor.CaretOffset);
@@ -722,8 +722,8 @@ begin
     Editor.Text := 'alpha beta';
     DirectEditor.SetSelection(0, 5);
     AssertEquals(0, PressKey(VK_RETURN, []));
-    AssertEquals('Enter replaces a visual selection with one CM',
-      '<CM> beta', Editor.Text);
+    AssertEquals('Enter replaces a visual selection with one CI',
+      '<CI> beta', Editor.Text);
     AssertTrue(Editor.Undo);
     AssertEquals('selection replacement is one undo step', 'alpha beta',
       Editor.Text);

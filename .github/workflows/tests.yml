@@ -41,7 +41,9 @@ jobs:
       - name: Run tests
         shell: bash
         run: |
-          cp sqlite3.dll pcre64.dll tests/ 2>/dev/null || true
+          # HTTPS libraries, CA bundle, lemmas and model list: the same files
+          # the release package carries, placed next to the test runner
+          python scripts/ci_package.py windows-runtime test . tests
           cd tests
           set -o pipefail
           ./fpcunitibiblia_console.exe --all --format=plain 2>&1 | tee test-results.txt

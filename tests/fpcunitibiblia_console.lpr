@@ -5,6 +5,10 @@ program fpcunitibiblia_console;
 uses
   Interfaces,
   consoletestrunner,
+  fpcunit,
+  fpcunitreport,
+  testutils,
+  unitskins,
   ibibliatest,
   versiculotest,
   syntagmselectiontest,
@@ -69,13 +73,83 @@ uses
   performance_debug_test,
   wysiwyg_editor_performance_test;
 
+type
+  { Puts every test on the same starting skin. The skin is global state that
+    other tests (and the main form) change, so without this a test result can
+    depend on which tests ran before it. Tests that need another skin set it
+    themselves after this runs. }
+  TSkinPinListener = class(TNoRefCountObject, ITestListener)
+  public
+    procedure AddFailure(ATest: TTest; AFailure: TTestFailure);
+    procedure AddError(ATest: TTest; AError: TTestFailure);
+    procedure StartTest(ATest: TTest);
+    procedure EndTest(ATest: TTest);
+    procedure StartTestSuite(ATestSuite: TTestSuite);
+    procedure EndTestSuite(ATestSuite: TTestSuite);
+  end;
+
+  TPinnedTestRunner = class(TTestRunner)
+  protected
+    procedure DoTestRun(ATest: TTest); override;
+  end;
+
+procedure TSkinPinListener.AddFailure(ATest: TTest; AFailure: TTestFailure);
+begin
+end;
+
+procedure TSkinPinListener.AddError(ATest: TTest; AError: TTestFailure);
+begin
+end;
+
+procedure TSkinPinListener.StartTest(ATest: TTest);
+begin
+  SetCurrentSkin(skClassic);
+end;
+
+procedure TSkinPinListener.EndTest(ATest: TTest);
+begin
+end;
+
+procedure TSkinPinListener.StartTestSuite(ATestSuite: TTestSuite);
+begin
+end;
+
+procedure TSkinPinListener.EndTestSuite(ATestSuite: TTestSuite);
+begin
+end;
+
+procedure TPinnedTestRunner.DoTestRun(ATest: TTest);
 var
-  Application: TTestRunner;
+  ResultsWriter: TCustomResultsWriter;
+  SkinPin: TSkinPinListener;
+  TestResult: TTestResult;
+begin
+  ResultsWriter := nil;
+  SkinPin := TSkinPinListener.Create;
+  TestResult := TTestResult.Create;
+  try
+    TestResult.AddListener(SkinPin);
+    ResultsWriter := GetResultsWriter;
+    ResultsWriter.Filename := FileName;
+    TestResult.AddListener(ResultsWriter);
+    ATest.Run(TestResult);
+    ResultsWriter.WriteResult(TestResult);
+    if not TestResult.WasSuccessful then
+      ExitCode := 1;
+  finally
+    TestResult.Free;
+    ResultsWriter.Free;
+    SkinPin.Free;
+  end;
+end;
+
+var
+  Application: TPinnedTestRunner;
 
 begin
   DefaultRunAllTests := True;
   DefaultFormat := fPlain;
-  Application := TTestRunner.Create(nil);
+  Application := TPinnedTestRunner.Create(nil);
   Application.Initialize;
   Application.Title := 'iBiblia console test runner';
   Application.Run;

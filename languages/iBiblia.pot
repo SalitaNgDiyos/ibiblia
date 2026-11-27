@@ -5867,3 +5867,162 @@ msgctxt "verse_panel_strip.sstrippropertieshint"
 msgid "Show the properties of this text in place of the verse"
 msgstr ""
 
+#: formflowexamples.rsflowexamplestitle
+msgctxt "formflowexamples.rsflowexamplestitle"
+msgid "%s examples"
+msgstr ""
+
+#: formflowexamples.rsexampleslist
+msgctxt "formflowexamples.rsexampleslist"
+msgid "Examples"
+msgstr ""
+
+#: formflowexamples.rsaddcurrentverse
+msgctxt "formflowexamples.rsaddcurrentverse"
+msgid "Add current verse"
+msgstr ""
+
+#: formflowexamples.rsmoveexampleup
+msgctxt "formflowexamples.rsmoveexampleup"
+msgid "Move up"
+msgstr ""
+
+#: formflowexamples.rsmoveexampledown
+msgctxt "formflowexamples.rsmoveexampledown"
+msgid "Move down"
+msgstr ""
+
+#: formflowexamples.rsremoveexample
+msgctxt "formflowexamples.rsremoveexample"
+msgid "Remove"
+msgstr ""
+
+#: formflowexamples.rsclearexamples
+msgctxt "formflowexamples.rsclearexamples"
+msgid "Clear"
+msgstr ""
+
+#: formflowexamples.rsbtnok
+msgctxt "formflowexamples.rsbtnok"
+msgid "OK"
+msgstr ""
+
+#: formflowexamples.rsbtncancel
+msgctxt "formflowexamples.rsbtncancel"
+msgid "Cancel"
+msgstr ""
+
+#: formflowexamples.rsvisualpreview
+msgctxt "formflowexamples.rsvisualpreview"
+msgid "Visual preview"
+msgstr ""
+
+#: formflowexamples.rspromptresponse
+msgctxt "formflowexamples.rspromptresponse"
+msgid "Prompt response"
+msgstr ""
+
+#: formflowexamples.rssourcetext
+msgctxt "formflowexamples.rssourcetext"
+msgid "Source text"
+msgstr ""
+
+#: formflowexamples.rsdestinationtext
+msgctxt "formflowexamples.rsdestinationtext"
+msgid "Destination / translation"
+msgstr ""
+
+#: formflowexamples.rsnoexamples
+msgctxt "formflowexamples.rsnoexamples"
+msgid "No saved examples."
+msgstr ""
+
+#: formflowexamples.rsreplaceexampletitle
+msgctxt "formflowexamples.rsreplaceexampletitle"
+msgid "Example already exists"
+msgstr ""
+
+#: formflowexamples.rsreplaceexampleprompt
+msgctxt "formflowexamples.rsreplaceexampleprompt"
+msgid "This verse is already saved as an example for the %s flow.\n\nDo you want to replace it with the current verse state?"
+msgstr ""
+
+#: formflowexamples.rsclearexamplestitle
+msgctxt "formflowexamples.rsclearexamplestitle"
+msgid "Clear examples"
+msgstr ""
+
+#: formflowexamples.rsclearexamplesprompt
+msgctxt "formflowexamples.rsclearexamplesprompt"
+msgid "Remove all saved examples for the %s flow?"
+msgstr ""
+
+#: formflowexamples.rswarningtitle
+msgctxt "formflowexamples.rswarningtitle"
+msgid "Warning"
+msgstr ""
+
+#: formflowexamples.rspreviewready
+msgctxt "formflowexamples.rspreviewready"
+msgid "Visual preview ready."
+msgstr ""
+
+#: formflowexamples.rspreviewnovisualassociations
+msgctxt "formflowexamples.rspreviewnovisualassociations"
+msgid "This example has no visual associations to display."
+msgstr ""
+
+#: formflowexamples.rshintaddcurrentverse
+msgctxt "formflowexamples.rshintaddcurrentverse"
+msgid "Add or replace an example using the current source and destination verses."
+msgstr ""
+
+#: formflowexamples.rshintmoveexampleup
+msgctxt "formflowexamples.rshintmoveexampleup"
+msgid "Move the selected example earlier in the prompt."
+msgstr ""
+
+#: formflowexamples.rshintmoveexampledown
+msgctxt "formflowexamples.rshintmoveexampledown"
+msgid "Move the selected example later in the prompt."
+msgstr ""
+
+#: formflowexamples.rshintremoveexample
+msgctxt "formflowexamples.rshintremoveexample"
+msgid "Remove the selected example from this working list."
+msgstr ""
+
+#: formflowexamples.rshintclearexamples
+msgctxt "formflowexamples.rshintclearexamples"
+msgid "Remove all examples from this working list."
+msgstr ""
+
+#: formflowexamples.rshintok
+msgctxt "formflowexamples.rshintok"
+msgid "Save these example changes."
+msgstr ""
+
+#: formflowexamples.rshintcancel
+msgctxt "formflowexamples.rshintcancel"
+msgid "Close without saving example changes."
+msgstr ""
+
+#: ai_effective_settings.saiconfigurationmissing
+msgctxt "ai_effective_settings.saiconfigurationmissing"
+msgid "Configure the AI model and API key in LLM Options before processing."
+msgstr ""
+
+#: ai_batch_orchestrator.saiconfigurationmissing
+msgctxt "ai_batch_orchestrator.saiconfigurationmissing"
+msgid "Configure the AI model and API key in LLM Options before processing."
+msgstr ""
+
+#: ai_global_settings.sglobalproviderinvalid
+msgctxt "ai_global_settings.sglobalproviderinvalid"
+msgid "The AI credential provider is not supported."
+msgstr ""
+
+#: bible_book_names.szechariah
+msgctxt "bible_book_names.szechariah"
+msgid "Zechariah"
+msgstr ""

@@ -216,7 +216,7 @@ begin
 
   Prepare('alpha beta', 5);
   PressKey(VK_RETURN, []);
-  AssertEquals('Enter inserts CM', 'alpha<CM> beta', FEditor.Text);
+  AssertEquals('Enter inserts CI', 'alpha<CI> beta', FEditor.Text);
   AssertSinglePipeline('Enter');
 
   Prepare('alpha beta', 5);

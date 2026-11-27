@@ -414,6 +414,15 @@ destructor TAIProcessingManager.Destroy;
 var
   i: Integer;
 begin
+  // The constructor can fail before any field exists (for example when the
+  // HTTPS runtime is missing). Destroy then runs on a half-built object, so
+  // there is nothing to stop or free: report the original error instead of
+  // hiding it behind an access violation.
+  if not Assigned(FWorkers) then
+  begin
+    inherited Destroy;
+    Exit;
+  end;
   CancelAll;
   for i := 0 to FWorkers.Count - 1 do
     TThread(FWorkers[i]).WaitFor;

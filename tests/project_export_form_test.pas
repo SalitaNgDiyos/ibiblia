@@ -99,7 +99,24 @@ type
 implementation
 
 uses
-  formPrincipal, project_database_bootstrap, sqlite3conn, sqldb, LCLTranslator;
+  formPrincipal, project_database_bootstrap, sqlite3conn, sqldb, LCLTranslator,
+  StrUtils;
+
+{ The form puts the folder in InitialDir and shows only the file name in the
+  dialog, without the extension the filter adds (a concordance keeps whatever
+  does not end in .dct.twm). }
+function ExpectedDialogFileName(Kind: TExportDestinationKind;
+  const Destination: string): string;
+begin
+  Result := ExtractFileName(Destination);
+  if Kind in [edAnalyticalConcordance, edSyntheticConcordance] then
+  begin
+    if AnsiEndsText('.dct.twm', Result) then
+      Result := Copy(Result, 1, Length(Result) - Length('.dct.twm'));
+  end
+  else
+    Result := ChangeFileExt(Result, '');
+end;
 
 function TScriptedExportSaveDialog.Execute: Boolean;
 begin
@@ -448,7 +465,7 @@ begin
       Dialog := SelectedDialog(Kind);
       FForm.ExportButtonClick(nil);
       AssertEquals('History reaches the selected project/type dialog',
-        Expected, Dialog.ConfiguredFileName);
+        ExpectedDialogFileName(Kind, Expected), Dialog.ConfiguredFileName);
       AssertEquals('Initial directory follows the same destination',
         ExtractFilePath(Expected), Dialog.ConfiguredInitialDir);
       AssertEquals('theWord remains the initial format', 1, Dialog.ConfiguredFilterIndex);
@@ -505,7 +522,10 @@ begin
   begin
     ResetProbe;
     SelectExportKind(Kind);
-    Destination := TempPath(Format('confirmed-%d.nt', [Ord(Kind)]));
+    if Kind in [edAnalyticalConcordance, edSyntheticConcordance] then
+      Destination := TempPath(Format('confirmed-%d.dct.twm', [Ord(Kind)]))
+    else
+      Destination := TempPath(Format('confirmed-%d.nt', [Ord(Kind)]));
     SelectedDialog(Kind).Accepted := True;
     SelectedDialog(Kind).SelectedFileName := Destination;
     FForm.ExportButtonClick(nil);
@@ -543,7 +563,8 @@ begin
     SelectedDialog(Kind).SelectedFileName := MySwordDestination;
     FForm.ExportButtonClick(nil);
     AssertEquals('Dialog initially suggests remembered theWord destination',
-      PreviousDestination, SelectedDialog(Kind).ConfiguredFileName);
+      ExpectedDialogFileName(Kind, PreviousDestination),
+      SelectedDialog(Kind).ConfiguredFileName);
     AssertEquals('MySword still reaches export', MySwordDestination, FForm.LastExportFileName);
     AssertEquals('MySword does not replace theWord history',
       PreviousDestination, FForm.RememberedBeforeExport);

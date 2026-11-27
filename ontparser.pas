@@ -76,7 +76,7 @@ begin
           CurrentSyntagm.Strong.Add(Copy(Token.Value, 3, Length(Token.Value)-3));
           CurrentSyntagm.RawText := CurrentSyntagm.RawText + Token.Value;
           Continue;
-        end else if AnsiStartsText('<WT', Token.Value) and Assigned(CurrentSyntagm) and Assigned(CurrentSyntagm.Morph) then // update the previous syntagm
+        end else if AnsiStartsStr('<WT', Token.Value) and Assigned(CurrentSyntagm) and Assigned(CurrentSyntagm.Morph) then // update the previous syntagm
         begin
           CurrentSyntagm.Morph.Add(Copy(Token.Value, 4, Length(Token.Value)-4));
           CurrentSyntagm.RawText := CurrentSyntagm.RawText + Token.Value;

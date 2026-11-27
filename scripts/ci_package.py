@@ -2,11 +2,16 @@
 """Build the release ZIP for one platform (used by the GitHub workflow).
 
 usage: ci_package.py windows|linux <version> <build_dir> <out_dir> [--libpcre PATH]
+       ci_package.py windows-runtime <version> <ignored> <dest_dir>
 
   windows  build_dir holds iBiblia.exe; runtime DLLs/CA bundle are fetched
            according to release/dependencies.lock.json and checked against the
            SHA-256 values pinned there.
   linux    build_dir holds the iBiblia binary; libpcre.so.3 comes from --libpcre.
+  windows-runtime
+           copies the same runtime files (HTTPS libraries, CA bundle, lemmas,
+           model list ...) into dest_dir, without iBiblia.exe, so the test
+           runner can find them next to itself.
 
 Output: <out_dir>/iBiblia-<version>-<platform>.zip
 The app updater looks for the "-windows-x64.zip" / "-linux-x86_64.zip" suffix
@@ -72,7 +77,7 @@ class Payload:
                     z.writestr(zi, f.read())
 
 
-def build_windows(version, build_dir, out_dir):
+def build_windows(version, build_dir, out_dir, with_exe=True):
     lock = json.load(open(os.path.join(REPO, "release", "dependencies.lock.json"), encoding="utf-8"))
     work = os.path.join(out_dir, "_deps")
     os.makedirs(work, exist_ok=True)
@@ -103,7 +108,8 @@ def build_windows(version, build_dir, out_dir):
     for item in lock["payload"]:
         dest, source = item["destination"], item["source"]
         if source == "iBiblia.exe":
-            p.add(dest, os.path.join(build_dir, "iBiblia.exe"), exe=True)
+            if with_exe:
+                p.add(dest, os.path.join(build_dir, "iBiblia.exe"), exe=True)
         elif dest in runtime:
             p.add(dest, runtime[dest])
         else:
@@ -148,6 +154,15 @@ def main():
         raise SystemExit(__doc__)
     platform, version, build_dir, out_dir = sys.argv[1:5]
     libpcre = sys.argv[sys.argv.index("--libpcre") + 1] if "--libpcre" in sys.argv else None
+    if platform == "windows-runtime":
+        work = os.path.join(out_dir, "_runtime_work")
+        payload = build_windows(version, build_dir, work, with_exe=False)
+        for arc, (src, _exe) in sorted(payload.items.items()):
+            target = os.path.join(out_dir, *arc.split("/"))
+            os.makedirs(os.path.dirname(target), exist_ok=True)
+            shutil.copyfile(src, target)
+        print("copied", len(payload.items), "runtime files to", out_dir)
+        return
     if platform == "windows":
         payload, suffix = build_windows(version, build_dir, out_dir), "windows-x64"
     elif platform == "linux":

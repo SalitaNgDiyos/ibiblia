@@ -4106,7 +4106,6 @@ msgid "Haggai"
 msgstr "Ageu"
 
 #: project.shebrew
-#, fuzzy
 msgctxt "project.shebrew"
 msgid "Hebrews"
 msgstr "Hebreus"
@@ -4236,7 +4235,6 @@ msgid "Joel"
 msgstr "Joel"
 
 #: project.sjohah
-#, fuzzy
 msgctxt "project.sjohah"
 msgid "Jonah"
 msgstr "Jonas"
@@ -6214,3 +6212,162 @@ msgctxt "verse_panel_strip.sstrippropertieshint"
 msgid "Show the properties of this text in place of the verse"
 msgstr "Mostrar as propriedades deste texto no lugar do versículo"
 
+#: formflowexamples.rsflowexamplestitle
+msgctxt "formflowexamples.rsflowexamplestitle"
+msgid "%s examples"
+msgstr "Exemplos de %s"
+
+#: formflowexamples.rsexampleslist
+msgctxt "formflowexamples.rsexampleslist"
+msgid "Examples"
+msgstr "Exemplos"
+
+#: formflowexamples.rsaddcurrentverse
+msgctxt "formflowexamples.rsaddcurrentverse"
+msgid "Add current verse"
+msgstr "Adicionar versículo atual"
+
+#: formflowexamples.rsmoveexampleup
+msgctxt "formflowexamples.rsmoveexampleup"
+msgid "Move up"
+msgstr "Mover para cima"
+
+#: formflowexamples.rsmoveexampledown
+msgctxt "formflowexamples.rsmoveexampledown"
+msgid "Move down"
+msgstr "Mover para baixo"
+
+#: formflowexamples.rsremoveexample
+msgctxt "formflowexamples.rsremoveexample"
+msgid "Remove"
+msgstr "Remover"
+
+#: formflowexamples.rsclearexamples
+msgctxt "formflowexamples.rsclearexamples"
+msgid "Clear"
+msgstr "Limpar"
+
+#: formflowexamples.rsbtnok
+msgctxt "formflowexamples.rsbtnok"
+msgid "OK"
+msgstr "OK"
+
+#: formflowexamples.rsbtncancel
+msgctxt "formflowexamples.rsbtncancel"
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: formflowexamples.rsvisualpreview
+msgctxt "formflowexamples.rsvisualpreview"
+msgid "Visual preview"
+msgstr "Visualização"
+
+#: formflowexamples.rspromptresponse
+msgctxt "formflowexamples.rspromptresponse"
+msgid "Prompt response"
+msgstr "Resposta do prompt"
+
+#: formflowexamples.rssourcetext
+msgctxt "formflowexamples.rssourcetext"
+msgid "Source text"
+msgstr "Texto de origem"
+
+#: formflowexamples.rsdestinationtext
+msgctxt "formflowexamples.rsdestinationtext"
+msgid "Destination / translation"
+msgstr "Destino / tradução"
+
+#: formflowexamples.rsnoexamples
+msgctxt "formflowexamples.rsnoexamples"
+msgid "No saved examples."
+msgstr "Nenhum exemplo salvo."
+
+#: formflowexamples.rsreplaceexampletitle
+msgctxt "formflowexamples.rsreplaceexampletitle"
+msgid "Example already exists"
+msgstr "Exemplo já existe"
+
+#: formflowexamples.rsreplaceexampleprompt
+msgctxt "formflowexamples.rsreplaceexampleprompt"
+msgid "This verse is already saved as an example for the %s flow.\n\nDo you want to replace it with the current verse state?"
+msgstr "Este versículo já está salvo como exemplo para o fluxo de %s.\n\nDeseja substituí-lo pelo estado atual do versículo?"
+
+#: formflowexamples.rsclearexamplestitle
+msgctxt "formflowexamples.rsclearexamplestitle"
+msgid "Clear examples"
+msgstr "Limpar exemplos"
+
+#: formflowexamples.rsclearexamplesprompt
+msgctxt "formflowexamples.rsclearexamplesprompt"
+msgid "Remove all saved examples for the %s flow?"
+msgstr "Remover todos os exemplos salvos para o fluxo de %s?"
+
+#: formflowexamples.rswarningtitle
+msgctxt "formflowexamples.rswarningtitle"
+msgid "Warning"
+msgstr "Aviso"
+
+#: formflowexamples.rspreviewready
+msgctxt "formflowexamples.rspreviewready"
+msgid "Visual preview ready."
+msgstr "Visualização pronta."
+
+#: formflowexamples.rspreviewnovisualassociations
+msgctxt "formflowexamples.rspreviewnovisualassociations"
+msgid "This example has no visual associations to display."
+msgstr "Este exemplo não possui associações visuais para exibir."
+
+#: formflowexamples.rshintaddcurrentverse
+msgctxt "formflowexamples.rshintaddcurrentverse"
+msgid "Add or replace an example using the current source and destination verses."
+msgstr "Adicionar ou substituir um exemplo usando os versículos atuais de origem e destino."
+
+#: formflowexamples.rshintmoveexampleup
+msgctxt "formflowexamples.rshintmoveexampleup"
+msgid "Move the selected example earlier in the prompt."
+msgstr "Mover o exemplo selecionado para uma posição anterior no prompt."
+
+#: formflowexamples.rshintmoveexampledown
+msgctxt "formflowexamples.rshintmoveexampledown"
+msgid "Move the selected example later in the prompt."
+msgstr "Mover o exemplo selecionado para uma posição posterior no prompt."
+
+#: formflowexamples.rshintremoveexample
+msgctxt "formflowexamples.rshintremoveexample"
+msgid "Remove the selected example from this working list."
+msgstr "Remover o exemplo selecionado desta lista de trabalho."
+
+#: formflowexamples.rshintclearexamples
+msgctxt "formflowexamples.rshintclearexamples"
+msgid "Remove all examples from this working list."
+msgstr "Remover todos os exemplos desta lista de trabalho."
+
+#: formflowexamples.rshintok
+msgctxt "formflowexamples.rshintok"
+msgid "Save these example changes."
+msgstr "Salvar as alterações dos exemplos."
+
+#: formflowexamples.rshintcancel
+msgctxt "formflowexamples.rshintcancel"
+msgid "Close without saving example changes."
+msgstr "Fechar sem salvar as alterações dos exemplos."
+
+#: ai_effective_settings.saiconfigurationmissing
+msgctxt "ai_effective_settings.saiconfigurationmissing"
+msgid "Configure the AI model and API key in LLM Options before processing."
+msgstr "Configure o modelo e a chave da API em Opções de IA antes de iniciar o processamento."
+
+#: ai_batch_orchestrator.saiconfigurationmissing
+msgctxt "ai_batch_orchestrator.saiconfigurationmissing"
+msgid "Configure the AI model and API key in LLM Options before processing."
+msgstr "Configure o modelo e a chave da API em Opções de IA antes de iniciar o processamento."
+
+#: ai_global_settings.sglobalproviderinvalid
+msgctxt "ai_global_settings.sglobalproviderinvalid"
+msgid "The AI credential provider is not supported."
+msgstr "O provedor da credencial de IA não é compatível."
+
+#: bible_book_names.szechariah
+msgctxt "bible_book_names.szechariah"
+msgid "Zechariah"
+msgstr "Zacarias"

@@ -213,7 +213,8 @@ begin
       PressKey(Broker, VK_RETURN, [ssShift]));
     TypeAscii(Broker, 'c');
 
-    AssertTrue('paragraph break is serialized', Pos('<CM>', Editor.Text) > 0);
+    AssertTrue('paragraph break is serialized as a tight CI',
+      Pos('<CI>', Editor.Text) > 0);
     AssertTrue('soft break is serialized', Pos('<CL>', Editor.Text) > 0);
     AssertFormattingAt('before breaks', Editor.Text, 1, 1, True, Red);
     AssertFormattingAt('after paragraph break', Editor.Text,

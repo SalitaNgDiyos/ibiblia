@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, KMemo, fpcunit,
-  testregistry, translation_memory_focus_controller;
+  testregistry, translation_memory_focus_controller, unitskins;
 
 type
   { TTranslationMemoryFocusControllerTests }
@@ -141,12 +141,19 @@ begin
           Paragraph.ParaStyle.BorderWidths.Bottom);
       if AFocused then
       begin
-        AssertEquals('focused border uses highlight color',
-          LongInt(clHighlight), LongInt(Paragraph.ParaStyle.BorderColor));
+        AssertEquals('focused border uses the skin pointed color',
+          LongInt(CurrentSkin.PointedBg),
+          LongInt(Paragraph.ParaStyle.BorderColor));
         AssertEquals('focused paragraph has solid background',
           Ord(bsSolid), Ord(Paragraph.ParaStyle.Brush.Style));
-        AssertEquals('focused background uses info color',
-          LongInt(clInfoBk), LongInt(Paragraph.ParaStyle.Brush.Color));
+        if CurrentSkin.Id = skClassic then
+          AssertEquals('focused background uses the classic note color',
+            LongInt(CurrentSkin.NoteBg),
+            LongInt(Paragraph.ParaStyle.Brush.Color))
+        else
+          AssertEquals('focused background uses the skin verse highlight',
+            LongInt(CurrentSkin.VerseHighlightBg),
+            LongInt(Paragraph.ParaStyle.Brush.Color));
       end
       else
       begin
