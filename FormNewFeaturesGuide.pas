@@ -106,7 +106,7 @@ const
     'the standard colours. Your choice is remembered.' + LineEnding + LineEnding +
     'ACTIVATE WINDOW ON MOUSE HOVER' + LineEnding +
     'View > Activate window on mouse hover (enabled by default) automatically activates ' +
-    'Dark-Skinned iBiblia when you move the pointer onto any visible part of the app while ' +
+    'The Bible Maker when you move the pointer onto any visible part of the app while ' +
     'it is inactive, without stealing focus during drags, Alt+Tab, or through overlapping windows.',
     // 7
     'IMPORT' + LineEnding + LineEnding +

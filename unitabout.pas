@@ -113,7 +113,14 @@ const
   GUIDE_TOPIC_COUNT = 14;
 
   CHANGELOG_TEXT =
-    
+
+  'The Bible Maker — Independent offshoot originally derived from iBiblia (Rúbio R. C. Terra).' + LineEnding +
+  'Not an official continuation of upstream iBiblia. Maintained independently at https://github.com/SalitaNgDiyos/The-Bible-Maker' + LineEnding +
+  LineEnding +
+  'Version 1.1.0.103 (64-bit Edition) - 2026-11-27' + LineEnding +
+  '- Rebranded the application to The Bible Maker (https://github.com/SalitaNgDiyos/The-Bible-Maker) across the main window, About dialog, User Guide, Updater feed, and GitHub Publisher.' + LineEnding +
+  '- Updated project history and credits to clarify that The Bible Maker (formerly Dark-Skinned iBiblia) is an independent offshoot derived from iBiblia, not a continuation of upstream rubiot/ibiblia.' + LineEnding +
+  LineEnding +
   'Version 1.1.0.102 (64-bit Edition) - 2026-11-27' + LineEnding +
   '- Added automatic Sync module About page from GitHub repository README.md when publishing (updates About in theWord .nt/.ot/.ont, e-Sword .bbli, and USFM 3.0 .usfm.zip).' + LineEnding +
   '- Included copr.htm About page inside exported USFM 3.0 .usfm.zip archives and folders, and defaulted File name base to amb+ for Ang-Malayang-Biblia-Translation.' + LineEnding +
@@ -152,7 +159,7 @@ const
   '- Added ''Unassociated Destination words'' and ''Unassociated Source words'' scopes to Find & Replace in Project (leave Find what blank to list every verse with unassociated words, or type a word/regex to filter specific unassociated words).' + LineEnding +
   '' + LineEnding +
   'Version 1.1.0.092 (64-bit Edition) - 2026-11-22' + LineEnding +
-  '- Added automatic window activation on mouse hover (View -> Activate window on mouse hover, enabled by default): moving the mouse onto any visible part of Dark-Skinned iBiblia brings it into active focus without clicking, while avoiding focus theft during drags, Alt+Tab, or overlapping windows.' + LineEnding +
+  '- Added automatic window activation on mouse hover (View -> Activate window on mouse hover, enabled by default): moving the mouse onto any visible part of The Bible Maker brings it into active focus without clicking, while avoiding focus theft during drags, Alt+Tab, or overlapping windows.' + LineEnding +
   '' + LineEnding +
   'Version 1.1.0.091 (64-bit Edition) - 2026-11-22' + LineEnding +
   '- Added 7-step session Undo (Ctrl+Z) and Redo (Ctrl+Y) buttons and shortcuts to Find & Replace in Project, restoring modified verses (even after the project has been saved) with confirmation prompts, association preservation, Project Change Log entries, and auto-save.' + LineEnding +
@@ -167,11 +174,11 @@ const
   '- Mass replacements in Destination, Source, Reference 1, or Reference 2 text apply directly in-project, preserve existing word associations via TVerse.ReplaceTextPreservingAssociations, log to the Project Change Log, and auto-save.' + LineEnding +
   '' + LineEnding +
   'Version 1.1.0.088 (64-bit Edition) - 2026-11-22' + LineEnding +
-  '- Updated the Help -> About dialog title, header, changelog title, and GitHub link to Dark-Skinned iBiblia (https://github.com/SalitaNgDiyos/Dark-Skinned-iBiblia).' + LineEnding +
+  '- Updated the Help -> About dialog title, header, changelog title, and GitHub link to this independent offshoot (https://github.com/SalitaNgDiyos/The-Bible-Maker).' + LineEnding +
   '' + LineEnding +
   'Version 1.1.0.087 (64-bit Edition) - 2026-11-22' + LineEnding +
   '- Made "Night (Pitch Black)" the default skin on startup (while keeping explicit "Classic" or other saved theme selections in iBiblia.ini) and updated Ctrl+Shift+D to toggle between Night and Classic (Light).' + LineEnding +
-  '- Updated the built-in updater repository and release links to SalitaNgDiyos/Dark-Skinned-iBiblia.' + LineEnding +
+  '- Updated the built-in updater repository and release links to the independent fork repository (SalitaNgDiyos/The-Bible-Maker).' + LineEnding +
   '' + LineEnding +
   'Version 1.1.0.086 (64-bit Edition) - 2026-11-22' + LineEnding +
   '- Fixed the horizontal splitter and footer button-bar stacking in Project -> Project change log... and Help -> Crash & error logs... so dragging the splitter up properly expands the Details / Preview pane and shrinks the list above it, keeping the footer buttons pinned at the bottom.' + LineEnding +
@@ -763,7 +770,7 @@ var
 begin
   inherited CreateNew(AOwner);
 
-  Caption := 'About Dark-Skinned iBiblia';
+  Caption := 'About The Bible Maker';
   BorderStyle := bsToolWindow;
   BorderIcons := [biSystemMenu];
   Position := poMainFormCenter;
@@ -771,7 +778,7 @@ begin
   ClientHeight := 270;
   OnShow := @FormShow;
 
-  // Title: Dark-Skinned iBiblia
+  // Title: The Bible Maker
   Label1 := TLabel.Create(Self);
   Label1.Parent := Self;
   Label1.Left := 0;
@@ -780,7 +787,7 @@ begin
   Label1.Height := 28;
   Label1.Alignment := taCenter;
   Label1.AutoSize := False;
-  Label1.Caption := 'Dark-Skinned iBiblia';
+  Label1.Caption := 'The Bible Maker';
   Label1.Font.Height := -21;
   Label1.Font.Style := [fsBold];
 
@@ -795,7 +802,7 @@ begin
     ver := '';
   end;
   if (ver = '') or (ver = '1.1.0.0') or (ver = '1.1.0.1') then
-    ver := '1.1.0.096';
+    ver := '1.1.0.103';
 
   LabelVersion := TLabel.Create(Self);
   LabelVersion.Parent := Self;
@@ -809,24 +816,56 @@ begin
   LabelVersion.Font.Height := -14;
   LabelVersion.Font.Style := [];
 
-  // Copyright Rubio Terra
+  // Author & Maintainer: Edmund P. Valdez
+  LabelContributor := TLabel.Create(Self);
+  LabelContributor.Parent := Self;
+  LabelContributor.Left := 0;
+  LabelContributor.Top := 66;
+  LabelContributor.Width := 480;
+  LabelContributor.Height := 18;
+  LabelContributor.Alignment := taCenter;
+  LabelContributor.AutoSize := False;
+  LabelContributor.Caption := 'Author & Maintainer: Edmund P. Valdez <malayangbiblia@gmail.com>';
+  LabelContributor.Cursor := crHandPoint;
+  LabelContributor.Hint := 'mailto:malayangbiblia@gmail.com';
+  LabelContributor.ShowHint := True;
+  LabelContributor.Font.Height := -13;
+  LabelContributor.Font.Style := [];
+  LabelContributor.OnClick := @LabelContributorClick;
+
+  // The Bible Maker GitHub
+  Label3 := TLabel.Create(Self);
+  Label3.Parent := Self;
+  Label3.Left := 0;
+  Label3.Top := 86;
+  Label3.Width := 480;
+  Label3.Height := 18;
+  Label3.Alignment := taCenter;
+  Label3.AutoSize := False;
+  Label3.Caption := 'https://github.com/SalitaNgDiyos/The-Bible-Maker';
+  Label3.Cursor := crHandPoint;
+  Label3.Font.Height := -13;
+  Label3.Font.Style := [];
+  Label3.OnClick := @Label3Click;
+
+  // Independent offshoot origin (Rúbio R. C. Terra)
   Label2 := TLabel.Create(Self);
   Label2.Parent := Self;
   Label2.Left := 0;
-  Label2.Top := 66;
+  Label2.Top := 112;
   Label2.Width := 480;
   Label2.Height := 18;
   Label2.Alignment := taCenter;
   Label2.AutoSize := False;
-  Label2.Caption := 'Copyright Rúbio R. C. Terra <rubio.terra@gmail.com>';
+  Label2.Caption := 'Independent offshoot originally derived from iBiblia by Rúbio R. C. Terra';
   Label2.Font.Height := -13;
   Label2.Font.Style := [];
 
-  // Rubio GitHub
+  // Upstream iBiblia origin link
   LabelRubioURL := TLabel.Create(Self);
   LabelRubioURL.Parent := Self;
   LabelRubioURL.Left := 0;
-  LabelRubioURL.Top := 86;
+  LabelRubioURL.Top := 132;
   LabelRubioURL.Width := 480;
   LabelRubioURL.Height := 18;
   LabelRubioURL.Alignment := taCenter;
@@ -836,38 +875,6 @@ begin
   LabelRubioURL.Font.Height := -13;
   LabelRubioURL.Font.Style := [];
   LabelRubioURL.OnClick := @LabelRubioURLClick;
-
-  // Contributor Edmund P. Valdez
-  LabelContributor := TLabel.Create(Self);
-  LabelContributor.Parent := Self;
-  LabelContributor.Left := 0;
-  LabelContributor.Top := 112;
-  LabelContributor.Width := 480;
-  LabelContributor.Height := 18;
-  LabelContributor.Alignment := taCenter;
-  LabelContributor.AutoSize := False;
-  LabelContributor.Caption := 'Contributor: Edmund P. Valdez <malayangbiblia@gmail.com>';
-  LabelContributor.Cursor := crHandPoint;
-  LabelContributor.Hint := 'mailto:malayangbiblia@gmail.com';
-  LabelContributor.ShowHint := True;
-  LabelContributor.Font.Height := -13;
-  LabelContributor.Font.Style := [];
-  LabelContributor.OnClick := @LabelContributorClick;
-
-  // Edmund GitHub
-  Label3 := TLabel.Create(Self);
-  Label3.Parent := Self;
-  Label3.Left := 0;
-  Label3.Top := 132;
-  Label3.Width := 480;
-  Label3.Height := 18;
-  Label3.Alignment := taCenter;
-  Label3.AutoSize := False;
-  Label3.Caption := 'https://github.com/SalitaNgDiyos/Dark-Skinned-iBiblia';
-  Label3.Cursor := crHandPoint;
-  Label3.Font.Height := -13;
-  Label3.Font.Style := [];
-  Label3.OnClick := @Label3Click;
 
   // Program and settings (working) folders
   LabelProgramDir := TLabel.Create(Self);
@@ -1102,7 +1109,7 @@ end;
 
 procedure TFormAbout.Label3Click(Sender: TObject);
 begin
-  OpenURL('https://github.com/SalitaNgDiyos/Dark-Skinned-iBiblia');
+  OpenURL('https://github.com/SalitaNgDiyos/The-Bible-Maker');
 end;
 
 procedure TFormAbout.LabelRubioURLClick(Sender: TObject);
@@ -1118,7 +1125,7 @@ var
 begin
   inherited CreateNew(AOwner);
 
-  Caption := 'What''s New in Dark-Skinned iBiblia';
+  Caption := 'What''s New in The Bible Maker';
   BorderStyle := bsDialog;
   Position := poScreenCenter;
   ClientWidth := 560;
@@ -1132,7 +1139,7 @@ begin
   lblTitle.Top := 12;
   lblTitle.Font.Height := -16;
   lblTitle.Font.Style := [fsBold];
-  lblTitle.Caption := 'Dark-Skinned iBiblia - Changelog';
+  lblTitle.Caption := 'The Bible Maker - Changelog';
   if IsThemedSkin then
     lblTitle.Font.Color := CurrentSkin.HeaderColor
   else
@@ -1263,7 +1270,7 @@ constructor TFormUserGuide.Create(AOwner: TComponent);
 begin
   inherited CreateNew(AOwner);
 
-  Caption := 'Dark-Skinned iBiblia — New Features User Guide (Since v1.0.0.71)';
+  Caption := 'The Bible Maker — New Features User Guide (Since v1.0.0.71)';
   BorderStyle := bsSizeable;
   BorderIcons := [biSystemMenu, biMinimize, biMaximize];
   FormStyle := fsStayOnTop;
@@ -1296,7 +1303,7 @@ begin
   lblHeaderTitle.Font.Name := 'Segoe UI';
   lblHeaderTitle.Font.Height := -17;
   lblHeaderTitle.Font.Style := [fsBold];
-  lblHeaderTitle.Caption := 'Dark-Skinned iBiblia User Guide (v1.0.0.71 – v1.1.0.096)';
+  lblHeaderTitle.Caption := 'The Bible Maker User Guide (v1.0.0.71 – v1.1.0.103)';
 
   lblHeaderSub := TLabel.Create(pnlHeader);
   lblHeaderSub.Parent := pnlHeader;
@@ -1505,8 +1512,8 @@ begin
     9: Result := '10. iBiblia 1.1.0: Bidirectional DirectWrite Rendering, Edit Safety & Translation Memory';
     10: Result := '11. iBiblia 1.1.0: Guided Project Wizard, Custom Statuses, AI Workflows & Toolbar Sizes';
     11: Result := '12. iBiblia 1.1.0: Arrange, Delete and Add Books in the Tree';
-    12: Result := '13. Dark-Skinned iBiblia: Updates, Project Change Log, Crash Logs, Backups & Linux';
-    13: Result := '14. Complete Quick-Reference Summary of All New Features (v1.0.0.70 – v1.1.0.096)';
+    12: Result := '13. The Bible Maker: Updates, Project Change Log, Crash Logs, Backups & Linux';
+    13: Result := '14. Complete Quick-Reference Summary of All New Features (v1.0.0.70 – v1.1.0.103)';
   else
     Result := '';
   end;
@@ -1749,7 +1756,7 @@ begin
         '     • Before Replace, Add Books, Clear Text, Apply Patch, or Apply AI, iBiblia offers "Back up and continue" (keeping the newest 2 automatic backups; manual backups you create are never deleted).' + sLineBreak +
         '     • "Restore project..." lists backups by date, type, note, associated verse count, and size, and automatically backs up the current project first so any restore can be undone. File > Open also opens .bib.zip files directly.' + sLineBreak + sLineBreak +
         '  3. Native 64-Bit Linux Edition:' + sLineBreak +
-        '     • Runs natively on Linux x86_64 with transparent hover bottom bars, Linux RTF dictionary popups, TTS (espeak-ng/espeak/spd-say), Timotheos sync, automatic desktop menu registration (~/.local/share/applications/ibiblia.desktop), and cloud-built GitHub Releases (SalitaNgDiyos/Dark-Skinned-iBiblia).' + sLineBreak + sLineBreak +
+        '     • Runs natively on Linux x86_64 with transparent hover bottom bars, Linux RTF dictionary popups, TTS (espeak-ng/espeak/spd-say), Timotheos sync, automatic desktop menu registration (~/.local/share/applications/ibiblia.desktop), and cloud-built GitHub Releases (SalitaNgDiyos/The-Bible-Maker).' + sLineBreak + sLineBreak +
         '  4. Project Change Log & Crash Logs (v1.1.0.083 – v1.1.0.086):' + sLineBreak +
         '     • Project > Project change log... records dictionary changes, settings, verse text edits, and Find & Replace batches, displaying GitHub-style red/green inline diffs for text edits with Ctrl+mouse wheel zoom and a resizable Details splitter.' + sLineBreak +
         '     • Help > Crash & error logs... lets you inspect and copy diagnostic reports cleanly.';
@@ -2660,11 +2667,11 @@ begin
   FLang := ALang;
   if FLang = 'pt' then
   begin
-    Caption := 'iBiblia — Guia de Novos Recursos (Desde v1.0.0.71)';
+    Caption := 'The Bible Maker — Guia de Novos Recursos (Desde v1.0.0.71)';
     if Assigned(lblHeaderTitle) then
-      lblHeaderTitle.Caption := 'Guia de Novos Recursos do iBiblia (v1.0.0.71 – v1.1.0.070)';
+      lblHeaderTitle.Caption := 'Guia de Novos Recursos do The Bible Maker (v1.0.0.71 – v1.1.0.103)';
     if Assigned(lblHeaderSub) then
-      lblHeaderSub.Caption := 'Janela Flutuante Interativa — Mantenha aberta enquanto pratica os recursos no iBiblia.';
+      lblHeaderSub.Caption := 'Janela Flutuante Interativa — Mantenha aberta enquanto pratica os recursos no aplicativo.';
     if Assigned(btnPrev) then btnPrev.Caption := '< Anterior';
     if Assigned(btnNext) then btnNext.Caption := 'Próximo >';
     if Assigned(btnCopy) then btnCopy.Caption := 'Copiar Guia';
@@ -2672,11 +2679,11 @@ begin
   end
   else
   begin
-    Caption := 'Dark-Skinned iBiblia — New Features User Guide (Since v1.0.0.71)';
+    Caption := 'The Bible Maker — New Features User Guide (Since v1.0.0.71)';
     if Assigned(lblHeaderTitle) then
-      lblHeaderTitle.Caption := 'Dark-Skinned iBiblia User Guide (v1.0.0.71 – v1.1.0.096)';
+      lblHeaderTitle.Caption := 'The Bible Maker User Guide (v1.0.0.71 – v1.1.0.103)';
     if Assigned(lblHeaderSub) then
-      lblHeaderSub.Caption := 'Floating Interactive Guide — Keep this window open while practicing features directly in iBiblia.';
+      lblHeaderSub.Caption := 'Floating Interactive Guide — Keep this window open while practicing features directly in The Bible Maker.';
     if Assigned(btnPrev) then btnPrev.Caption := '< Previous Topic';
     if Assigned(btnNext) then btnNext.Caption := 'Next Topic >';
     if Assigned(btnCopy) then btnCopy.Caption := 'Copy Guide Text';

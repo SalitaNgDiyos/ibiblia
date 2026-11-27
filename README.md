@@ -1,12 +1,16 @@
-# Dark-Skinned iBiblia (v1.1.0.088)
+# The Bible Maker (v1.1.0.103)
 
-**Dark-Skinned iBiblia** (SalitaNgDiyos Fork) is a native **64-bit Windows (`x64`) and Linux (`x86_64`)** multi-format Bible alignment, translation, and interlinear tagging workstation built on [iBiblia 1.1.0](https://github.com/rubiot/ibiblia). It includes built-in import and export support for **theWord** (`.ont`, `.ot`, `.nt`, and `.dct.twm` concordances), **Timotheos** (compatible module/concordance exports with `.order` tree companions and USFM 3.0 exact Strong's metadata), **MySword** (`.bbl.mybible`), **non-encrypted e-Sword** (`.bblx` RTF, `.bbli` HTML, `.bbl` SQLite), **USFM 2.x/3.0** (`.usfm`, `.sfm`), and **USFX XML** (`.usfx`, `.xml` from [eBible.org](https://ebible.org/) and Simple Bible Reader), along with direct import from **SWORD / CrossWire** (`.conf` / `.zip` Bibles and dictionaries), compressed archives (`.zip`, `.tar*`, `.gz`, `.7z`, `.rar`), and text documents (`.txt`, `.rtf`, `.odt`, `.docx`) for adding or replacing Bible books.
+**The Bible Maker** *(formerly Dark-Skinned iBiblia)* is a native **64-bit Windows (`x64`) and Linux (`x86_64`)** multi-format Bible alignment, translation, interlinear tagging, and direct GitHub/Timotheos publishing workstation built by **Edmund P. Valdez (`SalitaNgDiyos`)**.
 
-Associate words between a tagged **Source** Bible (Greek LXX/NT or Hebrew OT) and your **Destination** translation—or start with an initially empty Destination in a new translation project and write it directly inside the application. iBiblia automatically transfers Strong's numbers and morphological parsing tags, preserves unaffected associations across text edits, compares past translation choices in **Translation Memory**, formats verse markup in a **Visual WYSIWYG / Raw ONT Editor** with paragraph tags and rich translator notes, provides interactive Bible tree reordering and selective diff-highlighted book replacement, maintains an embedded per-project **Change Log** with **Backup & Restore** plus automated **Crash & Error Logging**, synchronizes verses with **theWord** and **Timotheos**, delivers automatic SHA-256 verified updates, and exports ready-to-use Bible and concordance modules.
+> **Project Origin & Independence:** **The Bible Maker** is an independent offshoot originally derived from [iBiblia 1.1.0](https://github.com/rubiot/ibiblia) by Rúbio R. C. Terra and developed independently for active Bible translation workflows. It is **not** a continuation of, nor officially affiliated with, upstream `rubiot/ibiblia`.
 
-For downloads, manuals, and detailed history, see:
+It includes built-in import and export support for **theWord** (`.ont`, `.ot`, `.nt`, and `.dct.twm` concordances), **Timotheos** (compatible module/concordance exports with `.order` tree companions, USFM 3.0 exact Strong's metadata, and real-time bundled AMB updates), **MySword** (`.bbl.mybible`), **non-encrypted e-Sword** (`.bblx` RTF, `.bbli` HTML, `.bbl` SQLite), **USFM 2.x/3.0** (`.usfm`, `.sfm`), and **USFX XML** (`.usfx`, `.xml` from [eBible.org](https://ebible.org/) and Simple Bible Reader), along with direct import from **SWORD / CrossWire** (`.conf` / `.zip` Bibles and dictionaries), compressed archives (`.zip`, `.tar*`, `.gz`, `.7z`, `.rar`), and text documents (`.txt`, `.rtf`, `.odt`, `.docx`) for adding or replacing Bible books.
 
-* [Download Latest Release (Windows x64 & Linux x86_64)](https://github.com/SalitaNgDiyos/Dark-Skinned-iBiblia/releases)
+Associate words between a tagged **Source** Bible (Greek LXX/NT or Hebrew OT) and your **Destination** translation—or start with an initially empty Destination in a new translation project and write it directly inside the application. The Bible Maker automatically transfers Strong's numbers and morphological parsing tags, preserves unaffected associations across text edits, compares past translation choices in **Translation Memory**, formats verse markup in a **Visual WYSIWYG / Raw ONT Editor** with paragraph tags and rich translator notes, provides interactive Bible tree reordering and selective diff-highlighted book replacement, maintains an embedded per-project **Change Log** with **Backup & Restore** plus automated **Crash & Error Logging**, synchronizes verses with **theWord** and **Timotheos**, publishes directly to GitHub Releases/branches with automatic `README.md` About-page sync, delivers SHA-256 verified app updates, and exports ready-to-use Bible and concordance modules.
+
+For downloads, manuals, and history, see:
+
+* [Download Latest Release (Windows x64 & Linux x86_64)](https://github.com/SalitaNgDiyos/The-Bible-Maker/releases)
 
 * [User Manual (English)](https://github.com/rubiot/ibiblia/wiki/User-manual-%28English%29) · [Installation and Updating (English)](https://github.com/rubiot/ibiblia/wiki/Installation-and-updating-%28English%29)
 
@@ -141,8 +145,7 @@ For downloads, manuals, and detailed history, see:
 
 `supports_struct_output` controls requests for structured JSON responses when supported. A missing or invalid catalog falls back to built-in defaults. API keys are configured inside the application (`Project > AI Options`) and stored locally for the current user; never place API keys inside `iBiblia.models.json`.
 
-## Credits & Contributors
+## Credits & Project Origin
 
-* **Original Author & 1.1.0 Architecture**: [Rúbio R. C. Terra](https://github.com/rubiot/ibiblia) (`rubio.terra@gmail.com`)
-
-* **Dark-Skinned iBiblia Fork, Linux Port & Feature Enhancements**: [Edmund P. Valdez](https://github.com/SalitaNgDiyos) (`malayangbiblia@gmail.com`)
+* **Author & Maintainer (The Bible Maker — Independent Offshoot, Linux Port & Feature Enhancements):** [Edmund P. Valdez](https://github.com/SalitaNgDiyos) (`malayangbiblia@gmail.com`)
+* **Original Upstream Lineage (iBiblia 1.1.0 Foundation):** [Rúbio R. C. Terra](https://github.com/rubiot/ibiblia) (`rubio.terra@gmail.com`) — *The Bible Maker branched from this original codebase and evolved into an independent offshoot rather than an upstream continuation.*

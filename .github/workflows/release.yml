@@ -128,7 +128,7 @@ jobs:
           cd dist && sha256sum iBiblia-*.zip > SHA256SUMS.txt && cat SHA256SUMS.txt && cd ..
           python3 scripts/ci_release_notes.py "$VERSION" > notes.md
           TAG="v$VERSION"
-          TITLE="iBiblia — 64-Bit Edition (v$VERSION)"
+          TITLE="The Bible Maker (v$VERSION)"
           gh release delete neon --yes --cleanup-tag 2>/dev/null || true
           gh release create "$TAG" dist/iBiblia-*.zip dist/SHA256SUMS.txt \
             --title "$TITLE" --notes-file notes.md --latest --target "$GITHUB_SHA"

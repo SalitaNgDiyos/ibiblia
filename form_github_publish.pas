@@ -746,7 +746,7 @@ begin
   if Link.LastPublishedAt <> '' then
     FLblLastPublished.Caption := 'Last published: ' + Link.LastPublishedAt
   else
-    FLblLastPublished.Caption := 'Not published from iBiblia yet.';
+    FLblLastPublished.Caption := 'Not published from The Bible Maker yet.';
 
   RefreshPreviews(nil);
   RefreshTokenStatusBadge;
@@ -925,7 +925,7 @@ end;
 
 procedure TGitHubPublishForm.OpenTokenPageClick(Sender: TObject);
 begin
-  OpenURL('https://github.com/settings/tokens/new?scopes=repo&description=Dark-Skinned-iBiblia');
+  OpenURL('https://github.com/settings/tokens/new?scopes=repo&description=The-Bible-Maker');
 end;
 
 procedure TGitHubPublishForm.SaveTokenClick(Sender: TObject);

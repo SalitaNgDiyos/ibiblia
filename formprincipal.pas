@@ -604,8 +604,8 @@ resourcestring
   SAddBooksDoneWithErrors = '%d verses were set. Some verses could not be set:%s';
 
 resourcestring
-  SMainCaption = 'iBiblia';
-  SMainCaptionProjectFmt = 'iBiblia | %s | %s (%s)';
+  SMainCaption = 'The Bible Maker';
+  SMainCaptionProjectFmt = 'The Bible Maker | %s | %s (%s)';
   SProjectFileTypeName = 'iBiblia Project File';
   STheWordHighlightColorsMenu = 'theWord highlight colors...';
   SRollbackCurrentVerse = 'Rollback current verse';

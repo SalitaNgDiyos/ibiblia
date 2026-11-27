@@ -1,7 +1,7 @@
 unit FormFindInProject;
 
 (* Find & Replace in Project: a modeless Notepad++-style search and bulk-replace
-  window for Dark-Skinned iBiblia (v1.1.0.091).
+  window for The Bible Maker (v1.1.0.091).
   Features:
   - Top Find / Replace tabs (Ctrl+F / Ctrl+H)
   - Find what & Replace with history dropdowns + Swap button

@@ -1,12 +1,18 @@
-# Changelog — iBiblia v1.1.0 (64-bit Edition) (2026-11-14)
+# Changelog — The Bible Maker
 
 ## Overview
 
-**iBiblia v1.1.0 (64-bit Edition)** upgrades [iBiblia](https://github.com/rubiot/ibiblia) ([SalitaNgDiyos Fork](https://github.com/SalitaNgDiyos)) to a native 64-bit Windows (`x86_64-win64`) build with full **Dark Mode / Sepia theming**, enhanced **Strong's & Morphology Dictionary Popup** responsiveness and layout persistence, synchronized **Destination Status & Bible Tree Roll-Up**, and 64-bit IPC synchronization with [theWord](https://www.thewordbooks.com/index.php/download-tools-and-utilities/) and **Timotheos (Tanglaw)**.
+**The Bible Maker** *(formerly Dark-Skinned iBiblia)* is an independent offshoot originally derived from [iBiblia](https://github.com/rubiot/ibiblia) by Rúbio R. C. Terra and maintained independently at [SalitaNgDiyos/The-Bible-Maker](https://github.com/SalitaNgDiyos/The-Bible-Maker). It is **not** a continuation of upstream `rubiot/ibiblia`, though it preserves compatibility with `.bib` project files while expanding into a native 64-bit Windows (`x64`) & Linux (`x86_64`) Bible translation, alignment, and direct GitHub/Timotheos publishing workstation.
 
-## What's New & Fixed in v1.1.0
+## Version History
 
-### 0. Version 1.1.0.102 (2026-11-27) — Sync Module About Page from GitHub README.md
+### 0. Version 1.1.0.103 (2026-11-27) — Rebrand to The Bible Maker & Independent History
+
+* **Rebranded Application Identity (`formprincipal.pas`, `unitabout.pas`, `unitabout.lfm`, `app_updater.pas`, `github_publisher.pas`, `form_github_publish.pas`, `FormFindInProject.pas`, `FormNewFeaturesGuide.pas`):** Renamed all UI titles, About/User Guide headers, GitHub Publisher agent/commit strings, and built-in updater feed from *Dark-Skinned iBiblia* to **The Bible Maker** (`https://github.com/SalitaNgDiyos/The-Bible-Maker`).
+* **Independent Offshoot Lineage (`README.md`, `CHANGELOG.md`, `historico.txt`, `Histórico.txt`, `unitabout.pas`):** Clarified across the repository documentation and in-app About/History views that **The Bible Maker** is an independent offshoot derived from Rúbio R. C. Terra's original iBiblia rather than an official continuation of upstream `rubiot/ibiblia`.
+* **Updater Continuity:** Kept existing release ZIP asset naming (`iBiblia-<version>-*.zip`) and executable filenames unchanged in this transition release so existing installations auto-upgrade cleanly to `v1.1.0.103`.
+
+### 0a. Version 1.1.0.102 (2026-11-27) — Sync Module About Page from GitHub README.md
 
 * **Automatic README.md About Sync (`github_publisher.pas`, `form_github_publish.pas`):** Added **Sync module About page from GitHub repository README.md** (enabled by default) so publishing fetches the linked repo's `README.md` and updates the module About page across all exported formats (**theWord** `.nt`/`.ot`/`.ont`, **e-Sword** `.bbli`, and **USFM 3.0** `.usfm.zip`).
 * **USFM 3.0 About Metadata (`esword_usfm.pas`):** Included `copr.htm` containing the module's About HTML inside exported `.usfm.zip` archives and `_usfm` folders.
@@ -58,7 +64,7 @@
 
 ### 0a. Version 1.1.0.092 (2026-11-22) — Activate iBiblia Window on Mouse Hover
 
-* **Hover-to-Activate Window (`formprincipal.pas`):** Moving the mouse onto any visible part of Dark-Skinned iBiblia (main window or floating tool dialogs) automatically activates the window as if clicked, making side-by-side work with theWord and Timotheos seamless. Includes safety guards against stealing focus through overlapping windows, while mouse buttons are held down, or when Alt+Tabbing away without moving the cursor. Toggleable via **View → Activate window on mouse hover** (enabled by default, saved in `iBiblia.ini`).
+* **Hover-to-Activate Window (`formprincipal.pas`):** Moving the mouse onto any visible part of The Bible Maker (main window or floating tool dialogs) automatically activates the window as if clicked, making side-by-side work with theWord and Timotheos seamless. Includes safety guards against stealing focus through overlapping windows, while mouse buttons are held down, or when Alt+Tabbing away without moving the cursor. Toggleable via **View → Activate window on mouse hover** (enabled by default, saved in `iBiblia.ini`).
 * Files: formprincipal.pas, iBiblia.lpi, iBiblia-linux.lpi, unitabout.pas, CHANGELOG.md, historico.txt, Histórico.txt.
 
 ### 0a. Version 1.1.0.091 (2026-11-22) — Find & Replace 7-Step Undo (Ctrl+Z) / Redo (Ctrl+Y) & Streamlined Buttons
@@ -79,15 +85,15 @@
 * **Association-Preserving In-Project Bulk Edits:** Replacements in Source, Destination, Reference 1, or Reference 2 text run directly through `TProject.ApplyVerseTexts(..., KeepAssociations)` so existing word associations stay intact wherever words remain unchanged, record a summary in **Project → Project change log...**, and save automatically.
 * Files: FormFindInProject.pas, formprincipal.pas, iBiblia.lpi, iBiblia-linux.lpi, unitabout.pas, CHANGELOG.md, historico.txt, Histórico.txt.
 
-### 0a. Version 1.1.0.088 (2026-11-22) — Update Help → About Dialog Name & GitHub URL to Dark-Skinned iBiblia
+### 0a. Version 1.1.0.088 (2026-11-22) — Update Help → About Dialog Name & Independent Repo URL
 
-* **Updated Help → About Dialog (`unitabout.pas`, `unitabout.lfm`):** Updated the **Help → About** window title (`About Dark-Skinned iBiblia`), main heading (`Dark-Skinned iBiblia`), **View Changelog** window title (`What's New in Dark-Skinned iBiblia` / `Dark-Skinned iBiblia - Changelog`), and clickable GitHub repository link (`https://github.com/SalitaNgDiyos/Dark-Skinned-iBiblia`).
+* **Updated Help → About Dialog (`unitabout.pas`, `unitabout.lfm`):** Updated the **Help → About** window title, main heading, **View Changelog** window title, and clickable GitHub repository link to point to this independent offshoot (now **The Bible Maker** at `https://github.com/SalitaNgDiyos/The-Bible-Maker`).
 * Files: unitabout.pas, unitabout.lfm, README.md.
 
-### 0a. Version 1.1.0.087 (2026-11-22) — Night (Pitch Black) as Default Skin & Dark-Skinned-iBiblia Feed
+### 0a. Version 1.1.0.087 (2026-11-22) — Night (Pitch Black) as Default Skin & Independent Release Feed
 
 * **Night (Pitch Black) Default Skin (`unitskins.pas`, `formprincipal.pas`, `FormNewFeaturesGuide.pas`, `unitabout.pas`):** Made **Night (Pitch Black)** (`skNight`) the default skin on fresh installs and whenever `Theme` is unset or `Default` in `iBiblia.ini` (while preserving an explicit `Classic` choice when saved in `iBiblia.ini`), and updated `Ctrl+Shift+D` to toggle between **Night** and **Classic (Light)**.
-* **Updated Repository Feed (`app_updater.pas`, `README.md`, `docs/releasing.md`):** Updated the built-in updater repository constant and release links to `SalitaNgDiyos/Dark-Skinned-iBiblia`.
+* **Updated Repository Feed (`app_updater.pas`, `README.md`, `docs/releasing.md`):** Updated the built-in updater repository constant and release links to the independent fork repository (now `SalitaNgDiyos/The-Bible-Maker`).
 * Files: unitskins.pas, formprincipal.pas, app_updater.pas, FormNewFeaturesGuide.pas, unitabout.pas, README.md, docs/releasing.md.
 
 ### 0a. Version 1.1.0.086 (2026-11-22) — Fix Splitter & Footer Layout in Project Change Log and Crash Logs Dialogs

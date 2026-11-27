@@ -1,6 +1,6 @@
 unit github_publisher;
 
-{ Direct GitHub publishing & Timotheos live AMB update engine for Dark-Skinned iBiblia.
+{ Direct GitHub publishing & Timotheos live AMB update engine for The Bible Maker.
 
   Stores per-project GitHub repository settings in the .bib SQLite info table,
   stores the GitHub Personal Access Token securely via CreateAICredentialStore
@@ -543,7 +543,7 @@ begin
     Client.AllowRedirect := True;
     Client.ConnectTimeout := 15000;
     Client.IOTimeout := 120000;
-    Client.AddHeader('User-Agent', 'Dark-Skinned-iBiblia');
+    Client.AddHeader('User-Agent', 'The-Bible-Maker');
     Client.AddHeader('Accept', 'application/vnd.github+json');
     Client.AddHeader('X-GitHub-Api-Version', '2022-11-28');
     if Token <> '' then
@@ -776,7 +776,7 @@ begin
 
   NotesText := Trim(ReleaseNotes);
   if NotesText = '' then
-    NotesText := 'Published from Dark-Skinned iBiblia.';
+    NotesText := 'Published from The Bible Maker.';
 
   ReqObj := TJSONObject.Create;
   try
@@ -1090,7 +1090,7 @@ begin
   // 6. Create commit
   MsgToUse := Trim(CommitMsg);
   if MsgToUse = '' then
-    MsgToUse := 'Update module from Dark-Skinned iBiblia';
+    MsgToUse := 'Update module from The Bible Maker';
 
   ReqObj := TJSONObject.Create;
   try
@@ -1415,7 +1415,7 @@ begin
           end;
           BaseMsg := Trim(CommitMessage);
           if BaseMsg = '' then
-            BaseMsg := 'Update ' + Trim(Link.BaseFileName) + ' from Dark-Skinned iBiblia';
+            BaseMsg := 'Update ' + Trim(Link.BaseFileName) + ' from The Bible Maker';
           if not CommitFilesToBranch(Token, Owner, Repo, Link.BranchName, BaseMsg,
                ExportedFiles, RepoPaths, Progress, FinalBranch, CommitSha, CommitUrl, ErrMsg) then
             Exit;
@@ -1450,7 +1450,7 @@ begin
 
         TimMsg := Trim(CommitMessage);
         if TimMsg = '' then
-          TimMsg := 'Update bundled Bible (' + ExtractFileName(TheWordFile) + ') from Dark-Skinned iBiblia';
+          TimMsg := 'Update bundled Bible (' + ExtractFileName(TheWordFile) + ') from The Bible Maker';
         if Link.TimotheosSkipCI and (Pos('[skip ci]', LowerCase(TimMsg)) = 0) then
           TimMsg := TimMsg + ' [skip ci]';
 
