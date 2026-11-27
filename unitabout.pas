@@ -114,6 +114,11 @@ const
 
   CHANGELOG_TEXT =
     
+  'Version 1.1.0.100 (64-bit Edition) - 2026-11-27' + LineEnding +
+  '- Added Project -> Publish to GitHub... and Project settings -> GitHub Publishing so projects can link directly to a GitHub repository and publish source or destination texts (.nt/.ot/.ont, .usfm.zip, and .bbli) to GitHub Releases or branches in one click.' + LineEnding +
+  '- Added one-click Timotheos Bible app integration so publishing updated AMB modules can commit straight to the Timotheos repository and deliver real-time updates to PC and Android users.' + LineEnding +
+  '- Added OS credential-store GitHub token management with GitHub CLI (gh) auto-detection.' + LineEnding +
+  '' + LineEnding +
   'Version 1.1.0.099 (64-bit Edition) - 2026-11-22' + LineEnding +
   '- Fixed native GTK2 file chooser and system dialogs (GtkFileChooserDialog, GtkPaned, GtkPathBar, GtkScrolledWindow) in Classic (Light) and all skins by adding class "GtkWidget" style : highest "ibiblia-skin" and explicit file-chooser widget rules in unitskins.pas.' + LineEnding +
   '- Added SyncGtkTopLevelTitleBars (via gtk_window_list_toplevels + lightweight GLib timer) so native GTK2 dialogs like Open/Save File Chooser also receive the matching KDE title bar colour scheme.' + LineEnding +

@@ -316,6 +316,7 @@ type
     FToolsOuterSeparator: TMenuItem;
     FHelpMenuSeparator: TMenuItem;
     FProjectChangeLogItem: TMenuItem;
+    FPublishGitHubItem: TMenuItem;
     FCrashLogsItem: TMenuItem;
     FHardCrashChecked: Boolean;
     FPreferencesMenuItem: TMenuItem;
@@ -556,6 +557,7 @@ type
     procedure DoOpenProject(filename: string);
     procedure CheckFileAssociation;
     procedure ProjectChangeLogClick(Sender: TObject);
+    procedure PublishGitHubClick(Sender: TObject);
     procedure CrashLogsClick(Sender: TObject);
   protected
     procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
@@ -818,7 +820,7 @@ uses FormNewProject, FormProjectProperties, FormProjectExport, FormMergeProjects
   FormNewFeaturesGuide, FormDictionaryPopup, project_book_import,
   project_backup, project_backup_ui, sqlite_database_copy,
   project_change_log, project_change_log_ui, crash_tracker, crash_tracker_ui,
-  bible_book_names;
+  github_publisher, form_github_publish, bible_book_names;
 
 {$R *.lfm}
 
@@ -1709,6 +1711,17 @@ begin
   if Assigned(MenuItemLlmOptions.Parent) then
     MenuItemLlmOptions.Parent.Remove(MenuItemLlmOptions);
   MenuItem1.Insert(MenuItem19.MenuIndex + 1, MenuItemLlmOptions);
+
+  if FPublishGitHubItem = nil then
+  begin
+    FPublishGitHubItem := TMenuItem.Create(MainMenu1);
+    FPublishGitHubItem.Caption := 'Publish to &GitHub...';
+    FPublishGitHubItem.OnClick := @PublishGitHubClick;
+  end
+  else if Assigned(FPublishGitHubItem.Parent) then
+    FPublishGitHubItem.Parent.Remove(FPublishGitHubItem);
+  FPublishGitHubItem.Enabled := Assigned(CurrentProject);
+  MenuItem1.Insert(MenuItem16.MenuIndex + 1, FPublishGitHubItem);
 
   if FProjectChangeLogItem = nil then
   begin
@@ -4653,6 +4666,7 @@ begin
   ActionRollbackCurrentVerse.Enabled := false;
   ActionClearAssociations.Enabled := false;
   ActionExportProject.Enabled := false;
+  if Assigned(FPublishGitHubItem) then FPublishGitHubItem.Enabled := false;
   ActionRebuildSuggestionDatabase.Enabled := false;
   ActionExportPatch.Enabled := false;
   ActionApplyPatch.Enabled := false;
@@ -5916,6 +5930,17 @@ begin
     ProjectTitle := ChangeFileExt(ExtractFileName(CurrentProject.FileName), '');
   RecordCrashBreadcrumb('Opened Project change log');
   ShowProjectChangeLogDialog(Self, CurrentProject.FileName, ProjectTitle);
+end;
+
+procedure TMainForm.PublishGitHubClick(Sender: TObject);
+begin
+  if not Assigned(CurrentProject) then
+    Exit;
+  CommitAllProps;
+  CurrentProject.SaveProject;
+  UpdateStateHeader;
+  RecordCrashBreadcrumb('Opened Publish to GitHub');
+  ShowGitHubPublishDialog(Self, CurrentProject, opts);
 end;
 
 procedure TMainForm.CrashLogsClick(Sender: TObject);
@@ -7747,6 +7772,7 @@ begin
   ActionRollbackCurrentVerse.Enabled := true;
   ActionClearAssociations.Enabled := true;
   ActionExportProject.Enabled := true;
+  if Assigned(FPublishGitHubItem) then FPublishGitHubItem.Enabled := true;
   ActionRebuildSuggestionDatabase.Enabled := true;
   ActionExportPatch.Enabled := true;
   ActionApplyPatch.Enabled := true;

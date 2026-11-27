@@ -148,6 +148,10 @@ type
       const Options: TInterlinearTextExportOptions;
       StartSession, FinishSession: TExportSessionProc;
       GetReference: TExportReferenceFunc): TExportResult;
+    function ExportPlainSourceText(const FileName: string;
+      ProgressBar: TProgressBar; const Properties: string;
+      Direction: TTextDirection; StartSession,
+      FinishSession: TExportSessionProc): TExportResult;
     function ExportConcordance(const FileName: string;
       ProgressBar: TProgressBar; const Options: TConcordanceExportOptions;
       StartSession, FinishSession: TExportSessionProc;
@@ -784,6 +788,95 @@ begin
     FreeAndNil(ApocLines);
     FreeAndNil(ApocRefs);
     FreeAndNil(Errors);
+    if Assigned(ProgressBar) then
+      ProgressBar.Visible := False;
+  end;
+end;
+
+function TProjectExporter.ExportPlainSourceText(const FileName: string;
+  ProgressBar: TProgressBar; const Properties: string;
+  Direction: TTextDirection; StartSession,
+  FinishSession: TExportSessionProc): TExportResult;
+var
+  VerseData: TVerseData;
+  Lines, ApocLines, ApocRefs: TStringList;
+  RenderedLine: string;
+  Staging: TExportFileStaging;
+begin
+  Result := Default(TExportResult);
+  Lines := nil;
+  ApocLines := nil;
+  ApocRefs := nil;
+  Staging := nil;
+  try
+    try
+      RequireDependencies;
+      ConfigureProgressBar(ProgressBar, QLinhas[FScope]);
+      Lines := TStringList.Create;
+      ApocLines := TStringList.Create;
+      ApocRefs := TStringList.Create;
+
+      if Assigned(StartSession) then
+        StartSession;
+      try
+        FVerseRepository.First;
+        while not FVerseRepository.EOF do
+        begin
+          VerseData := FVerseRepository.ReadCurrentVerseData;
+          if IsSelected(FVerseRepository.CurrentReferenceID) then
+            RenderedLine := VerseData.OriginalText
+          else
+            RenderedLine := '';
+
+          if IsApocryphaReference(FVerseRepository.CurrentReferenceID) then
+          begin
+            if Trim(RenderedLine) <> '' then
+            begin
+              ApocLines.Add(RenderedLine);
+              ApocRefs.Add(FVerseRepository.CurrentReferenceID);
+            end;
+          end
+          else
+            Lines.Add(RenderedLine);
+
+          AdvanceProgressBar(ProgressBar, 50);
+          FVerseRepository.Next;
+        end;
+      finally
+        if Assigned(FinishSession) then
+          FinishSession;
+      end;
+
+      Result.ProcessedVerseCount := Lines.Count;
+      Staging := TExportFileStaging.Create(FileName);
+      if IsESwordOrUSFMExport(FileName) then
+        WriteESwordOrUSFMBible(Lines, Staging.StagingFileName, Staging.FinalFileName,
+          Properties, ApocLines, ApocRefs)
+      else if SameText(ExtractFileExt(FileName), '.mybible') then
+        WriteMySwordBible(Lines, Staging.StagingFileName, Properties,
+          ApocLines, ApocRefs)
+      else
+        WriteTheWordBible(Lines, Staging.StagingFileName, Properties, Direction);
+
+      if SameText(ExtractFileExt(FileName), '.mybible') or
+         TESwordModule.IsESwordFileName(FileName) then
+        Staging.Publish(epSQLiteModule)
+      else
+        Staging.Publish(epTextModule);
+      Result.OutputFileName := Staging.FinalFileName;
+      CompleteExport(Result, nil, '');
+    except
+      on E: Exception do
+      begin
+        Result.Status := esFailed;
+        Result.ErrorMessage := E.Message;
+      end;
+    end;
+  finally
+    Staging.Free;
+    FreeAndNil(Lines);
+    FreeAndNil(ApocLines);
+    FreeAndNil(ApocRefs);
     if Assigned(ProgressBar) then
       ProgressBar.Visible := False;
   end;

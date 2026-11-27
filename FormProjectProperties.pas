@@ -127,6 +127,9 @@ type
     FBackupButton: TButton;
     FRestoreButton: TButton;
     FBackupInfoLabel: TLabel;
+    FGitHubGroup: TGroupBox;
+    FGitHubStatusLabel: TLabel;
+    FGitHubButton: TButton;
     FRestoreRequest: string;
     FAutoLoadPending: Boolean;
     FPendingBookRequests: TList;    // TBookImportRequest, not applied yet
@@ -135,6 +138,8 @@ type
     procedure BackupClick(Sender: TObject);
     procedure RestoreClick(Sender: TObject);
     procedure RefreshBackupFolder;
+    procedure GitHubButtonClick(Sender: TObject);
+    procedure RefreshGitHubSummary;
     procedure BtnAddBooksClick(Sender: TObject);
     procedure ClearPendingBookRequests(TextType: TTipoTextoBiblico;
       AllTexts: Boolean);
@@ -358,7 +363,8 @@ implementation
 uses
   bible_archive,
   FormLlmOptions, formPrincipal, module_conversion, project_book_import,
-  FormBookImport, project_backup, project_backup_ui, project_change_log;
+  FormBookImport, project_backup, project_backup_ui, project_change_log,
+  github_publisher, form_github_publish;
 
 { TFrmProjectProperties }
 
@@ -433,6 +439,41 @@ begin
     FBackupFolderEdit.Text := GetBackupFolder
   else
     FBackupFolderEdit.Text := SBackupFolderNotSet;
+end;
+
+procedure TFrmProjectProperties.RefreshGitHubSummary;
+var
+  Link: TGitHubProjectLink;
+  RepoOwner, RepoName, Summary: string;
+begin
+  if not Assigned(FGitHubStatusLabel) then
+    Exit;
+  if not Assigned(FProject) then
+  begin
+    FGitHubStatusLabel.Caption := 'No project loaded.';
+    Exit;
+  end;
+  Link := LoadGitHubProjectLink(FProject);
+  if ParseGitHubOwnerRepo(Link.RepoUrl, RepoOwner, RepoName) then
+  begin
+    Summary := 'Linked repository: ' + RepoOwner + '/' + RepoName;
+    if Link.TimotheosEnabled then
+      Summary := Summary + '  (+ Timotheos live update)';
+    if Link.LastPublishedAt <> '' then
+      Summary := Summary + ' · Last published ' + Link.LastPublishedAt;
+  end
+  else
+    Summary := 'Not linked to a GitHub repository yet.';
+  FGitHubStatusLabel.Caption := Summary;
+end;
+
+procedure TFrmProjectProperties.GitHubButtonClick(Sender: TObject);
+begin
+  if not Assigned(FProject) then
+    Exit;
+  ShowGitHubPublishDialog(Self, FProject, opts);
+  RefreshGitHubSummary;
+  UpdateReview;
 end;
 
 procedure TFrmProjectProperties.BackupFolderClick(Sender: TObject);
@@ -636,6 +677,26 @@ begin
   FBackupInfoLabel.SetBounds(16, 110, PageWidth - 32, 66);
   FBackupInfoLabel.Anchors := [akLeft, akTop, akRight];
   FBackupInfoLabel.Caption := Format(SBackupKeepInfo, [AUTO_BACKUPS_KEPT]);
+
+  FGitHubGroup := TGroupBox.Create(Self);
+  FGitHubGroup.Parent := FTabProject;
+  FGitHubGroup.SetBounds(16, 16 + ProjectGroupHeight + 16 + 200 + 14, PageWidth - 12, 92);
+  FGitHubGroup.Anchors := [akLeft, akTop, akRight];
+  FGitHubGroup.Caption := 'GitHub Publishing';
+
+  FGitHubStatusLabel := TLabel.Create(Self);
+  FGitHubStatusLabel.Parent := FGitHubGroup;
+  FGitHubStatusLabel.AutoSize := False;
+  FGitHubStatusLabel.WordWrap := True;
+  FGitHubStatusLabel.SetBounds(16, 18, PageWidth - 32 - 220, 44);
+  FGitHubStatusLabel.Anchors := [akLeft, akTop, akRight];
+
+  FGitHubButton := TButton.Create(Self);
+  FGitHubButton.Parent := FGitHubGroup;
+  FGitHubButton.SetBounds(PageWidth - 32 - 204 + 16, 18, 204, 34);
+  FGitHubButton.Anchors := [akTop, akRight];
+  FGitHubButton.Caption := 'Configure & Publish...';
+  FGitHubButton.OnClick := @GitHubButtonClick;
 
   FWorkflowIntroLabel := TLabel.Create(Self);
   FWorkflowIntroLabel.Parent := FTabWorkflow;
@@ -1722,6 +1783,7 @@ begin
     FRestoreButton.Caption := SRestoreProject;
     FBackupInfoLabel.Caption := Format(SBackupKeepInfo, [AUTO_BACKUPS_KEPT]);
     RefreshBackupFolder;
+    RefreshGitHubSummary;
   end;
   if Assigned(BtnCancel) then
     BtnCancel.Caption := SUICancel;
@@ -2115,6 +2177,7 @@ begin
   FProject := Project;
   FRestoreRequest := '';
   RefreshBackupFolder;
+  RefreshGitHubSummary;
   FStatusDefinitions := Project.GetStatusDefinitions;
   FStatusRemaps := nil;
   FStatusCatalogChanged := False;

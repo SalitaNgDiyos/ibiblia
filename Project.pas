@@ -511,6 +511,7 @@ type
     function ExportDestinationTextWithStrongs(arquivo: string; pb: TProgressBar; opcoes: TOpcoesExportacao): TExportResult;
     function ExportInterlinearText(arquivo: string; opcoes: TOpcoesExportacao): TExportResult;
     function ExportInterlinearText(arquivo: string; pb: TProgressBar; opcoes: TOpcoesExportacao): TExportResult;
+    function ExportPlainSourceText(arquivo: string; pb: TProgressBar): TExportResult;
     function ExportConcordance(arquivo: string; opcoes: TOpcoesExportacao; abbreviation: string): TExportResult;
     function ExportConcordance(arquivo: string; pb: TProgressBar;
       opcoes: TOpcoesExportacao; abbreviation: string;
@@ -7896,6 +7897,44 @@ begin
       end;
       Result.ErrorMessage := E.Message;
     end;
+  end;
+end;
+
+function TProject.ExportPlainSourceText(arquivo: string;
+  pb: TProgressBar): TExportResult;
+begin
+  Result := Default(TExportResult);
+  Result.ErrorMessage := 'The project verse views are not available for export';
+  if not Assigned(FAVersiculo[tbOrigem]) then
+    Exit;
+
+  Result.ErrorMessage := '';
+  try
+    CancelDefaultVerseModeRequest;
+    try
+      FExportando := True;
+      FProjectExporter.Selection := FExportSelection;
+      try
+        Result := FProjectExporter.ExportPlainSourceText(arquivo, pb,
+          ReadInfo('propriedades.origem'), GetTextDirection(tbOrigem),
+          @StartScrollingSession, @FinishScrollingSession);
+      finally
+        FProjectExporter.Selection := nil;
+      end;
+      if Result.Status <> esFailed then
+      begin
+        if Result.OutputFileName <> '' then
+          WriteTreeOrderFile(Result.OutputFileName)
+        else
+          WriteTreeOrderFile(arquivo);
+      end;
+    finally
+      FExportando := False;
+      AfterVerseScroll(nil);
+    end;
+  except
+    on E: Exception do
+      Result.ErrorMessage := E.Message;
   end;
 end;
 

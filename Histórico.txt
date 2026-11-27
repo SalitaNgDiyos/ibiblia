@@ -1,3 +1,8 @@
+Version 1.1.0.100 (64-bit Edition) - 2026-11-27
+- Added Project -> Publish to GitHub... and Project settings -> GitHub Publishing to link projects directly to GitHub and publish source or destination texts (.nt/.ot/.ont, .usfm.zip, and .bbli) to GitHub Releases or branches in one click.
+- Added optional Timotheos live publish target to commit bundled AMB changes directly to the Timotheos repository for real-time updates on PC and Android.
+- Added secure OS credential-store GitHub token storage and GitHub CLI (gh) auto-detection.
+
 Version 1.1.0.099 (64-bit Edition) - 2026-11-22
 - Fixed native GTK2 file chooser and system dialogs (GtkFileChooserDialog, GtkPaned, GtkPathBar, GtkScrolledWindow) in Classic (Light) and all skins via class "GtkWidget" style : highest "ibiblia-skin" in unitskins.pas.
 - Added SyncGtkTopLevelTitleBars so native GTK2 Open/Save dialogs also receive the matching KDE title bar colour scheme.

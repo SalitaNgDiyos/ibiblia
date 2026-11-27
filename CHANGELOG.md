@@ -6,7 +6,14 @@
 
 ## What's New & Fixed in v1.1.0
 
-### v1.1.0.099 (2026-11-22)
+### 0. Version 1.1.0.100 (2026-11-27) — Publish Projects Directly to GitHub & Timotheos
+
+* **Direct GitHub Publishing (`github_publisher.pas`, `form_github_publish.pas`):** Added **Project → Publish to GitHub...** and a **GitHub Publishing** section inside **Project settings** so any `.bib` project can be linked directly to a GitHub repository and published in one click without manual file exports or GitHub uploads.
+* **Source & Destination Texts Across Formats:** Supports publishing tagged destination text, interlinear source text, or plain source text in selectable formats (**theWord** `.nt`/`.ot`/`.ont`, **USFM 3.0** `.usfm.zip`, and **e-Sword 11+** `.bbli`).
+* **Release, Branch & Real-Time Timotheos Delivery:** Updates the latest (or specified) GitHub Release assets, optionally commits files to a branch using atomic Git Data API commits, and can automatically push the bundled Bible module to the **Timotheos** repository so PC and Android users receive updates in real time.
+* **Secure Authentication:** Stores your GitHub Personal Access Token in the OS credential store (Windows Credential Manager on Windows, `0600` credential file on Linux) across all projects, with automatic **GitHub CLI (`gh`)** token detection.
+
+### 0a. Version 1.1.0.099 (2026-11-22)
 - Fixed native GTK2 file chooser and system dialogs (`GtkFileChooserDialog`, `GtkPaned`, `GtkPathBar`, `GtkScrolledWindow`) on Linux dark desktop themes by adding `class "GtkWidget" style : highest "ibiblia-skin"` and explicit file-chooser rules in `unitskins.pas`.
 - Added `SyncGtkTopLevelTitleBars` (`gtk_window_list_toplevels`) so native GTK2 dialogs (such as Open/Save File Chooser) also receive the matching KDE title bar color scheme.
 
