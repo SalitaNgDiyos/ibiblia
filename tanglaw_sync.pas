@@ -142,7 +142,8 @@ begin
             (ExeBaseLower = 'explorer.exe') or
             (ExeBaseLower = 'code.exe') or
             (ExeBaseLower = 'lazarus.exe') or
-            (ExeBaseLower = 'ibiblia.exe');
+            (ExeBaseLower = 'ibiblia.exe') or
+            (ExeBaseLower = 'thebiblemaker.exe');
 end;
 
 type

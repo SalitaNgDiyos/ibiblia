@@ -1,13 +1,13 @@
 name: Release
 
-# Every push to linux-port, master, or Neon whose project files carry a version that has
-# no GitHub release yet builds iBiblia for Windows (x64) and Linux (x86_64) with
-# Lazarus and publishes release v<version>. The programs check this release feed
-# at start-up and update themselves (see app_updater.pas).
+# Every push to Neon whose project files carry a version that has no GitHub
+# release yet builds The Bible Maker for Windows (x64) and Linux (x86_64) with
+# Lazarus and publishes release v<version>. The app checks this release feed
+# at start-up and updates itself (see app_updater.pas).
 
 on:
   push:
-    branches: [linux-port, master, Neon]
+    branches: [Neon]
   workflow_dispatch:
 
 permissions:
@@ -125,10 +125,10 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           VERSION: ${{ needs.plan.outputs.version }}
         run: |
-          cd dist && sha256sum iBiblia-*.zip > SHA256SUMS.txt && cat SHA256SUMS.txt && cd ..
+          cd dist && sha256sum TheBibleMaker-*.zip > SHA256SUMS.txt && cat SHA256SUMS.txt && cd ..
           python3 scripts/ci_release_notes.py "$VERSION" > notes.md
           TAG="v$VERSION"
           TITLE="The Bible Maker (v$VERSION)"
           gh release delete neon --yes --cleanup-tag 2>/dev/null || true
-          gh release create "$TAG" dist/iBiblia-*.zip dist/SHA256SUMS.txt \
+          gh release create "$TAG" dist/TheBibleMaker-*.zip dist/SHA256SUMS.txt \
             --title "$TITLE" --notes-file notes.md --latest --target "$GITHUB_SHA"

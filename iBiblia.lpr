@@ -28,8 +28,8 @@ uses
 {$IFDEF WINDOWS}
 function HandleFileAssociationCommand(out AExitCode: Integer): Boolean;
 const
-  SAppTitle = 'iBiblia';
-  SProjectFileTypeName = 'iBiblia Project File';
+  SAppTitle = 'The Bible Maker';
+  SProjectFileTypeName = 'The Bible Maker Project File';
   SRegisterFileAssociationSuccess = 'Successfully registered file association for .bib files';
   SRegisterFileAssociationFailure = 'Failed to register file association for .bib files';
   SUnregisterFileAssociationSuccess = 'Successfully removed file association for .bib files';

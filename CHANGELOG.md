@@ -6,7 +6,14 @@
 
 ## Version History
 
-### 0. Version 1.1.0.103 (2026-11-27) — Rebrand to The Bible Maker & Independent History
+### 0. Version 2.0.0.001 (2026-11-27) — Independent Product Milestone, Custom Icon & Safe Migration
+
+* **Custom App Icon & Provenance (`iBiblia.ico`, `packaging/linux/TheBibleMaker.png`, `LICENSE`, `NOTICE.md`):** Designed and embedded a custom **The Bible Maker** gold-on-obsidian desktop icon across Windows and Linux, updated `iBiblia.rc` metadata to `2.0.0.001`, added root `LICENSE` + `NOTICE.md`, and replaced remaining upstream `rubiot/ibiblia` wiki/issue links across docs and error dialogs.
+* **Seamless Settings & Credential Migration (`formprincipal.pas`, `ai_credential_store.pas`):** Moved configuration to `TheBibleMaker.ini` and `~/.config/TheBibleMaker` (`TheBibleMaker.ini` & `credentials.ini`) with automatic one-time migration from `iBiblia.ini` and `~/.config/iBiblia` so saved preferences, GitHub tokens, and AI keys carry over automatically.
+* **Updater Bridge & Linux Desktop Entry (`app_updater.pas`, `install-menu-entry.sh`, `scripts/ci_package.py`, `.github/workflows/release.yml`):** Packaged releases as `TheBibleMaker-<version>-*.zip`, updated the Linux menu entry to `thebiblemaker.desktop` (`Name=The Bible Maker`), and bridged the updater to handle both legacy `iBiblia(.exe)` and future `TheBibleMaker(.exe)` executables cleanly before the `v2.0.0.002` binary rename.
+* **UI & Localization Polish (`crash_tracker_ui.pas`, `unitupdate.pas`, `Project.pas`, `iBiblia.lpr`, `languages/iBiblia.*.po/.mo`):** Updated remaining user-facing dialogs, update prompts, file association descriptions, and compiled English/Portuguese `.mo` catalogs to **The Bible Maker**.
+
+### 0a. Version 1.1.0.103 (2026-11-27) — Rebrand to The Bible Maker & Independent History
 
 * **Rebranded Application Identity (`formprincipal.pas`, `unitabout.pas`, `unitabout.lfm`, `app_updater.pas`, `github_publisher.pas`, `form_github_publish.pas`, `FormFindInProject.pas`, `FormNewFeaturesGuide.pas`):** Renamed all UI titles, About/User Guide headers, GitHub Publisher agent/commit strings, and built-in updater feed from *Dark-Skinned iBiblia* to **The Bible Maker** (`https://github.com/SalitaNgDiyos/The-Bible-Maker`).
 * **Independent Offshoot Lineage (`README.md`, `CHANGELOG.md`, `historico.txt`, `Histórico.txt`, `unitabout.pas`):** Clarified across the repository documentation and in-app About/History views that **The Bible Maker** is an independent offshoot derived from Rúbio R. C. Terra's original iBiblia rather than an official continuation of upstream `rubiot/ibiblia`.

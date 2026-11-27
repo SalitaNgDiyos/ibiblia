@@ -259,14 +259,44 @@ type
 
 function TUnixFileAICredentialStore.StoreFileName: string;
 var
-  Dir: string;
+  BaseDir, LegacyFile, TargetDir: string;
+  Src, Dst: TFileStream;
 begin
-  Dir := SysUtils.GetEnvironmentVariable('XDG_CONFIG_HOME');
-  if Dir = '' then
-    Dir := IncludeTrailingPathDelimiter(GetUserDir) + '.config';
-  if Dir = '' then
-    Dir := GetAppConfigDir(False);
-  Result := IncludeTrailingPathDelimiter(Dir) + 'iBiblia' + PathDelim + 'credentials.ini';
+  BaseDir := SysUtils.GetEnvironmentVariable('XDG_CONFIG_HOME');
+  if BaseDir = '' then
+    BaseDir := IncludeTrailingPathDelimiter(GetUserDir) + '.config';
+  if BaseDir = '' then
+    BaseDir := GetAppConfigDir(False);
+  BaseDir := IncludeTrailingPathDelimiter(BaseDir);
+  TargetDir := BaseDir + 'TheBibleMaker';
+  Result := TargetDir + PathDelim + 'credentials.ini';
+  if not FileExists(Result) then
+  begin
+    LegacyFile := BaseDir + 'iBiblia' + PathDelim + 'credentials.ini';
+    if FileExists(LegacyFile) then
+    begin
+      if ForceDirectories(TargetDir) then
+      begin
+        FpChmod(PChar(TargetDir), &700);
+        try
+          Src := TFileStream.Create(LegacyFile, fmOpenRead or fmShareDenyWrite);
+          try
+            Dst := TFileStream.Create(Result, fmCreate);
+            try
+              Dst.CopyFrom(Src, 0);
+            finally
+              Dst.Free;
+            end;
+          finally
+            Src.Free;
+          end;
+          FpChmod(PChar(Result), &600);
+        except
+          // best-effort migration
+        end;
+      end;
+    end;
+  end;
 end;
 
 function TUnixFileAICredentialStore.IsPersistent: Boolean;

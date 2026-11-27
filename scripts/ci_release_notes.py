@@ -17,4 +17,4 @@ for n, m in enumerate(heads):
         print(body)
         break
 else:
-    print("iBiblia %s" % ver)
+    print("The Bible Maker %s" % ver)

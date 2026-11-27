@@ -3,6 +3,12 @@ Independent offshoot originally derived from iBiblia by Rúbio R. C. Terra.
 Not an official continuation of upstream iBiblia (rubiot/ibiblia).
 Maintained independently at https://github.com/SalitaNgDiyos/The-Bible-Maker
 
+Version 2.0.0.001 (64-bit Edition) - 2026-11-27
+- Major independent product milestone: embedded custom The Bible Maker gold-on-obsidian app icon across Windows and Linux, updated Windows version info to 2.0.0.001, added root LICENSE and NOTICE.md, and replaced remaining upstream rubiot/ibiblia wiki/issue links.
+- Added automatic one-time migration to TheBibleMaker.ini and ~/.config/TheBibleMaker (preserving iBiblia.ini and credentials.ini) and updated Linux menu integration to thebiblemaker.desktop.
+- Bridged self-updater and CI packaging to produce TheBibleMaker-<version>-*.zip packages seamlessly before the v2.0.0.002 executable rename.
+- Updated Crash Tracker, Updater dialogs, File Association labels, Project warnings, and compiled English/Portuguese translations (.po/.mo) to The Bible Maker.
+
 Version 1.1.0.103 (64-bit Edition) - 2026-11-27
 - Rebranded the application to The Bible Maker (https://github.com/SalitaNgDiyos/The-Bible-Maker) across the main window, About dialog, User Guide, Updater feed, and GitHub Publisher.
 - Updated project history and credits to clarify that The Bible Maker (formerly Dark-Skinned iBiblia) is an independent offshoot derived from iBiblia, not a continuation of upstream rubiot/ibiblia.

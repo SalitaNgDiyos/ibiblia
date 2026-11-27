@@ -117,6 +117,12 @@ const
   'The Bible Maker — Independent offshoot originally derived from iBiblia (Rúbio R. C. Terra).' + LineEnding +
   'Not an official continuation of upstream iBiblia. Maintained independently at https://github.com/SalitaNgDiyos/The-Bible-Maker' + LineEnding +
   LineEnding +
+  'Version 2.0.0.001 (64-bit Edition) - 2026-11-27' + LineEnding +
+  '- Major independent offshoot milestone: custom The Bible Maker gold-on-obsidian app icon (iBiblia.ico & TheBibleMaker.png), MIT LICENSE + NOTICE.md provenance documentation, and cleanup of upstream rubiot/ibiblia wiki/issue links and stale repo branches.' + LineEnding +
+  '- Transitioned Linux/Windows settings and Linux credential store to ~/.config/TheBibleMaker (TheBibleMaker.ini & credentials.ini) with automatic one-time migration from iBiblia.ini / ~/.config/iBiblia, and updated the Linux desktop menu entry to thebiblemaker.desktop.' + LineEnding +
+  '- Bridged app_updater.pas, ci_package.py, and release.yml to publish TheBibleMaker-<ver>-*.zip packages while auto-upgrading existing v1.1.0.103 installs seamlessly and preparing for the v2.0.0.002 executable rename.' + LineEnding +
+  '- Updated remaining UI strings (Crash & Error Logs, App Updater, File Association, Project Data Warnings, Settings Help Menu) and compiled English/Portuguese (.po/.mo) translations to The Bible Maker.' + LineEnding +
+  LineEnding +
   'Version 1.1.0.103 (64-bit Edition) - 2026-11-27' + LineEnding +
   '- Rebranded the application to The Bible Maker (https://github.com/SalitaNgDiyos/The-Bible-Maker) across the main window, About dialog, User Guide, Updater feed, and GitHub Publisher.' + LineEnding +
   '- Updated project history and credits to clarify that The Bible Maker (formerly Dark-Skinned iBiblia) is an independent offshoot derived from iBiblia, not a continuation of upstream rubiot/ibiblia.' + LineEnding +
@@ -802,7 +808,7 @@ begin
     ver := '';
   end;
   if (ver = '') or (ver = '1.1.0.0') or (ver = '1.1.0.1') then
-    ver := '1.1.0.103';
+    ver := '2.0.0.001';
 
   LabelVersion := TLabel.Create(Self);
   LabelVersion.Parent := Self;
@@ -1303,7 +1309,7 @@ begin
   lblHeaderTitle.Font.Name := 'Segoe UI';
   lblHeaderTitle.Font.Height := -17;
   lblHeaderTitle.Font.Style := [fsBold];
-  lblHeaderTitle.Caption := 'The Bible Maker User Guide (v1.0.0.71 – v1.1.0.103)';
+  lblHeaderTitle.Caption := 'The Bible Maker User Guide (v1.0.0.71 – v2.0.0.001)';
 
   lblHeaderSub := TLabel.Create(pnlHeader);
   lblHeaderSub.Parent := pnlHeader;
@@ -1513,7 +1519,7 @@ begin
     10: Result := '11. iBiblia 1.1.0: Guided Project Wizard, Custom Statuses, AI Workflows & Toolbar Sizes';
     11: Result := '12. iBiblia 1.1.0: Arrange, Delete and Add Books in the Tree';
     12: Result := '13. The Bible Maker: Updates, Project Change Log, Crash Logs, Backups & Linux';
-    13: Result := '14. Complete Quick-Reference Summary of All New Features (v1.0.0.70 – v1.1.0.103)';
+    13: Result := '14. Complete Quick-Reference Summary of All New Features (v1.0.0.70 – v2.0.0.001)';
   else
     Result := '';
   end;
@@ -2669,7 +2675,7 @@ begin
   begin
     Caption := 'The Bible Maker — Guia de Novos Recursos (Desde v1.0.0.71)';
     if Assigned(lblHeaderTitle) then
-      lblHeaderTitle.Caption := 'Guia de Novos Recursos do The Bible Maker (v1.0.0.71 – v1.1.0.103)';
+      lblHeaderTitle.Caption := 'Guia de Novos Recursos do The Bible Maker (v1.0.0.71 – v2.0.0.001)';
     if Assigned(lblHeaderSub) then
       lblHeaderSub.Caption := 'Janela Flutuante Interativa — Mantenha aberta enquanto pratica os recursos no aplicativo.';
     if Assigned(btnPrev) then btnPrev.Caption := '< Anterior';
@@ -2681,7 +2687,7 @@ begin
   begin
     Caption := 'The Bible Maker — New Features User Guide (Since v1.0.0.71)';
     if Assigned(lblHeaderTitle) then
-      lblHeaderTitle.Caption := 'The Bible Maker User Guide (v1.0.0.71 – v1.1.0.103)';
+      lblHeaderTitle.Caption := 'The Bible Maker User Guide (v1.0.0.71 – v2.0.0.001)';
     if Assigned(lblHeaderSub) then
       lblHeaderSub.Caption := 'Floating Interactive Guide — Keep this window open while practicing features directly in The Bible Maker.';
     if Assigned(btnPrev) then btnPrev.Caption := '< Previous Topic';

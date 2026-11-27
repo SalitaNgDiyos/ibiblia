@@ -794,20 +794,20 @@ resourcestring
   SButtonCancel = 'Cancel';
   SCorruptedData = 'Corrupted data, some associations may be lost.' +
                    'This can happen for several reasons:'#13#10 +
-                   ' 1. The project file was modified outside iBiblia'#13#10 +
-                   ' 2. The project was created/edited on an incompatible iBiblia version'#13#10 +
-                   ' 3. This can be a bug in iBiblia.'#13#10 +
+                   ' 1. The project file was modified outside The Bible Maker'#13#10 +
+                   ' 2. The project was created/edited on an incompatible The Bible Maker version'#13#10 +
+                   ' 3. This can be a bug in The Bible Maker.'#13#10 +
                    '    If this is the case, please file a bug in the Github project page'#13#10 +
-                   '    at https://github.com/rubiot/ibiblia.';
+                   '    at https://github.com/SalitaNgDiyos/The-Bible-Maker/issues.';
   SStrongDictionary = 'Strong''s Dictionary';
   SMorphologyDictionary = 'Morphology Dictionary';
   SDictionaryDoesntExist = 'The selected dictionary doesn''t exist: %s';
   SInvalidMorphologyDictionary = 'This is not a morphology dictionary.'#13#10'Please choose a valid morphology dictionary.';
   SInvalidStrongsDictionary = 'This is not a Strong''s dictionary.'#13#10'Please choose a valid Strong''s dictionary.';
   SCompressedDictionary = 'Compressed dictionary';
-  SInvalidCompressedDictionary = 'iBiblia does not suppport compressed dictionaries yet.'#13#10'Please choose an uncompressed module.';
+  SInvalidCompressedDictionary = 'The Bible Maker does not suppport compressed dictionaries yet.'#13#10'Please choose an uncompressed module.';
   SEncryptedDictionary = 'Encrypted dictionary';
-  SInvalidEncryptedDictionary = 'iBiblia does not and will not support encrypted modules.'#13#10'Please choose an unencrypted module.';
+  SInvalidEncryptedDictionary = 'The Bible Maker does not and will not support encrypted modules.'#13#10'Please choose an unencrypted module.';
   SNonRTFDictionary = 'Non-RTF module';
   SInvalidNonRTFDictionary = 'iBiblia only suppports RTF modules.'#13#10'Please choose another module or convert this module to RTF in theWord.';
   SOpenProject = 'Open project';

@@ -92,14 +92,14 @@ Only perform remote writes within the user's explicit authorization. Publishing 
 
 If source changes after packaging, rebuild and revalidate the affected checks, replace all three assets together and update the evidence. Never attach an old ZIP to a newer source tag.
 
-## Automatic updates and GitHub releases (1.1.0.027 and later)
+## Automatic updates and GitHub releases
 
-The Bible Maker checks `https://api.github.com/repos/SalitaNgDiyos/The-Bible-Maker/releases/latest` a few seconds after it starts (Help > Check for updates... does it on demand). It downloads `iBiblia-<version>-windows-x64.zip` or `iBiblia-<version>-linux-x86_64.zip`, verifies it against `SHA256SUMS.txt` from the same release, and swaps the files into the program folder (see `app_updater.pas`). Projects and `iBiblia.ini` are never touched.
+The Bible Maker checks `https://api.github.com/repos/SalitaNgDiyos/The-Bible-Maker/releases/latest` a few seconds after it starts (Help > Check for updates... does it on demand). It downloads `TheBibleMaker-<version>-windows-x64.zip` or `TheBibleMaker-<version>-linux-x86_64.zip`, verifies it against `SHA256SUMS.txt` from the same release, and swaps the files into the program folder (see `app_updater.pas`). Projects, `TheBibleMaker.ini`, and `iBiblia.ini` are never overwritten.
 
 To publish a version:
 
-1. Set the same version in `iBiblia.lpi` and `iBiblia-linux.lpi` (VersionInfo, `BuildNr`), and add a `### 0. Version x.y.z.nnn (date) — title` section at the top of the version list in `CHANGELOG.md`; it becomes the release text.
-2. Commit and push the branch (`linux-port` or `master`). No tag is needed.
+1. Set the same version in `iBiblia.lpi`, `iBiblia-linux.lpi` (VersionInfo, `MajorVersionNr`/`MinorVersionNr`/`BuildNr`), and `iBiblia.rc`, and add a `### 0. Version x.y.z.nnn (date) — title` section at the top of the version list in `CHANGELOG.md`; it becomes the release text.
+2. Commit and push the `Neon` branch. No tag is needed.
 3. `.github/workflows/release.yml` reads the version from the project files; if there is no release `v<version>` yet it builds Windows (x64) and Linux (x86_64) with Lazarus, packages them with `scripts/ci_package.py` and creates the release (and its tag) with the two ZIPs and `SHA256SUMS.txt`. A push that does not change the version builds nothing. A failed run can be repeated from the Actions tab (Release > Run workflow).
 
 The updater only sees releases that are not drafts or pre-releases, newest first. For testing, `IBIBLIA_UPDATE_FEED` can point at a local copy of the release JSON (HTTPS only) and `IBIBLIA_NO_UPDATE=1` turns updating off.

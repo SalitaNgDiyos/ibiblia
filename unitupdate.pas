@@ -221,7 +221,7 @@ begin
   inherited CreateNew(AOwner);
   BorderStyle := bsDialog;
   FormStyle := fsStayOnTop;
-  Caption := 'iBiblia update';
+  Caption := 'The Bible Maker update';
   ClientWidth := 400;
   ClientHeight := 110;
   Position := poDefault;
@@ -231,7 +231,7 @@ begin
   L.SetBounds(16, 14, 368, 50);
   L.AutoSize := False;
   L.WordWrap := True;
-  L.Caption := 'Version ' + AVersion + ' has been downloaded. Restart iBiblia now ' +
+  L.Caption := 'Version ' + AVersion + ' has been downloaded. Restart The Bible Maker now ' +
     'to use it? (It will ask to save any unsaved changes first.)';
   B1 := TButton.Create(Self);
   B1.Parent := Self;
@@ -271,7 +271,7 @@ var
 begin
   inherited CreateNew(AOwner);
   FInfo := AInfo;
-  Caption := 'iBiblia update';
+  Caption := 'The Bible Maker update';
   Position := poMainFormCenter;
   BorderStyle := bsDialog;
   ClientWidth := 520;
@@ -285,10 +285,10 @@ begin
   FHead.WordWrap := True;
   FHead.Font.Style := [fsBold];
   if NormalizeUpdateChannel(AInfo.Channel) = UpdateChannelNeon then
-    FHead.Caption := Format('iBiblia %s (Neon) is available (you have %s).',
+    FHead.Caption := Format('The Bible Maker %s (Neon) is available (you have %s).',
       [AInfo.Version, NormalizeVersion(CurrentAppVersion)])
   else
-    FHead.Caption := Format('iBiblia %s is available (you have %s).',
+    FHead.Caption := Format('The Bible Maker %s is available (you have %s).',
       [AInfo.Version, NormalizeVersion(CurrentAppVersion)]);
 
   FNotes := TMemo.Create(Self);
@@ -575,13 +575,13 @@ begin
   if not AOk then
   begin
     if AManual then
-      MessageDlg('iBiblia update', 'Could not check for updates: ' + AErr, mtWarning, [mbOK], 0);
+      MessageDlg('The Bible Maker update', 'Could not check for updates: ' + AErr, mtWarning, [mbOK], 0);
     Exit;
   end;
   if not AInfo.Available then
   begin
     if AManual then
-      MessageDlg('iBiblia update', 'You have the latest version on ' +
+      MessageDlg('The Bible Maker update', 'You have the latest version on ' +
         UpdateChannelDisplayName(AInfo.Channel) + ' (' + NormalizeVersion(CurrentAppVersion) + ').',
         mtInformation, [mbOK], 0);
     Exit;

@@ -606,7 +606,7 @@ resourcestring
 resourcestring
   SMainCaption = 'The Bible Maker';
   SMainCaptionProjectFmt = 'The Bible Maker | %s | %s (%s)';
-  SProjectFileTypeName = 'iBiblia Project File';
+  SProjectFileTypeName = 'The Bible Maker Project File';
   STheWordHighlightColorsMenu = 'theWord highlight colors...';
   SRollbackCurrentVerse = 'Rollback current verse';
   SRollbackCurrentVerseHint = 'Discard unsaved changes in the current verse';
@@ -1830,7 +1830,7 @@ begin
     FUpdateCheckItem.Caption := 'Check for &updates...';
     FUpdateCheckItem.OnClick := @UpdateCheckItemClick;
     FUpdateStartupItem := TMenuItem.Create(MainMenu1);
-    FUpdateStartupItem.Caption := 'Check for updates when iBiblia starts';
+    FUpdateStartupItem.Caption := 'Check for updates when The Bible Maker starts';
     FUpdateStartupItem.AutoCheck := True;
     FUpdateStartupItem.Checked := Assigned(UpdateCoordinator) and UpdateCoordinator.CheckAtStartup;
     FUpdateStartupItem.OnClick := @UpdateStartupItemClick;
@@ -1839,7 +1839,7 @@ begin
     FUpdateBranchMenu.Caption := 'Update &branch';
 
     FUpdateBranchStableItem := TMenuItem.Create(MainMenu1);
-    FUpdateBranchStableItem.Caption := 'Stable (linux-port)';
+    FUpdateBranchStableItem.Caption := 'Stable (latest release)';
     FUpdateBranchStableItem.RadioItem := True;
     FUpdateBranchStableItem.GroupIndex := 1;
     FUpdateBranchStableItem.Tag := 0;
@@ -5472,21 +5472,32 @@ begin
 
   CurrentProject := nil;
 
-  ConfigFilePath := ExtractFilePath(ParamStr(0)) + 'iBiblia.ini';
+  ConfigFilePath := ExtractFilePath(ParamStr(0)) + 'TheBibleMaker.ini';
+  if (not FileExists(ConfigFilePath)) and
+     FileExists(ExtractFilePath(ParamStr(0)) + 'iBiblia.ini') then
+    CopyFile(ExtractFilePath(ParamStr(0)) + 'iBiblia.ini', ConfigFilePath);
   {$IFNDEF WINDOWS}
   { Linux: the settings live in the user's config folder, so they survive
-    when a new version is unpacked into another folder. The ini next to the
-    program (older versions) is copied there the first time. }
+    when a new version is unpacked into another folder. Migrate seamlessly from
+    ~/.config/iBiblia/iBiblia.ini or an adjacent iBiblia.ini on first run. }
   begin
     ConfigFilePath := SysUtils.GetEnvironmentVariable('XDG_CONFIG_HOME');
     if ConfigFilePath = '' then
       ConfigFilePath := IncludeTrailingPathDelimiter(GetUserDir) + '.config';
-    ConfigFilePath := IncludeTrailingPathDelimiter(ConfigFilePath) + 'iBiblia';
+    ConfigFilePath := IncludeTrailingPathDelimiter(ConfigFilePath) + 'TheBibleMaker';
     ForceDirectories(ConfigFilePath);
-    ConfigFilePath := IncludeTrailingPathDelimiter(ConfigFilePath) + 'iBiblia.ini';
-    if (not FileExists(ConfigFilePath)) and
-       FileExists(ExtractFilePath(ParamStr(0)) + 'iBiblia.ini') then
-      CopyFile(ExtractFilePath(ParamStr(0)) + 'iBiblia.ini', ConfigFilePath);
+    ConfigFilePath := IncludeTrailingPathDelimiter(ConfigFilePath) + 'TheBibleMaker.ini';
+    if not FileExists(ConfigFilePath) then
+    begin
+      if FileExists(IncludeTrailingPathDelimiter(ExtractFileDir(ExcludeTrailingPathDelimiter(ExtractFileDir(ConfigFilePath)))) +
+                    'iBiblia' + PathDelim + 'iBiblia.ini') then
+        CopyFile(IncludeTrailingPathDelimiter(ExtractFileDir(ExcludeTrailingPathDelimiter(ExtractFileDir(ConfigFilePath)))) +
+                 'iBiblia' + PathDelim + 'iBiblia.ini', ConfigFilePath)
+      else if FileExists(ExtractFilePath(ParamStr(0)) + 'TheBibleMaker.ini') then
+        CopyFile(ExtractFilePath(ParamStr(0)) + 'TheBibleMaker.ini', ConfigFilePath)
+      else if FileExists(ExtractFilePath(ParamStr(0)) + 'iBiblia.ini') then
+        CopyFile(ExtractFilePath(ParamStr(0)) + 'iBiblia.ini', ConfigFilePath);
+    end;
   end;
   {$ENDIF}
   opts := TIniFile.Create(ConfigFilePath);

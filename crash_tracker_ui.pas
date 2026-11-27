@@ -22,16 +22,16 @@ uses
   LCLIntf, ui_style, unitskins, crash_tracker;
 
 resourcestring
-  SCrashPopupTitle = 'iBiblia Error Report';
-  SCrashPopupRecoveredTitle = 'iBiblia Recovered Error Report';
-  SCrashPopupIntro = 'iBiblia ran into an unexpected error. An error log was saved automatically so you can save or share it for troubleshooting.';
-  SCrashPopupRecoveredIntro = 'iBiblia closed unexpectedly during your previous session. A recovery crash log was saved automatically.';
+  SCrashPopupTitle = 'The Bible Maker Error Report';
+  SCrashPopupRecoveredTitle = 'The Bible Maker Recovered Error Report';
+  SCrashPopupIntro = 'The Bible Maker ran into an unexpected error. An error log was saved automatically so you can save or share it for troubleshooting.';
+  SCrashPopupRecoveredIntro = 'The Bible Maker closed unexpectedly during your previous session. A recovery crash log was saved automatically.';
   SCrashSavedAt = 'Saved log file: %s';
   SCrashCopyBtn = 'Copy report';
   SCrashSaveAsBtn = 'Save log as...';
   SCrashOpenFolderBtn = 'Open logs folder';
   SCrashContinueBtn = 'Continue';
-  SCrashCloseAppBtn = 'Close iBiblia';
+  SCrashCloseAppBtn = 'Close The Bible Maker';
   SCrashCopiedStatus = 'Report copied to clipboard.';
   SCrashSaveFilter = 'Log files (*.log;*.txt)|*.log;*.txt|All files (*.*)|*.*';
   SCrashSaveSuccess = 'Error log saved to:'#13#10'%s';
@@ -43,7 +43,7 @@ resourcestring
   SLogsManagerColKind = 'Type';
   SLogsManagerColHeadline = 'Summary';
   SLogsManagerColSize = 'Size';
-  SLogsManagerEmpty = 'No crash or diagnostic logs have been recorded yet.'#13#10#13#10'If iBiblia ever encounters an unexpected error or shuts down abruptly, a full error report will be saved here automatically. You can also create a manual diagnostic report using the button below.';
+  SLogsManagerEmpty = 'No crash or diagnostic logs have been recorded yet.'#13#10#13#10'If The Bible Maker ever encounters an unexpected error or shuts down abruptly, a full error report will be saved here automatically. You can also create a manual diagnostic report using the button below.';
   SLogsManagerDiagBtn = 'Create diagnostic report';
   SLogsManagerDiagTitle = 'Create diagnostic report';
   SLogsManagerDiagPrompt = 'Optional note describing what you were doing (can be left blank):';

@@ -385,7 +385,7 @@ begin
   Result.AllowRedirect := True;
   Result.ConnectTimeout := 15000;
   Result.IOTimeout := 30000;
-  Result.AddHeader('User-Agent', 'iBiblia-updater/' + CurrentAppVersion);
+  Result.AddHeader('User-Agent', 'TheBibleMaker-updater/' + CurrentAppVersion);
   Result.AddHeader('Accept', 'application/vnd.github+json');
 end;
 
@@ -414,7 +414,7 @@ begin
   if NormalizeUpdateChannel(AChannel) = UpdateChannelNeon then
     Result := 'Neon'
   else
-    Result := 'Stable (linux-port)';
+    Result := 'Stable (latest release)';
 end;
 
 { IBIBLIA_UPDATE_FEED lets a test point the updater at a local copy of the
@@ -601,11 +601,13 @@ begin
     end;
 
     {$IFDEF WINDOWS}
-    if not FileExists(StageDir + 'iBiblia.exe') then
+    if (not FileExists(StageDir + 'TheBibleMaker.exe')) and
+       (not FileExists(StageDir + 'iBiblia.exe')) then
     {$ELSE}
-    if not FileExists(StageDir + 'iBiblia') then
+    if (not FileExists(StageDir + 'TheBibleMaker')) and
+       (not FileExists(StageDir + 'iBiblia')) then
     {$ENDIF}
-      raise Exception.Create('The package does not contain the iBiblia program.');
+      raise Exception.Create('The package does not contain the The Bible Maker program.');
     Result := True;
   except
     on E: Exception do
@@ -675,7 +677,8 @@ begin
       begin
         Rel := Files[i];
         // never touch the user's settings or projects
-        if SameText(ExtractFileName(Rel), 'iBiblia.ini') or
+        if SameText(ExtractFileName(Rel), 'TheBibleMaker.ini') or
+           SameText(ExtractFileName(Rel), 'iBiblia.ini') or
            SameText(ExtractFileExt(Rel), '.bib') then
           Continue;
         Src := StageDir + Rel;
@@ -694,7 +697,9 @@ begin
           raise Exception.Create('Cannot write ' + Rel);
         Created.Add(Rel);
         {$IFDEF UNIX}
-        if (ExtractFileName(Rel) = 'iBiblia') or SameText(ExtractFileExt(Rel), '.sh') then
+        if (ExtractFileName(Rel) = 'TheBibleMaker') or
+           (ExtractFileName(Rel) = 'iBiblia') or
+           SameText(ExtractFileExt(Rel), '.sh') then
           FpChmod(Dest, &755);
         {$ENDIF}
       end;
@@ -777,7 +782,7 @@ begin
         for k := 0 to L.Count - 1 do
         begin
           Line := Trim(L[k]);
-          if Line = 'Name=iBiblia' then IsIBiblia := True
+          if (Line = 'Name=The Bible Maker') or (Line = 'Name=iBiblia') then IsIBiblia := True
           else if (Copy(Line, 1, 5) = 'Exec=') and (Target = '') then
           begin
             Line := Trim(Copy(Line, 6, MaxInt));
@@ -806,7 +811,7 @@ end;
 procedure EnsureLinuxMenuEntry;
 {$IFDEF UNIX}
 var
-  Exe, Icon, Dir, FileName, Wanted, Current: string;
+  Exe, Icon, Dir, FileName, LegacyFile, Wanted, Current: string;
   L: TStringList;
 begin
   try
@@ -816,8 +821,11 @@ begin
     if GetEnvironmentVariable('HOME') = '' then Exit;
     Dir := IncludeTrailingPathDelimiter(GetEnvironmentVariable('HOME')) +
       '.local/share/applications';
-    FileName := Dir + '/ibiblia.desktop';
-    Icon := ExtractFilePath(Exe) + 'iBiblia.png';
+    FileName := Dir + '/thebiblemaker.desktop';
+    LegacyFile := Dir + '/ibiblia.desktop';
+    Icon := ExtractFilePath(Exe) + 'TheBibleMaker.png';
+    if not FileExists(Icon) then
+      Icon := ExtractFilePath(Exe) + 'iBiblia.png';
     Wanted := 'Exec="' + Exe + '" %f';
     if FileExists(FileName) then
     begin
@@ -827,6 +835,8 @@ begin
         Current := L.Values['Exec'];
         if ('Exec=' + Current = Wanted) or (Pos(Exe, L.Text) > 0) then
         begin
+          if FileExists(LegacyFile) then
+            DeleteFile(LegacyFile);
           RemoveBrokenMenuEntries(Dir, FileName);
           Exit;
         end;
@@ -835,13 +845,15 @@ begin
       end;
     end;
     if not ForceDirectories(Dir) then Exit;
+    if FileExists(LegacyFile) then
+      DeleteFile(LegacyFile);
     RemoveBrokenMenuEntries(Dir, FileName);
     L := TStringList.Create;
     try
       L.Add('[Desktop Entry]');
       L.Add('Type=Application');
-      L.Add('Name=iBiblia');
-      L.Add('Comment=Associate Strong''s numbers and morphology between Bible texts');
+      L.Add('Name=The Bible Maker');
+      L.Add('Comment=Bible translation, alignment, and publishing workstation');
       L.Add(Wanted);
       if FileExists(Icon) then L.Add('Icon=' + Icon);
       L.Add('Terminal=false');
@@ -864,24 +876,31 @@ function LaunchNewInstance: Boolean;
 var
   P: TProcess;
   i: Integer;
+  NextExe: string;
 begin
   Result := False;
   try
     P := TProcess.Create(nil);
     try
       {$IFDEF UNIX}
+      NextExe := InstallDir + 'TheBibleMaker';
+      if not FileExists(NextExe) then
+        NextExe := ExpandFileName(ParamStr(0));
       { Wait (up to 20 s) until this process has really exited before the new
-        copy starts: while the old one is still running it holds iBiblia.ini
-        and the new one fails with "Unable to open file ... Try again". }
+        copy starts: while the old one is still running it holds settings
+        and locks. }
       P.Executable := '/bin/sh';
       P.Parameters.Add('-c');
       P.Parameters.Add('p=$1; shift; n=0; while kill -0 "$p" 2>/dev/null && ' +
         '[ "$n" -lt 100 ]; do sleep 0.2; n=$((n+1)); done; exec "$@"');
-      P.Parameters.Add('ibiblia-restart');
+      P.Parameters.Add('tbm-restart');
       P.Parameters.Add(IntToStr(fpGetPid));
-      P.Parameters.Add(ExpandFileName(ParamStr(0)));
+      P.Parameters.Add(NextExe);
       {$ELSE}
-      P.Executable := ExpandFileName(ParamStr(0));
+      NextExe := InstallDir + 'TheBibleMaker.exe';
+      if not FileExists(NextExe) then
+        NextExe := ExpandFileName(ParamStr(0));
+      P.Executable := NextExe;
       {$ENDIF}
       for i := 1 to ParamCount do
         P.Parameters.Add(ParamStr(i));

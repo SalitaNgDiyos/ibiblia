@@ -1,22 +1,20 @@
-# The Bible Maker (v1.1.0.103)
+# The Bible Maker (v2.0.0.001)
 
 **The Bible Maker** *(formerly Dark-Skinned iBiblia)* is a native **64-bit Windows (`x64`) and Linux (`x86_64`)** multi-format Bible alignment, translation, interlinear tagging, and direct GitHub/Timotheos publishing workstation built by **Edmund P. Valdez (`SalitaNgDiyos`)**.
 
-> **Project Origin & Independence:** **The Bible Maker** is an independent offshoot originally derived from [iBiblia 1.1.0](https://github.com/rubiot/ibiblia) by Rúbio R. C. Terra and developed independently for active Bible translation workflows. It is **not** a continuation of, nor officially affiliated with, upstream `rubiot/ibiblia`.
+> **Project Origin & Independence:** **The Bible Maker** is an independent offshoot originally derived from [iBiblia 1.1.0](https://github.com/rubiot/ibiblia) by Rúbio R. C. Terra and developed independently for active Bible translation workflows. It is **not** a continuation of, nor officially affiliated with, upstream `rubiot/ibiblia`. See [NOTICE.md](NOTICE.md) and [LICENSE](LICENSE).
 
 It includes built-in import and export support for **theWord** (`.ont`, `.ot`, `.nt`, and `.dct.twm` concordances), **Timotheos** (compatible module/concordance exports with `.order` tree companions, USFM 3.0 exact Strong's metadata, and real-time bundled AMB updates), **MySword** (`.bbl.mybible`), **non-encrypted e-Sword** (`.bblx` RTF, `.bbli` HTML, `.bbl` SQLite), **USFM 2.x/3.0** (`.usfm`, `.sfm`), and **USFX XML** (`.usfx`, `.xml` from [eBible.org](https://ebible.org/) and Simple Bible Reader), along with direct import from **SWORD / CrossWire** (`.conf` / `.zip` Bibles and dictionaries), compressed archives (`.zip`, `.tar*`, `.gz`, `.7z`, `.rar`), and text documents (`.txt`, `.rtf`, `.odt`, `.docx`) for adding or replacing Bible books.
 
-Associate words between a tagged **Source** Bible (Greek LXX/NT or Hebrew OT) and your **Destination** translation—or start with an initially empty Destination in a new translation project and write it directly inside the application. The Bible Maker automatically transfers Strong's numbers and morphological parsing tags, preserves unaffected associations across text edits, compares past translation choices in **Translation Memory**, formats verse markup in a **Visual WYSIWYG / Raw ONT Editor** with paragraph tags and rich translator notes, provides interactive Bible tree reordering and selective diff-highlighted book replacement, maintains an embedded per-project **Change Log** with **Backup & Restore** plus automated **Crash & Error Logging**, synchronizes verses with **theWord** and **Timotheos**, publishes directly to GitHub Releases/branches with automatic `README.md` About-page sync, delivers SHA-256 verified app updates, and exports ready-to-use Bible and concordance modules.
+Associate words between a tagged **Source** Bible (Greek LXX/NT or Hebrew OT) and your **Destination** translation—or start with an initially empty Destination in a new translation project and write it directly inside the application. **The Bible Maker** automatically transfers Strong's numbers and morphological parsing tags, preserves unaffected associations across text edits, compares past translation choices in **Translation Memory**, formats verse markup in a **Visual WYSIWYG / Raw ONT Editor** with paragraph tags and rich translator notes, provides interactive Bible tree reordering and selective diff-highlighted book replacement, maintains an embedded per-project **Change Log** with **Backup & Restore** plus automated **Crash & Error Logging**, synchronizes verses with **theWord** and **Timotheos**, publishes directly to GitHub Releases/branches with automatic `README.md` About-page sync, delivers SHA-256 verified app updates, and exports ready-to-use Bible and concordance modules.
 
 For downloads, manuals, and history, see:
 
 * [Download Latest Release (Windows x64 & Linux x86_64)](https://github.com/SalitaNgDiyos/The-Bible-Maker/releases)
 
-* [User Manual (English)](https://github.com/rubiot/ibiblia/wiki/User-manual-%28English%29) · [Installation and Updating (English)](https://github.com/rubiot/ibiblia/wiki/Installation-and-updating-%28English%29)
+* **Built-In Interactive User Guide (`Shift+F1`)** · **Keyboard Shortcuts (`F1`)** · [Issue Tracker & Support](https://github.com/SalitaNgDiyos/The-Bible-Maker/issues)
 
-* [Manual de Utilização (Português)](https://github.com/rubiot/ibiblia/wiki/Manual-de-utiliza%C3%A7%C3%A3o-%28Portugu%C3%AAs%29) · [Instalação e Atualização (Português)](https://github.com/rubiot/ibiblia/wiki/Instala%C3%A7%C3%A3o-e-atualiza%C3%A7%C3%A3o-%28Portugu%C3%AAs%29)
-
-* [What's New in 1.1.0](docs/releases/1.1.0.md) · [Portable Package Instructions](docs/README-portable.md) · [Full Changelog (Including Bug Fixes)](CHANGELOG.md)
+* [Portable Package Instructions](docs/README-portable.md) · [Feature Notes](docs/releases/1.1.0.md) · [Full Changelog (Including Bug Fixes)](CHANGELOG.md) · [Lineage & License](NOTICE.md)
 
 ## Key Features Overview
 

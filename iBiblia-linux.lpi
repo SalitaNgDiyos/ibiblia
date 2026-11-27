@@ -20,10 +20,9 @@
     </i18n>
     <VersionInfo>
       <UseVersionInfo Value="True"/>
-      <MajorVersionNr Value="1"/>
-      <MinorVersionNr Value="1"/>
-      <BuildNr Value="103"/>
-      <StringTable CompanyName="SalitaNgDiyos (Edmund P. Valdez)" FileDescription="The Bible Maker — Bible translation, alignment, and publishing workstation" ProductName="The Bible Maker" ProductVersion="1.1.0.103"/>
+      <MajorVersionNr Value="2"/>
+      <BuildNr Value="1"/>
+      <StringTable CompanyName="SalitaNgDiyos (Edmund P. Valdez)" FileDescription="The Bible Maker — Bible translation, alignment, and publishing workstation" ProductName="The Bible Maker" ProductVersion="2.0.0.001"/>
     </VersionInfo>
     <BuildModes Count="6" Active="Debug">
       <Item1 Name="Debug" Default="True"/>

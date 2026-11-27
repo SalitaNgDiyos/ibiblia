@@ -34,7 +34,7 @@ def sha256(path):
 
 
 def fetch(url, dest):
-    req = urllib.request.Request(url, headers={"User-Agent": "iBiblia-release"})
+    req = urllib.request.Request(url, headers={"User-Agent": "TheBibleMaker-release"})
     with urllib.request.urlopen(req, timeout=120) as r, open(dest, "wb") as f:
         shutil.copyfileobj(r, f)
 
@@ -108,6 +108,10 @@ def build_windows(version, build_dir, out_dir):
             p.add(dest, runtime[dest])
         else:
             p.add(dest, os.path.join(REPO, source))
+    for extra in ("LICENSE", "NOTICE.md"):
+        extra_path = os.path.join(REPO, extra)
+        if os.path.isfile(extra_path):
+            p.add(extra, extra_path)
     return p
 
 
@@ -118,15 +122,20 @@ def build_linux(version, build_dir, libpcre, out_dir):
     p.add("lemmas.dat", os.path.join(REPO, "lemmas.dat"))
     p.add("iBiblia.models.json", os.path.join(REPO, "iBiblia.models.json"))
     p.add("historico.txt", os.path.join(REPO, "historico.txt"))
+    for extra in ("LICENSE", "NOTICE.md"):
+        extra_path = os.path.join(REPO, extra)
+        if os.path.isfile(extra_path):
+            p.add(extra, extra_path)
     p.add_tree("languages", os.path.join(REPO, "languages"), (".po", ".mo"))
     lin = os.path.join(REPO, "packaging", "linux")
-    for name in ("THIRD-PARTY-NOTICES.txt", "iBiblia.png"):
-        p.add(name, os.path.join(lin, name))
+    for name in ("THIRD-PARTY-NOTICES.txt", "iBiblia.png", "TheBibleMaker.png"):
+        if os.path.isfile(os.path.join(lin, name)):
+            p.add(name, os.path.join(lin, name))
     p.add("install-menu-entry.sh", os.path.join(lin, "install-menu-entry.sh"), exe=True)
     p.add_tree("licenses", os.path.join(lin, "licenses"))
     # README carries the version number
     readme = open(os.path.join(lin, "README-Linux.txt"), encoding="utf-8").read()
-    readme = readme.replace("1.1.0.026", version)
+    readme = readme.replace("2.0.0.001", version).replace("1.1.0.026", version)
     os.makedirs(out_dir, exist_ok=True)
     tmp = os.path.join(out_dir, "README-Linux.generated.txt")
     open(tmp, "w", encoding="utf-8").write(readme)
@@ -145,7 +154,7 @@ def main():
         payload, suffix = build_linux(version, build_dir, libpcre, out_dir), "linux-x86_64"
     else:
         raise SystemExit("unknown platform")
-    zip_path = os.path.join(out_dir, "iBiblia-%s-%s.zip" % (version, suffix))
+    zip_path = os.path.join(out_dir, "TheBibleMaker-%s-%s.zip" % (version, suffix))
     payload.write(zip_path)
     print("wrote", zip_path, os.path.getsize(zip_path), "bytes,", len(payload.items), "files")
 

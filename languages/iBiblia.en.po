@@ -1936,14 +1936,14 @@ msgstr ""
 
 #: formprincipal.smaincaption
 msgctxt "formprincipal.smaincaption"
-msgid "iBiblia"
-msgstr "iBiblia"
+msgid "The Bible Maker"
+msgstr "The Bible Maker"
 
 #: formprincipal.smaincaptionprojectfmt
 #, object-pascal-format
 msgctxt "formprincipal.smaincaptionprojectfmt"
-msgid "iBiblia | %s | %s (%s)"
-msgstr "iBiblia | %s | %s (%s)"
+msgid "The Bible Maker | %s | %s (%s)"
+msgstr "The Bible Maker | %s | %s (%s)"
 
 #: formprincipal.smaintenancemenu
 msgid "&Maintenance"
@@ -2091,8 +2091,8 @@ msgstr ""
 
 #: formprincipal.sprojectfiletypename
 msgctxt "formprincipal.sprojectfiletypename"
-msgid "iBiblia Project File"
-msgstr "iBiblia Project File"
+msgid "The Bible Maker Project File"
+msgstr "The Bible Maker Project File"
 
 #: formprincipal.sprojectmenu
 msgid "&Project"
@@ -3988,22 +3988,21 @@ msgid "Copy association example for AI instructions"
 msgstr ""
 
 #: project.scorrupteddata
-#, fuzzy
 msgctxt "project.scorrupteddata"
 msgid ""
 "Corrupted data, some associations may be lost.This can happen for several reasons:\n"
-" 1. The project file was modified outside iBiblia\n"
-" 2. The project was created/edited on an incompatible iBiblia version\n"
-" 3. This can be a bug in iBiblia.\n"
+" 1. The project file was modified outside The Bible Maker\n"
+" 2. The project was created/edited on an incompatible The Bible Maker version\n"
+" 3. This can be a bug in The Bible Maker.\n"
 "    If this is the case, please file a bug in the Github project page\n"
-"    at https://github.com/rubiot/ibiblia."
+"    at https://github.com/SalitaNgDiyos/The-Bible-Maker/issues."
 msgstr ""
 "Corrupted data, some associations may be lost.This can happen for several reasons:\n"
-" 1. The project file was modified outside iBiblia\n"
-" 2. The project was created/edited on an incompatible iBiblia version\n"
-" 3. This can be a bug in iBiblia.\n"
+" 1. The project file was modified outside The Bible Maker\n"
+" 2. The project was created/edited on an incompatible The Bible Maker version\n"
+" 3. This can be a bug in The Bible Maker.\n"
 "    If this is the case, please file a bug in the Github project page\n"
-"    at https://github.com/rubiot/ibiblia."
+"    at https://github.com/SalitaNgDiyos/The-Bible-Maker/issues."
 
 #: project.sdaniel
 msgctxt "project.sdaniel"
@@ -4837,14 +4836,13 @@ msgstr "Invalid buffered association memory pair"
 
 #: tformabout.caption
 msgctxt "tformabout.caption"
-msgid "About iBiblia"
-msgstr "About iBiblia"
+msgid "About The Bible Maker"
+msgstr "About The Bible Maker"
 
 #: tformabout.label1.caption
-#, fuzzy
 msgctxt "tformabout.label1.caption"
-msgid "iBiblia"
-msgstr "iBiblia"
+msgid "The Bible Maker"
+msgstr "The Bible Maker"
 
 #: tformabout.label2.caption
 msgid "Copyright Rúbio R. C. Terra <rubio.terra@gmail.com>"
@@ -5648,10 +5646,9 @@ msgid "BottomPanel"
 msgstr ""
 
 #: tmainform.caption
-#, fuzzy
 msgctxt "tmainform.caption"
-msgid "iBiblia"
-msgstr "iBiblia"
+msgid "The Bible Maker"
+msgstr "The Bible Maker"
 
 #: tmainform.centerpanel.caption
 msgid "CenterPanel"
