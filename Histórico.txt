@@ -1,3 +1,8 @@
+Version 1.1.0.102 (64-bit Edition) - 2026-11-27
+- Added automatic Sync module About page from GitHub repository README.md when publishing (updates About in theWord .nt/.ot/.ont, e-Sword .bbli, and USFM 3.0 .usfm.zip).
+- Included copr.htm About page in exported USFM 3.0 .usfm.zip archives and folders.
+- Defaulted File name base to amb+ when linking to Ang-Malayang-Biblia-Translation.
+
 Version 1.1.0.101 (64-bit Edition) - 2026-11-27
 - Fixed horizontal clipping on the Publish to GitHub dialog (Detect gh CLI, Get Token..., and footer buttons) via explicit responsive bounds calculation on tab and form layout.
 - Fixed GTK2 password placeholder rendering dots in the empty GitHub Token field, added gh CLI auto-detect fallback when clicking Save Token, and fixed "&" accelerator rendering in dialog and button captions.

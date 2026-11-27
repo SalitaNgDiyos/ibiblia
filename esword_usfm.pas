@@ -5904,8 +5904,8 @@ end;
 class procedure TESwordModule.ExportUSFMBibleEx(verses, refIDs: TStringList;
   const filename, finalFileName, props: string; hasOT, hasNT, zipOnly: boolean);
 var
-  names, texts: TStringList;
-  stagedFile, folder, all: string;
+  names, texts, propList: TStringList;
+  stagedFile, folder, all, aboutStr: string;
   i: integer;
   zipper: TZipper;
   ms: TMemoryStream;
@@ -5913,7 +5913,10 @@ var
 begin
   names := TStringList.Create;
   texts := TStringList.Create;
+  propList := TStringList.Create;
   try
+    propList.Text := props;
+    aboutStr := Trim(propList.Values['about']);
     BuildUSFMBookFiles(verses, refIDs, props, ChangeFileExt(ExtractFileName(finalFileName), ''),
       hasOT, hasNT, names, texts);
     if names.Count = 0 then
@@ -5936,6 +5939,14 @@ begin
             ms.WriteBuffer(texts[i][1], Length(texts[i]));
           ms.Position := 0;
           zipper.Entries.AddFileEntry(ms, names[i]);
+        end;
+        if aboutStr <> '' then
+        begin
+          ms := TMemoryStream.Create;
+          streamList.Add(ms);
+          ms.WriteBuffer(aboutStr[1], Length(aboutStr));
+          ms.Position := 0;
+          zipper.Entries.AddFileEntry(ms, 'copr.htm');
         end;
         zipper.ZipAllFiles;
       finally
@@ -5963,7 +5974,10 @@ begin
       raise Exception.CreateFmt('The USFM file was written, but the folder "%s" for the per-book files could not be created.', [folder]);
     for i := 0 to names.Count - 1 do
       WriteUSFMTextFile(IncludeTrailingPathDelimiter(folder) + names[i], texts[i]);
+    if aboutStr <> '' then
+      WriteUSFMTextFile(IncludeTrailingPathDelimiter(folder) + 'copr.htm', aboutStr);
   finally
+    propList.Free;
     texts.Free;
     names.Free;
   end;

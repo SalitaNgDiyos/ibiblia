@@ -72,6 +72,7 @@ type
     FCbFmtTheWord: TCheckBox;
     FCbFmtUsfmZip: TCheckBox;
     FCbFmtESwordBbli: TCheckBox;
+    FCbSyncReadmeAbout: TCheckBox;
     FLblPreview: TLabel;
 
     FGrpTargets: TGroupBox;
@@ -381,6 +382,10 @@ begin
   FCbFmtESwordBbli.Caption := 'e-Sword 11+ (.bbli)';
   FCbFmtESwordBbli.OnClick := @RefreshPreviews;
 
+  FCbSyncReadmeAbout := TCheckBox.Create(Self);
+  FCbSyncReadmeAbout.Parent := FGrpContent;
+  FCbSyncReadmeAbout.Caption := 'Sync module About page from GitHub repository README.md';
+
   FLblPreview := TLabel.Create(Self);
   FLblPreview.Parent := FGrpContent;
   FLblPreview.AutoSize := False;
@@ -582,7 +587,7 @@ begin
   FLblTokenBadge.SetBounds(M, UIScale(Self, 42),
     Max(UIScale(Self, 180), IW - M * 2), UIScale(Self, 20));
 
-  FGrpContent.SetBounds(M, FGrpRepo.Top + FGrpRepo.Height + Gap, GW, UIScale(Self, 134));
+  FGrpContent.SetBounds(M, FGrpRepo.Top + FGrpRepo.Height + Gap, GW, UIScale(Self, 158));
   IW := FGrpContent.ClientWidth;
   if IW <= 0 then IW := GW - UIScale(Self, 12);
   BaseEditW := UIScale(Self, 110);
@@ -597,7 +602,9 @@ begin
   FCbFmtUsfmZip.SetBounds(UIScale(Self, 316), UIScale(Self, 42), UIScale(Self, 166), UIScale(Self, 24));
   FCbFmtESwordBbli.SetBounds(UIScale(Self, 490), UIScale(Self, 42),
     Max(UIScale(Self, 140), IW - M - UIScale(Self, 490)), UIScale(Self, 24));
-  FLblPreview.SetBounds(M, UIScale(Self, 74),
+  FCbSyncReadmeAbout.SetBounds(UIScale(Self, 128), UIScale(Self, 70),
+    Max(UIScale(Self, 220), IW - M - UIScale(Self, 128)), UIScale(Self, 24));
+  FLblPreview.SetBounds(M, UIScale(Self, 98),
     Max(UIScale(Self, 180), IW - M * 2), UIScale(Self, 32));
 
   FGrpTargets.SetBounds(M, FGrpContent.Top + FGrpContent.Height + Gap, GW, UIScale(Self, 134));
@@ -714,6 +721,7 @@ begin
   FCbFmtTheWord.Checked := Link.PublishTheWord;
   FCbFmtUsfmZip.Checked := Link.PublishUSFMZip;
   FCbFmtESwordBbli.Checked := Link.PublishESwordBbli;
+  FCbSyncReadmeAbout.Checked := Link.SyncAboutFromReadme;
   FCbUpdateRelease.Checked := Link.UpdateRelease;
   FEditReleaseTag.Text := Link.ReleaseTag;
   FCbCommitBranch.Checked := Link.CommitToBranch;
@@ -754,6 +762,7 @@ begin
   Result.PublishTheWord := FCbFmtTheWord.Checked;
   Result.PublishUSFMZip := FCbFmtUsfmZip.Checked;
   Result.PublishESwordBbli := FCbFmtESwordBbli.Checked;
+  Result.SyncAboutFromReadme := FCbSyncReadmeAbout.Checked;
   Result.UpdateRelease := FCbUpdateRelease.Checked;
   Result.ReleaseTag := Trim(FEditReleaseTag.Text);
   Result.CommitToBranch := FCbCommitBranch.Checked;
@@ -1037,7 +1046,10 @@ begin
   FSettingsSaved := True;
 
   FMemoLog.Clear;
-  AppendLog('Exporting Bible module file(s)...');
+  if Link.SyncAboutFromReadme then
+    AppendLog('Syncing About page from repo README.md & exporting Bible module file(s)...')
+  else
+    AppendLog('Exporting Bible module file(s)...');
   SetControlsEnabledForPublish(False);
   FPublishing := True;
   FProgressBar.Visible := True;
@@ -1050,7 +1062,7 @@ begin
 
   ExportedFiles := TStringList.Create;
   try
-    if not ExportProjectFilesForGitHub(FProject, Link, FTempDir, FProgressBar,
+    if not ExportProjectFilesForGitHub(FProject, Tok, Link, FTempDir, FProgressBar,
          ExportedFiles, TheWordFile, ErrMsg) then
     begin
       FPublishing := False;

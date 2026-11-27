@@ -36,6 +36,7 @@ type
     PublishTheWord: Boolean;
     PublishUSFMZip: Boolean;
     PublishESwordBbli: Boolean;
+    SyncAboutFromReadme: Boolean;
     UpdateRelease: Boolean;
     ReleaseTag: string;
     CommitToBranch: Boolean;
@@ -69,7 +70,11 @@ function ResolveGitHubToken(Ini: TIniFile; out SourceLabel: string): string;
 function TestGitHubConnection(const Token, Owner, Repo: string;
   out Login, DefaultBranch, LatestTag, ErrMsg: string): Boolean;
 
-function ExportProjectFilesForGitHub(Project: TProject;
+function FetchGitHubRepoReadme(const Token, Owner, Repo: string;
+  out ReadmeText, ErrMsg: string): Boolean;
+function NormalizeReadmeToAboutHtml(const RawReadme: string): string;
+
+function ExportProjectFilesForGitHub(Project: TProject; const Token: string;
   const Link: TGitHubProjectLink; const OutDir: string;
   ProgressBar: TProgressBar; ExportedFiles: TStrings;
   out TheWordFile, ErrMsg: string): Boolean;
@@ -96,6 +101,7 @@ const
   KEY_FMT_THEWORD = 'github.fmt.theword';
   KEY_FMT_USFM_ZIP = 'github.fmt.usfm_zip';
   KEY_FMT_ESWORD_BBLI = 'github.fmt.esword_bbli';
+  KEY_SYNC_README_ABOUT = 'github.sync_readme_about';
   KEY_UPDATE_RELEASE = 'github.update_release';
   KEY_RELEASE_TAG = 'github.release_tag';
   KEY_COMMIT_BRANCH = 'github.commit_branch_enabled';
@@ -181,6 +187,7 @@ begin
   Result.PublishTheWord := True;
   Result.PublishUSFMZip := True;
   Result.PublishESwordBbli := True;
+  Result.SyncAboutFromReadme := True;
   Result.UpdateRelease := True;
   Result.ReleaseTag := '';
   Result.CommitToBranch := False;
@@ -210,11 +217,15 @@ begin
   if V <> '' then Result.TextKind := StrToTextKind(V);
 
   V := Trim(Project.GetInfo(KEY_BASE_FILENAME));
-  if V <> '' then Result.BaseFileName := V;
+  if V <> '' then
+    Result.BaseFileName := V
+  else if Pos('ang-malayang-biblia-translation', LowerCase(Result.RepoUrl)) > 0 then
+    Result.BaseFileName := 'amb+';
 
   Result.PublishTheWord := StrToBoolDefault(Project.GetInfo(KEY_FMT_THEWORD), True);
   Result.PublishUSFMZip := StrToBoolDefault(Project.GetInfo(KEY_FMT_USFM_ZIP), True);
   Result.PublishESwordBbli := StrToBoolDefault(Project.GetInfo(KEY_FMT_ESWORD_BBLI), True);
+  Result.SyncAboutFromReadme := StrToBoolDefault(Project.GetInfo(KEY_SYNC_README_ABOUT), True);
   Result.UpdateRelease := StrToBoolDefault(Project.GetInfo(KEY_UPDATE_RELEASE), True);
   Result.ReleaseTag := Trim(Project.GetInfo(KEY_RELEASE_TAG));
   Result.CommitToBranch := StrToBoolDefault(Project.GetInfo(KEY_COMMIT_BRANCH), False);
@@ -244,6 +255,7 @@ begin
   Project.SetInfo(KEY_FMT_THEWORD, BoolStr(Link.PublishTheWord));
   Project.SetInfo(KEY_FMT_USFM_ZIP, BoolStr(Link.PublishUSFMZip));
   Project.SetInfo(KEY_FMT_ESWORD_BBLI, BoolStr(Link.PublishESwordBbli));
+  Project.SetInfo(KEY_SYNC_README_ABOUT, BoolStr(Link.SyncAboutFromReadme));
   Project.SetInfo(KEY_UPDATE_RELEASE, BoolStr(Link.UpdateRelease));
   Project.SetInfo(KEY_RELEASE_TAG, Trim(Link.ReleaseTag));
   Project.SetInfo(KEY_COMMIT_BRANCH, BoolStr(Link.CommitToBranch));
@@ -1172,12 +1184,111 @@ begin
     ErrMsg := Res.ErrorMessage;
 end;
 
-function ExportProjectFilesForGitHub(Project: TProject;
+function FetchGitHubRepoReadme(const Token, Owner, Repo: string;
+  out ReadmeText, ErrMsg: string): Boolean;
+var
+  Code: Integer;
+  Data: TJSONData;
+  Obj: TJSONObject;
+  Enc, B64, CleanB64: string;
+  I: Integer;
+begin
+  Result := False;
+  ReadmeText := '';
+  ErrMsg := '';
+  if (Trim(Owner) = '') or (Trim(Repo) = '') then
+  begin
+    ErrMsg := 'Invalid GitHub repository.';
+    Exit;
+  end;
+
+  if not GitHubJsonRequest('GET', '/repos/' + Owner + '/' + Repo + '/readme',
+       Token, nil, Code, Data, ErrMsg) then
+  begin
+    Data.Free;
+    Exit;
+  end;
+  try
+    if (not Assigned(Data)) or (Data.JSONType <> jtObject) then
+    begin
+      ErrMsg := 'Unexpected GitHub README response.';
+      Exit;
+    end;
+    Obj := TJSONObject(Data);
+    Enc := LowerCase(Trim(Obj.Get('encoding', '')));
+    B64 := Obj.Get('content', '');
+    if (Enc = 'base64') and (B64 <> '') then
+    begin
+      CleanB64 := '';
+      for I := 1 to Length(B64) do
+        if not (B64[I] in [#10, #13, ' ', #9]) then
+          CleanB64 := CleanB64 + B64[I];
+      ReadmeText := DecodeStringBase64(CleanB64);
+      Result := True;
+    end
+    else if B64 <> '' then
+    begin
+      ReadmeText := B64;
+      Result := True;
+    end
+    else
+      ErrMsg := 'Repository README is empty.';
+  finally
+    Data.Free;
+  end;
+end;
+
+function NormalizeReadmeToAboutHtml(const RawReadme: string): string;
+var
+  S: string;
+begin
+  S := Trim(RawReadme);
+  if S = '' then Exit('');
+  // Strip UTF-8 BOM if present
+  if (Length(S) >= 3) and (S[1] = #$EF) and (S[2] = #$BB) and (S[3] = #$BF) then
+    Delete(S, 1, 3);
+  S := StringReplace(S, #13#10, ' ', [rfReplaceAll]);
+  S := StringReplace(S, #13, ' ', [rfReplaceAll]);
+  S := StringReplace(S, #10, ' ', [rfReplaceAll]);
+  while Pos('  ', S) > 0 do
+    S := StringReplace(S, '  ', ' ', [rfReplaceAll]);
+  S := StringReplace(S, '> <', '><', [rfReplaceAll]);
+  Result := Trim(S);
+end;
+
+function UpsertAboutInProperties(const Props, AboutHtml: string): string;
+var
+  Lines: TStringList;
+  I: Integer;
+  Found: Boolean;
+begin
+  Lines := TStringList.Create;
+  try
+    Lines.Text := Props;
+    Found := False;
+    for I := 0 to Lines.Count - 1 do
+    begin
+      if AnsiStartsText('about=', TrimLeft(Lines[I])) then
+      begin
+        Lines[I] := 'about=' + AboutHtml;
+        Found := True;
+        Break;
+      end;
+    end;
+    if not Found then
+      Lines.Add('about=' + AboutHtml);
+    Result := Lines.Text;
+  finally
+    Lines.Free;
+  end;
+end;
+
+function ExportProjectFilesForGitHub(Project: TProject; const Token: string;
   const Link: TGitHubProjectLink; const OutDir: string;
   ProgressBar: TProgressBar; ExportedFiles: TStrings;
   out TheWordFile, ErrMsg: string): Boolean;
 var
-  Base, Ext, FPath: string;
+  Base, Ext, FPath, Owner, Repo, RawReadme, AboutHtml, ReadmeErr, PropKey: string;
   Opts: TOpcoesExportacao;
 begin
   Result := False;
@@ -1189,6 +1300,22 @@ begin
   begin
     ErrMsg := 'No project is open.';
     Exit;
+  end;
+
+  if Link.SyncAboutFromReadme and ParseGitHubOwnerRepo(Link.RepoUrl, Owner, Repo) then
+  begin
+    if FetchGitHubRepoReadme(Token, Owner, Repo, RawReadme, ReadmeErr) then
+    begin
+      AboutHtml := NormalizeReadmeToAboutHtml(RawReadme);
+      if AboutHtml <> '' then
+      begin
+        if Link.TextKind = ghtDestinationTagged then
+          PropKey := 'propriedades.destino'
+        else
+          PropKey := 'propriedades.origem';
+        Project.SetInfo(PropKey, UpsertAboutInProperties(Project.GetInfo(PropKey), AboutHtml));
+      end;
+    end;
   end;
 
   Base := Trim(Link.BaseFileName);

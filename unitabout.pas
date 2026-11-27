@@ -114,6 +114,10 @@ const
 
   CHANGELOG_TEXT =
     
+  'Version 1.1.0.102 (64-bit Edition) - 2026-11-27' + LineEnding +
+  '- Added automatic Sync module About page from GitHub repository README.md when publishing (updates About in theWord .nt/.ot/.ont, e-Sword .bbli, and USFM 3.0 .usfm.zip).' + LineEnding +
+  '- Included copr.htm About page inside exported USFM 3.0 .usfm.zip archives and folders, and defaulted File name base to amb+ for Ang-Malayang-Biblia-Translation.' + LineEnding +
+  LineEnding +
   'Version 1.1.0.101 (64-bit Edition) - 2026-11-27' + LineEnding +
   '- Fixed horizontal clipping in the Publish to GitHub dialog (Detect gh CLI, Get Token..., Save Settings, Publish Now, and Close buttons) across GTK2 and Windows.' + LineEnding +
   '- Removed masked placeholder dots on the empty GitHub Token box, added gh CLI auto-detection when clicking Save Token, and fixed "&" label/button caption rendering.' + LineEnding +

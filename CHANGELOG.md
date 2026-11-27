@@ -6,7 +6,13 @@
 
 ## What's New & Fixed in v1.1.0
 
-### 0. Version 1.1.0.101 (2026-11-27) — Fix GitHub Publish Dialog Layout & Token UX
+### 0. Version 1.1.0.102 (2026-11-27) — Sync Module About Page from GitHub README.md
+
+* **Automatic README.md About Sync (`github_publisher.pas`, `form_github_publish.pas`):** Added **Sync module About page from GitHub repository README.md** (enabled by default) so publishing fetches the linked repo's `README.md` and updates the module About page across all exported formats (**theWord** `.nt`/`.ot`/`.ont`, **e-Sword** `.bbli`, and **USFM 3.0** `.usfm.zip`).
+* **USFM 3.0 About Metadata (`esword_usfm.pas`):** Included `copr.htm` containing the module's About HTML inside exported `.usfm.zip` archives and `_usfm` folders.
+* **Smart AMB Filename Default:** Defaults **File name base** to `amb+` when linking to `Ang-Malayang-Biblia-Translation`.
+
+### 0a. Version 1.1.0.101 (2026-11-27) — Fix GitHub Publish Dialog Layout & Token UX
 
 * **Publish to GitHub Layout (`form_github_publish.pas`, `FormProjectProperties.pas`):** Replaced right/bottom LCL anchors inside tab sheets and footer panels with explicit responsive bounds computation in `LayoutControls` so the **Detect gh CLI**, **Get Token...**, **Save Settings**, **Publish Now**, **Close**, and status labels never clip past the right edge on GTK2 or Windows.
 * **Empty Token Field & UX (`form_github_publish.pas`):** Removed `FEditToken.TextHint` (which GTK2 rendered as masked `***` dots inside a password box even when empty), auto-detects signed-in `gh` CLI when clicking **Save Token** with an empty box, shows a clearer signed-in status message, and properly escapes `&` captions (`&&` and `ShowAccelChar := False`).
