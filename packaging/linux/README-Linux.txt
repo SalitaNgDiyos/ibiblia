@@ -1,4 +1,4 @@
-The Bible Maker 2.0.0.002 for Linux (64-bit)
+The Bible Maker 2.0.0.003 for Linux (64-bit)
 ============================================
 
 Built for Debian 12 (bookworm) and Debian 13 (trixie) on 64-bit PCs
@@ -51,6 +51,8 @@ Your settings and projects
 
 Licences
 --------
-The Bible Maker is open-source software (see LICENSE and NOTICE.md).
+The Bible Maker's own additions are licensed under AGPL-3.0-or-later
+(see LICENSE). The original iBiblia code remains the copyright of
+Rúbio R. C. Terra (see NOTICE.md).
 Third-party notices are in THIRD-PARTY-NOTICES.txt and the licenses
 folder (PCRE, SQLite, OpenSSL, Mozilla CA list).

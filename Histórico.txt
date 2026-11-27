@@ -3,6 +3,10 @@ Independent offshoot originally derived from iBiblia by Rúbio R. C. Terra.
 Not an official continuation of upstream iBiblia (rubiot/ibiblia).
 Maintained independently at https://github.com/SalitaNgDiyos/The-Bible-Maker
 
+Version 2.0.0.003 (64-bit Edition) - 2026-11-27
+- Changed the licence of The Bible Maker's own additions from MIT to AGPL-3.0-or-later (full text in LICENSE).
+- NOTICE.md and README now state that the original iBiblia code remains the copyright of Rúbio R. C. Terra and is not relicensed.
+
 Version 2.0.0.002 (64-bit Edition) - 2026-11-27
 - Changed default project file extension from .bib to .tbm (and zipped backups from .bib.zip to .tbm.zip) across New Project, Open, Save As, Backup & Restore, File Association, Linux MIME types, Updater protection, docs, and English/Portuguese translations.
 - Kept full backward compatibility to open, edit, save, and restore legacy .bib and .bib.zip projects.

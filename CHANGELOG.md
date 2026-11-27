@@ -6,7 +6,11 @@
 
 ## Version History
 
-### 0. Version 2.0.0.002 (2026-11-27) — Default Project File Extension Changed to `.tbm`
+### 0. Version 2.0.0.003 (2026-11-27) — Licence Changed to AGPL-3.0-or-later
+
+* **Licence (`LICENSE`, `NOTICE.md`, `README.md`, `packaging/linux/README-Linux.txt`):** The Bible Maker's own additions and changes are now licensed under **AGPL-3.0-or-later** instead of MIT. The original iBiblia code remains the copyright of Rúbio R. C. Terra and is not relicensed; third-party components keep their own licences.
+
+### 0a. Version 2.0.0.002 (2026-11-27) — Default Project File Extension Changed to `.tbm`
 
 * **`.tbm` Project Format (`FormNewProject.pas`, `project_setup_validation.pas`, `formprincipal.pas`, `formprincipal.lfm`, `iBiblia.lpr`):** Changed the default project extension from `.bib` to **`.tbm`** across New Project, Open, Save As, File Association, CLI launch, updater protection (`app_updater.pas`), Linux desktop MIME (`thebiblemaker.desktop` / `install-menu-entry.sh`), and English/Portuguese `.po`/`.mo` translations.
 * **`.tbm.zip` Backups (`project_backup.pas`, `project_backup_ui.pas`, `FormProjectProperties.pas`):** Changed project backup archives to **`.tbm.zip`** (storing `.tbm` inside).

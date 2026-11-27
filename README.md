@@ -1,4 +1,4 @@
-# The Bible Maker (v2.0.0.002)
+# The Bible Maker (v2.0.0.003)
 
 **The Bible Maker** *(formerly Dark-Skinned iBiblia)* is a native **64-bit Windows (`x64`) and Linux (`x86_64`)** multi-format Bible alignment, translation, interlinear tagging, and direct GitHub/Timotheos publishing workstation built by **Edmund P. Valdez (`SalitaNgDiyos`)**.
 
@@ -147,3 +147,7 @@ For downloads, manuals, and history, see:
 
 * **Author & Maintainer (The Bible Maker — Independent Offshoot, Linux Port & Feature Enhancements):** [Edmund P. Valdez](https://github.com/SalitaNgDiyos) (`malayangbiblia@gmail.com`)
 * **Original Upstream Lineage (iBiblia 1.1.0 Foundation):** [Rúbio R. C. Terra](https://github.com/rubiot/ibiblia) (`rubio.terra@gmail.com`) — *The Bible Maker branched from this original codebase and evolved into an independent offshoot rather than an upstream continuation.*
+
+## Licence
+
+Edmund P. Valdez's additions and changes are licensed under **AGPL-3.0-or-later** (see [LICENSE](LICENSE)). The original iBiblia code remains the copyright of Rúbio R. C. Terra, and third-party components keep their own licences. See [NOTICE.md](NOTICE.md) for the details.
