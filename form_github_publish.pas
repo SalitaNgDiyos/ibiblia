@@ -125,6 +125,7 @@ type
     FClosingAfterDone: Boolean;
 
     procedure BuildUI;
+    procedure LayoutControls;
     procedure ApplyTheme;
     procedure LoadFromProject;
     function CollectLinkFromUI: TGitHubProjectLink;
@@ -133,6 +134,7 @@ type
     procedure AppendLog(const Msg: string);
     procedure SetControlsEnabledForPublish(Idle: Boolean);
     procedure FormShowHandler(Sender: TObject);
+    procedure FormResizeHandler(Sender: TObject);
     procedure FormCloseQueryHandler(Sender: TObject; var CanClose: Boolean);
     procedure PageControlChangeHandler(Sender: TObject);
     procedure SaveClick(Sender: TObject);
@@ -260,16 +262,17 @@ end;
 
 procedure TGitHubPublishForm.BuildUI;
 var
-  PW, M: Integer;
+  M: Integer;
 begin
   Caption := 'Publish to GitHub';
   Position := poMainFormCenter;
   BorderStyle := bsSizeable;
-  Width := UIScale(Self, 740);
+  Width := UIScale(Self, 780);
   Height := UIScale(Self, 680);
-  Constraints.MinWidth := UIScale(Self, 680);
-  Constraints.MinHeight := UIScale(Self, 610);
+  Constraints.MinWidth := UIScale(Self, 700);
+  Constraints.MinHeight := UIScale(Self, 620);
   OnShow := @FormShowHandler;
+  OnResize := @FormResizeHandler;
   OnCloseQuery := @FormCloseQueryHandler;
 
   M := UIScale(Self, 12);
@@ -282,31 +285,22 @@ begin
 
   FLblLastPublished := TLabel.Create(Self);
   FLblLastPublished.Parent := FFooterPanel;
-  FLblLastPublished.SetBounds(M, UIScale(Self, 17), UIScale(Self, 320), UIScale(Self, 20));
-  FLblLastPublished.Anchors := [akLeft, akTop, akRight];
+  FLblLastPublished.AutoSize := False;
+  FLblLastPublished.ShowAccelChar := False;
 
   FBtnClose := TButton.Create(Self);
   FBtnClose.Parent := FFooterPanel;
-  FBtnClose.SetBounds(Width - M - UIScale(Self, 96), UIScale(Self, 10),
-    UIScale(Self, 96), UIScale(Self, 32));
-  FBtnClose.Anchors := [akTop, akRight];
   FBtnClose.Caption := 'Close';
   FBtnClose.OnClick := @CloseClick;
 
   FBtnPublish := TButton.Create(Self);
   FBtnPublish.Parent := FFooterPanel;
-  FBtnPublish.SetBounds(FBtnClose.Left - UIScale(Self, 128), UIScale(Self, 10),
-    UIScale(Self, 120), UIScale(Self, 32));
-  FBtnPublish.Anchors := [akTop, akRight];
   FBtnPublish.Caption := 'Publish Now';
   FBtnPublish.Default := True;
   FBtnPublish.OnClick := @PublishClick;
 
   FBtnSave := TButton.Create(Self);
   FBtnSave.Parent := FFooterPanel;
-  FBtnSave.SetBounds(FBtnPublish.Left - UIScale(Self, 120), UIScale(Self, 10),
-    UIScale(Self, 112), UIScale(Self, 32));
-  FBtnSave.Anchors := [akTop, akRight];
   FBtnSave.Caption := 'Save Settings';
   FBtnSave.OnClick := @SaveClick;
 
@@ -322,46 +316,34 @@ begin
 
   FTabConnection := TTabSheet.Create(FPageControl);
   FTabConnection.PageControl := FPageControl;
-  FTabConnection.Caption := 'GitHub Connection & Timotheos';
-
-  PW := Width - M * 3 - UIScale(Self, 12);
+  FTabConnection.Caption := 'GitHub Connection && Timotheos';
 
   { ---- Tab 1: Publish ---- }
   FGrpRepo := TGroupBox.Create(Self);
   FGrpRepo.Parent := FTabPublish;
   FGrpRepo.Caption := 'Linked GitHub Repository';
-  FGrpRepo.SetBounds(M, UIScale(Self, 8), PW - M, UIScale(Self, 82));
-  FGrpRepo.Anchors := [akLeft, akTop, akRight];
 
   FLblRepo := TLabel.Create(Self);
   FLblRepo.Parent := FGrpRepo;
   FLblRepo.Caption := 'Repository URL:';
-  FLblRepo.SetBounds(M, UIScale(Self, 14), UIScale(Self, 110), UIScale(Self, 20));
 
   FEditRepoUrl := TEdit.Create(Self);
   FEditRepoUrl.Parent := FGrpRepo;
-  FEditRepoUrl.SetBounds(UIScale(Self, 128), UIScale(Self, 10),
-    FGrpRepo.Width - UIScale(Self, 142), UIScale(Self, 26));
-  FEditRepoUrl.Anchors := [akLeft, akTop, akRight];
   FEditRepoUrl.TextHint := 'https://github.com/SalitaNgDiyos/Ang-Malayang-Biblia-Translation';
   FEditRepoUrl.OnChange := @RefreshPreviews;
 
   FLblTokenBadge := TLabel.Create(Self);
   FLblTokenBadge.Parent := FGrpRepo;
-  FLblTokenBadge.SetBounds(M, UIScale(Self, 42), FGrpRepo.Width - M * 2, UIScale(Self, 20));
-  FLblTokenBadge.Anchors := [akLeft, akTop, akRight];
+  FLblTokenBadge.AutoSize := False;
+  FLblTokenBadge.ShowAccelChar := False;
 
   FGrpContent := TGroupBox.Create(Self);
   FGrpContent.Parent := FTabPublish;
-  FGrpContent.Caption := 'What to Export & Publish';
-  FGrpContent.SetBounds(M, FGrpRepo.Top + FGrpRepo.Height + UIScale(Self, 8),
-    PW - M, UIScale(Self, 134));
-  FGrpContent.Anchors := [akLeft, akTop, akRight];
+  FGrpContent.Caption := 'What to Export && Publish';
 
   FLblTextKind := TLabel.Create(Self);
   FLblTextKind.Parent := FGrpContent;
   FLblTextKind.Caption := 'Text to publish:';
-  FLblTextKind.SetBounds(M, UIScale(Self, 12), UIScale(Self, 110), UIScale(Self, 20));
 
   FComboTextKind := TComboBox.Create(Self);
   FComboTextKind.Parent := FGrpContent;
@@ -369,143 +351,101 @@ begin
   FComboTextKind.Items.Add('Destination text (tagged with Strong''s & morphology)');
   FComboTextKind.Items.Add('Source text (interlinear)');
   FComboTextKind.Items.Add('Source text (plain)');
-  FComboTextKind.SetBounds(UIScale(Self, 128), UIScale(Self, 8),
-    FGrpContent.Width - UIScale(Self, 360), UIScale(Self, 26));
-  FComboTextKind.Anchors := [akLeft, akTop, akRight];
   FComboTextKind.OnChange := @RefreshPreviews;
 
   FLblBaseName := TLabel.Create(Self);
   FLblBaseName.Parent := FGrpContent;
   FLblBaseName.Caption := 'File name base:';
-  FLblBaseName.SetBounds(FGrpContent.Width - UIScale(Self, 220), UIScale(Self, 12),
-    UIScale(Self, 100), UIScale(Self, 20));
-  FLblBaseName.Anchors := [akTop, akRight];
 
   FEditBaseName := TEdit.Create(Self);
   FEditBaseName.Parent := FGrpContent;
-  FEditBaseName.SetBounds(FGrpContent.Width - UIScale(Self, 118), UIScale(Self, 8),
-    UIScale(Self, 104), UIScale(Self, 26));
-  FEditBaseName.Anchors := [akTop, akRight];
   FEditBaseName.TextHint := 'amb+';
   FEditBaseName.OnChange := @RefreshPreviews;
 
   FLblFormats := TLabel.Create(Self);
   FLblFormats.Parent := FGrpContent;
   FLblFormats.Caption := 'Formats:';
-  FLblFormats.SetBounds(M, UIScale(Self, 44), UIScale(Self, 110), UIScale(Self, 20));
 
   FCbFmtTheWord := TCheckBox.Create(Self);
   FCbFmtTheWord.Parent := FGrpContent;
   FCbFmtTheWord.Caption := 'theWord (.nt / .ot / .ont)';
-  FCbFmtTheWord.SetBounds(UIScale(Self, 128), UIScale(Self, 42), UIScale(Self, 180), UIScale(Self, 24));
   FCbFmtTheWord.OnClick := @RefreshPreviews;
 
   FCbFmtUsfmZip := TCheckBox.Create(Self);
   FCbFmtUsfmZip.Parent := FGrpContent;
   FCbFmtUsfmZip.Caption := 'USFM 3.0 (.usfm.zip)';
-  FCbFmtUsfmZip.SetBounds(UIScale(Self, 316), UIScale(Self, 42), UIScale(Self, 166), UIScale(Self, 24));
   FCbFmtUsfmZip.OnClick := @RefreshPreviews;
 
   FCbFmtESwordBbli := TCheckBox.Create(Self);
   FCbFmtESwordBbli.Parent := FGrpContent;
   FCbFmtESwordBbli.Caption := 'e-Sword 11+ (.bbli)';
-  FCbFmtESwordBbli.SetBounds(UIScale(Self, 490), UIScale(Self, 42), UIScale(Self, 170), UIScale(Self, 24));
   FCbFmtESwordBbli.OnClick := @RefreshPreviews;
 
   FLblPreview := TLabel.Create(Self);
   FLblPreview.Parent := FGrpContent;
-  FLblPreview.SetBounds(M, UIScale(Self, 74), FGrpContent.Width - M * 2, UIScale(Self, 32));
-  FLblPreview.Anchors := [akLeft, akTop, akRight];
   FLblPreview.AutoSize := False;
   FLblPreview.WordWrap := True;
+  FLblPreview.ShowAccelChar := False;
 
   FGrpTargets := TGroupBox.Create(Self);
   FGrpTargets.Parent := FTabPublish;
   FGrpTargets.Caption := 'Where to Publish';
-  FGrpTargets.SetBounds(M, FGrpContent.Top + FGrpContent.Height + UIScale(Self, 8),
-    PW - M, UIScale(Self, 134));
-  FGrpTargets.Anchors := [akLeft, akTop, akRight];
 
   FCbUpdateRelease := TCheckBox.Create(Self);
   FCbUpdateRelease.Parent := FGrpTargets;
   FCbUpdateRelease.Caption := 'Update GitHub Release';
-  FCbUpdateRelease.SetBounds(M, UIScale(Self, 10), UIScale(Self, 190), UIScale(Self, 24));
   FCbUpdateRelease.OnClick := @RefreshPreviews;
 
   FLblReleaseTag := TLabel.Create(Self);
   FLblReleaseTag.Parent := FGrpTargets;
   FLblReleaseTag.Caption := 'Release tag (blank = latest):';
-  FLblReleaseTag.SetBounds(UIScale(Self, 214), UIScale(Self, 13), UIScale(Self, 180), UIScale(Self, 20));
 
   FEditReleaseTag := TEdit.Create(Self);
   FEditReleaseTag.Parent := FGrpTargets;
-  FEditReleaseTag.SetBounds(UIScale(Self, 398), UIScale(Self, 9),
-    FGrpTargets.Width - UIScale(Self, 412), UIScale(Self, 26));
-  FEditReleaseTag.Anchors := [akLeft, akTop, akRight];
   FEditReleaseTag.TextHint := '(auto: latest release)';
   FEditReleaseTag.OnChange := @RefreshPreviews;
 
   FCbCommitBranch := TCheckBox.Create(Self);
   FCbCommitBranch.Parent := FGrpTargets;
   FCbCommitBranch.Caption := 'Also commit file(s) to branch:';
-  FCbCommitBranch.SetBounds(M, UIScale(Self, 42), UIScale(Self, 198), UIScale(Self, 24));
   FCbCommitBranch.OnClick := @RefreshPreviews;
 
   FEditBranchName := TEdit.Create(Self);
   FEditBranchName.Parent := FGrpTargets;
-  FEditBranchName.SetBounds(UIScale(Self, 214), UIScale(Self, 40), UIScale(Self, 136), UIScale(Self, 26));
   FEditBranchName.TextHint := '(default branch)';
 
   FLblBranchFolder := TLabel.Create(Self);
   FLblBranchFolder.Parent := FGrpTargets;
   FLblBranchFolder.Caption := 'Folder:';
-  FLblBranchFolder.SetBounds(UIScale(Self, 360), UIScale(Self, 44), UIScale(Self, 48), UIScale(Self, 20));
 
   FEditBranchFolder := TEdit.Create(Self);
   FEditBranchFolder.Parent := FGrpTargets;
-  FEditBranchFolder.SetBounds(UIScale(Self, 412), UIScale(Self, 40),
-    FGrpTargets.Width - UIScale(Self, 426), UIScale(Self, 26));
-  FEditBranchFolder.Anchors := [akLeft, akTop, akRight];
   FEditBranchFolder.TextHint := '(repo root)';
 
   FCbTimotheos := TCheckBox.Create(Self);
   FCbTimotheos.Parent := FGrpTargets;
-  FCbTimotheos.Caption := 'Push updated Bible to Timotheos app (real-time update for PC & Android users)';
-  FCbTimotheos.SetBounds(M, UIScale(Self, 74), FGrpTargets.Width - M * 2, UIScale(Self, 24));
-  FCbTimotheos.Anchors := [akLeft, akTop, akRight];
+  FCbTimotheos.Caption := 'Push updated Bible to Timotheos app (real-time update for PC && Android users)';
   FCbTimotheos.OnClick := @RefreshPreviews;
 
   FLblTimotheosSummary := TLabel.Create(Self);
   FLblTimotheosSummary.Parent := FGrpTargets;
-  FLblTimotheosSummary.SetBounds(UIScale(Self, 32), UIScale(Self, 98),
-    FGrpTargets.Width - UIScale(Self, 46), UIScale(Self, 20));
-  FLblTimotheosSummary.Anchors := [akLeft, akTop, akRight];
+  FLblTimotheosSummary.AutoSize := False;
+  FLblTimotheosSummary.ShowAccelChar := False;
 
   FLblCommitMsg := TLabel.Create(Self);
   FLblCommitMsg.Parent := FTabPublish;
   FLblCommitMsg.Caption := 'Commit / Release Note (optional):';
-  FLblCommitMsg.SetBounds(M, FGrpTargets.Top + FGrpTargets.Height + UIScale(Self, 10),
-    UIScale(Self, 210), UIScale(Self, 20));
 
   FEditCommitMsg := TEdit.Create(Self);
   FEditCommitMsg.Parent := FTabPublish;
-  FEditCommitMsg.SetBounds(UIScale(Self, 224), FGrpTargets.Top + FGrpTargets.Height + UIScale(Self, 6),
-    PW - M - UIScale(Self, 224), UIScale(Self, 26));
-  FEditCommitMsg.Anchors := [akLeft, akTop, akRight];
   FEditCommitMsg.TextHint := 'e.g. Updated Matthew & Mark Strong''s tags and wording';
 
   FProgressBar := TProgressBar.Create(Self);
   FProgressBar.Parent := FTabPublish;
-  FProgressBar.SetBounds(M, FEditCommitMsg.Top + FEditCommitMsg.Height + UIScale(Self, 8),
-    PW - M, UIScale(Self, 16));
-  FProgressBar.Anchors := [akLeft, akTop, akRight];
   FProgressBar.Visible := False;
 
   FMemoLog := TMemo.Create(Self);
   FMemoLog.Parent := FTabPublish;
-  FMemoLog.SetBounds(M, FProgressBar.Top + FProgressBar.Height + UIScale(Self, 8),
-    PW - M, UIScale(Self, 118));
-  FMemoLog.Anchors := [akLeft, akTop, akRight, akBottom];
   FMemoLog.ReadOnly := True;
   FMemoLog.ScrollBars := ssVertical;
 
@@ -513,120 +453,217 @@ begin
   FGrpAuth := TGroupBox.Create(Self);
   FGrpAuth.Parent := FTabConnection;
   FGrpAuth.Caption := 'GitHub Sign-In (saved securely on this computer)';
-  FGrpAuth.SetBounds(M, UIScale(Self, 8), PW - M, UIScale(Self, 210));
-  FGrpAuth.Anchors := [akLeft, akTop, akRight];
 
   FLblAuthHelp := TLabel.Create(Self);
   FLblAuthHelp.Parent := FGrpAuth;
   FLblAuthHelp.AutoSize := False;
   FLblAuthHelp.WordWrap := True;
+  FLblAuthHelp.ShowAccelChar := False;
   FLblAuthHelp.Caption :=
-    'Enter a GitHub Personal Access Token (classic token with "repo" scope, or fine-grained token with Contents: Read & Write) ' +
-    'once. It is stored securely in your operating system credential store and never written inside any .bib project file. ' +
+    'Paste a GitHub Personal Access Token (ghp_... or github_pat_... with "repo" or Contents Read & Write permission) ' +
+    'once. It is stored securely in your operating system credential store and never written inside any .bib file. ' +
     'If GitHub CLI (gh) is installed and signed in, you can also detect it automatically.';
-  FLblAuthHelp.SetBounds(M, UIScale(Self, 12), FGrpAuth.Width - M * 2, UIScale(Self, 54));
-  FLblAuthHelp.Anchors := [akLeft, akTop, akRight];
 
   FLblToken := TLabel.Create(Self);
   FLblToken.Parent := FGrpAuth;
   FLblToken.Caption := 'GitHub Token:';
-  FLblToken.SetBounds(M, UIScale(Self, 74), UIScale(Self, 100), UIScale(Self, 20));
 
   FEditToken := TEdit.Create(Self);
   FEditToken.Parent := FGrpAuth;
   FEditToken.PasswordChar := '*';
-  FEditToken.SetBounds(UIScale(Self, 120), UIScale(Self, 70),
-    FGrpAuth.Width - UIScale(Self, 370), UIScale(Self, 26));
-  FEditToken.Anchors := [akLeft, akTop, akRight];
-  FEditToken.TextHint := 'ghp_... or github_pat_...';
 
   FBtnDetectCLI := TButton.Create(Self);
   FBtnDetectCLI.Parent := FGrpAuth;
   FBtnDetectCLI.Caption := 'Detect gh CLI';
-  FBtnDetectCLI.SetBounds(FGrpAuth.Width - UIScale(Self, 242), UIScale(Self, 68),
-    UIScale(Self, 112), UIScale(Self, 30));
-  FBtnDetectCLI.Anchors := [akTop, akRight];
   FBtnDetectCLI.OnClick := @DetectCLIClick;
 
   FBtnOpenTokenPage := TButton.Create(Self);
   FBtnOpenTokenPage.Parent := FGrpAuth;
   FBtnOpenTokenPage.Caption := 'Get Token...';
-  FBtnOpenTokenPage.SetBounds(FGrpAuth.Width - UIScale(Self, 124), UIScale(Self, 68),
-    UIScale(Self, 110), UIScale(Self, 30));
-  FBtnOpenTokenPage.Anchors := [akTop, akRight];
   FBtnOpenTokenPage.OnClick := @OpenTokenPageClick;
 
   FBtnSaveToken := TButton.Create(Self);
   FBtnSaveToken.Parent := FGrpAuth;
   FBtnSaveToken.Caption := 'Save Token';
-  FBtnSaveToken.SetBounds(M, UIScale(Self, 112), UIScale(Self, 120), UIScale(Self, 30));
   FBtnSaveToken.OnClick := @SaveTokenClick;
 
   FBtnClearToken := TButton.Create(Self);
   FBtnClearToken.Parent := FGrpAuth;
   FBtnClearToken.Caption := 'Clear Saved Token';
-  FBtnClearToken.SetBounds(UIScale(Self, 140), UIScale(Self, 112), UIScale(Self, 146), UIScale(Self, 30));
   FBtnClearToken.OnClick := @ClearTokenClick;
 
   FBtnTestConn := TButton.Create(Self);
   FBtnTestConn.Parent := FGrpAuth;
   FBtnTestConn.Caption := 'Test Connection';
-  FBtnTestConn.SetBounds(UIScale(Self, 294), UIScale(Self, 112), UIScale(Self, 140), UIScale(Self, 30));
   FBtnTestConn.OnClick := @TestConnClick;
 
   FLblConnStatus := TLabel.Create(Self);
   FLblConnStatus.Parent := FGrpAuth;
   FLblConnStatus.AutoSize := False;
   FLblConnStatus.WordWrap := True;
-  FLblConnStatus.SetBounds(M, UIScale(Self, 152), FGrpAuth.Width - M * 2, UIScale(Self, 36));
-  FLblConnStatus.Anchors := [akLeft, akTop, akRight];
+  FLblConnStatus.ShowAccelChar := False;
 
   FGrpTimotheosCfg := TGroupBox.Create(Self);
   FGrpTimotheosCfg.Parent := FTabConnection;
   FGrpTimotheosCfg.Caption := 'Timotheos App Live Update Target';
-  FGrpTimotheosCfg.SetBounds(M, FGrpAuth.Top + FGrpAuth.Height + UIScale(Self, 12),
-    PW - M, UIScale(Self, 180));
-  FGrpTimotheosCfg.Anchors := [akLeft, akTop, akRight];
 
   FLblTimRepo := TLabel.Create(Self);
   FLblTimRepo.Parent := FGrpTimotheosCfg;
   FLblTimRepo.Caption := 'Timotheos Repo URL:';
-  FLblTimRepo.SetBounds(M, UIScale(Self, 16), UIScale(Self, 140), UIScale(Self, 20));
 
   FEditTimRepo := TEdit.Create(Self);
   FEditTimRepo.Parent := FGrpTimotheosCfg;
-  FEditTimRepo.SetBounds(UIScale(Self, 160), UIScale(Self, 12),
-    FGrpTimotheosCfg.Width - UIScale(Self, 174), UIScale(Self, 26));
-  FEditTimRepo.Anchors := [akLeft, akTop, akRight];
   FEditTimRepo.OnChange := @RefreshPreviews;
 
   FLblTimBranch := TLabel.Create(Self);
   FLblTimBranch.Parent := FGrpTimotheosCfg;
   FLblTimBranch.Caption := 'Target Branch:';
-  FLblTimBranch.SetBounds(M, UIScale(Self, 50), UIScale(Self, 140), UIScale(Self, 20));
 
   FEditTimBranch := TEdit.Create(Self);
   FEditTimBranch.Parent := FGrpTimotheosCfg;
-  FEditTimBranch.SetBounds(UIScale(Self, 160), UIScale(Self, 46), UIScale(Self, 160), UIScale(Self, 26));
   FEditTimBranch.OnChange := @RefreshPreviews;
 
   FLblTimPath := TLabel.Create(Self);
   FLblTimPath.Parent := FGrpTimotheosCfg;
   FLblTimPath.Caption := 'Bundled File Path:';
-  FLblTimPath.SetBounds(M, UIScale(Self, 84), UIScale(Self, 140), UIScale(Self, 20));
 
   FEditTimPath := TEdit.Create(Self);
   FEditTimPath.Parent := FGrpTimotheosCfg;
-  FEditTimPath.SetBounds(UIScale(Self, 160), UIScale(Self, 80),
-    FGrpTimotheosCfg.Width - UIScale(Self, 174), UIScale(Self, 26));
-  FEditTimPath.Anchors := [akLeft, akTop, akRight];
   FEditTimPath.OnChange := @RefreshPreviews;
 
   FCbTimSkipCI := TCheckBox.Create(Self);
   FCbTimSkipCI.Parent := FGrpTimotheosCfg;
-  FCbTimSkipCI.Caption := 'Add [skip ci] when committing bundled Bible to Timotheos (live auto-update still runs immediately for users)';
-  FCbTimSkipCI.SetBounds(M, UIScale(Self, 118), FGrpTimotheosCfg.Width - M * 2, UIScale(Self, 24));
-  FCbTimSkipCI.Anchors := [akLeft, akTop, akRight];
+  FCbTimSkipCI.Caption := 'Add [skip ci] when committing bundled Bible to Timotheos (live auto-update still runs)';
+
+  LayoutControls;
+end;
+
+procedure TGitHubPublishForm.LayoutControls;
+var
+  M, Gap, FW, FH, BtnH, BtnY, CloseW, PubW, SaveW: Integer;
+  TW, TH, GW, IW: Integer;
+  BaseEditW, BaseLblW, MsgTop, ProgTop, LogTop: Integer;
+  TokenRowY, BtnRowY, GetTokW, DetectW: Integer;
+begin
+  M := UIScale(Self, 12);
+  Gap := UIScale(Self, 8);
+
+  { Footer }
+  FW := FFooterPanel.ClientWidth;
+  if FW <= 0 then FW := ClientWidth;
+  if FW <= 0 then FW := UIScale(Self, 780);
+  FH := FFooterPanel.ClientHeight;
+  if FH <= 0 then FH := UIScale(Self, 52);
+  BtnH := UIScale(Self, 32);
+  BtnY := (FH - BtnH) div 2;
+  CloseW := UIScale(Self, 92);
+  PubW := UIScale(Self, 124);
+  SaveW := UIScale(Self, 120);
+
+  FBtnClose.SetBounds(FW - M - CloseW, BtnY, CloseW, BtnH);
+  FBtnPublish.SetBounds(FBtnClose.Left - Gap - PubW, BtnY, PubW, BtnH);
+  FBtnSave.SetBounds(FBtnPublish.Left - Gap - SaveW, BtnY, SaveW, BtnH);
+  FLblLastPublished.SetBounds(M, (FH - UIScale(Self, 20)) div 2,
+    Max(UIScale(Self, 120), FBtnSave.Left - Gap - M), UIScale(Self, 20));
+
+  { Tab 1: Publish }
+  TW := FTabPublish.ClientWidth;
+  if TW <= 0 then TW := Max(UIScale(Self, 440), ClientWidth - M * 2 - UIScale(Self, 8));
+  TH := FTabPublish.ClientHeight;
+  if TH <= 0 then TH := Max(UIScale(Self, 420), ClientHeight - FFooterPanel.Height - M * 2 - UIScale(Self, 32));
+  GW := Max(UIScale(Self, 400), TW - M * 2);
+
+  FGrpRepo.SetBounds(M, UIScale(Self, 8), GW, UIScale(Self, 82));
+  IW := FGrpRepo.ClientWidth;
+  if IW <= 0 then IW := GW - UIScale(Self, 12);
+  FLblRepo.SetBounds(M, UIScale(Self, 14), UIScale(Self, 110), UIScale(Self, 20));
+  FEditRepoUrl.SetBounds(UIScale(Self, 128), UIScale(Self, 10),
+    Max(UIScale(Self, 180), IW - UIScale(Self, 128) - M), UIScale(Self, 26));
+  FLblTokenBadge.SetBounds(M, UIScale(Self, 42),
+    Max(UIScale(Self, 180), IW - M * 2), UIScale(Self, 20));
+
+  FGrpContent.SetBounds(M, FGrpRepo.Top + FGrpRepo.Height + Gap, GW, UIScale(Self, 134));
+  IW := FGrpContent.ClientWidth;
+  if IW <= 0 then IW := GW - UIScale(Self, 12);
+  BaseEditW := UIScale(Self, 110);
+  BaseLblW := UIScale(Self, 102);
+  FEditBaseName.SetBounds(IW - M - BaseEditW, UIScale(Self, 8), BaseEditW, UIScale(Self, 26));
+  FLblBaseName.SetBounds(FEditBaseName.Left - Gap - BaseLblW, UIScale(Self, 12), BaseLblW, UIScale(Self, 20));
+  FLblTextKind.SetBounds(M, UIScale(Self, 12), UIScale(Self, 110), UIScale(Self, 20));
+  FComboTextKind.SetBounds(UIScale(Self, 128), UIScale(Self, 8),
+    Max(UIScale(Self, 160), FLblBaseName.Left - Gap - UIScale(Self, 128)), UIScale(Self, 26));
+  FLblFormats.SetBounds(M, UIScale(Self, 44), UIScale(Self, 110), UIScale(Self, 20));
+  FCbFmtTheWord.SetBounds(UIScale(Self, 128), UIScale(Self, 42), UIScale(Self, 180), UIScale(Self, 24));
+  FCbFmtUsfmZip.SetBounds(UIScale(Self, 316), UIScale(Self, 42), UIScale(Self, 166), UIScale(Self, 24));
+  FCbFmtESwordBbli.SetBounds(UIScale(Self, 490), UIScale(Self, 42),
+    Max(UIScale(Self, 140), IW - M - UIScale(Self, 490)), UIScale(Self, 24));
+  FLblPreview.SetBounds(M, UIScale(Self, 74),
+    Max(UIScale(Self, 180), IW - M * 2), UIScale(Self, 32));
+
+  FGrpTargets.SetBounds(M, FGrpContent.Top + FGrpContent.Height + Gap, GW, UIScale(Self, 134));
+  IW := FGrpTargets.ClientWidth;
+  if IW <= 0 then IW := GW - UIScale(Self, 12);
+  FCbUpdateRelease.SetBounds(M, UIScale(Self, 10), UIScale(Self, 190), UIScale(Self, 24));
+  FLblReleaseTag.SetBounds(UIScale(Self, 214), UIScale(Self, 13), UIScale(Self, 180), UIScale(Self, 20));
+  FEditReleaseTag.SetBounds(UIScale(Self, 398), UIScale(Self, 9),
+    Max(UIScale(Self, 120), IW - M - UIScale(Self, 398)), UIScale(Self, 26));
+  FCbCommitBranch.SetBounds(M, UIScale(Self, 42), UIScale(Self, 198), UIScale(Self, 24));
+  FEditBranchName.SetBounds(UIScale(Self, 214), UIScale(Self, 40), UIScale(Self, 136), UIScale(Self, 26));
+  FLblBranchFolder.SetBounds(UIScale(Self, 360), UIScale(Self, 44), UIScale(Self, 48), UIScale(Self, 20));
+  FEditBranchFolder.SetBounds(UIScale(Self, 412), UIScale(Self, 40),
+    Max(UIScale(Self, 120), IW - M - UIScale(Self, 412)), UIScale(Self, 26));
+  FCbTimotheos.SetBounds(M, UIScale(Self, 74),
+    Max(UIScale(Self, 200), IW - M * 2), UIScale(Self, 24));
+  FLblTimotheosSummary.SetBounds(UIScale(Self, 32), UIScale(Self, 98),
+    Max(UIScale(Self, 200), IW - M - UIScale(Self, 32)), UIScale(Self, 20));
+
+  MsgTop := FGrpTargets.Top + FGrpTargets.Height + UIScale(Self, 10);
+  FLblCommitMsg.SetBounds(M, MsgTop + UIScale(Self, 4), UIScale(Self, 210), UIScale(Self, 20));
+  FEditCommitMsg.SetBounds(UIScale(Self, 224), MsgTop,
+    Max(UIScale(Self, 180), GW + M - UIScale(Self, 224)), UIScale(Self, 26));
+  ProgTop := FEditCommitMsg.Top + FEditCommitMsg.Height + Gap;
+  FProgressBar.SetBounds(M, ProgTop, GW, UIScale(Self, 14));
+  LogTop := FProgressBar.Top + FProgressBar.Height + Gap;
+  FMemoLog.SetBounds(M, LogTop, GW, Max(UIScale(Self, 96), TH - M - LogTop));
+
+  { Tab 2: GitHub Connection & Timotheos }
+  TW := FTabConnection.ClientWidth;
+  if TW <= 0 then TW := Max(UIScale(Self, 440), ClientWidth - M * 2 - UIScale(Self, 8));
+  GW := Max(UIScale(Self, 400), TW - M * 2);
+
+  FGrpAuth.SetBounds(M, UIScale(Self, 8), GW, UIScale(Self, 224));
+  IW := FGrpAuth.ClientWidth;
+  if IW <= 0 then IW := GW - UIScale(Self, 12);
+  FLblAuthHelp.SetBounds(M, UIScale(Self, 10),
+    Max(UIScale(Self, 200), IW - M * 2), UIScale(Self, 54));
+  TokenRowY := UIScale(Self, 72);
+  GetTokW := UIScale(Self, 114);
+  DetectW := UIScale(Self, 120);
+  FBtnOpenTokenPage.SetBounds(IW - M - GetTokW, TokenRowY, GetTokW, UIScale(Self, 30));
+  FBtnDetectCLI.SetBounds(FBtnOpenTokenPage.Left - Gap - DetectW, TokenRowY, DetectW, UIScale(Self, 30));
+  FLblToken.SetBounds(M, TokenRowY + UIScale(Self, 5), UIScale(Self, 100), UIScale(Self, 20));
+  FEditToken.SetBounds(UIScale(Self, 116), TokenRowY + UIScale(Self, 2),
+    Max(UIScale(Self, 140), FBtnDetectCLI.Left - Gap - UIScale(Self, 116)), UIScale(Self, 26));
+  BtnRowY := TokenRowY + UIScale(Self, 40);
+  FBtnSaveToken.SetBounds(M, BtnRowY, UIScale(Self, 120), UIScale(Self, 30));
+  FBtnClearToken.SetBounds(FBtnSaveToken.Left + FBtnSaveToken.Width + Gap, BtnRowY, UIScale(Self, 146), UIScale(Self, 30));
+  FBtnTestConn.SetBounds(FBtnClearToken.Left + FBtnClearToken.Width + Gap, BtnRowY, UIScale(Self, 140), UIScale(Self, 30));
+  FLblConnStatus.SetBounds(M, BtnRowY + UIScale(Self, 38),
+    Max(UIScale(Self, 200), IW - M * 2), UIScale(Self, 42));
+
+  FGrpTimotheosCfg.SetBounds(M, FGrpAuth.Top + FGrpAuth.Height + UIScale(Self, 12), GW, UIScale(Self, 184));
+  IW := FGrpTimotheosCfg.ClientWidth;
+  if IW <= 0 then IW := GW - UIScale(Self, 12);
+  FLblTimRepo.SetBounds(M, UIScale(Self, 16), UIScale(Self, 140), UIScale(Self, 20));
+  FEditTimRepo.SetBounds(UIScale(Self, 160), UIScale(Self, 12),
+    Max(UIScale(Self, 180), IW - UIScale(Self, 160) - M), UIScale(Self, 26));
+  FLblTimBranch.SetBounds(M, UIScale(Self, 50), UIScale(Self, 140), UIScale(Self, 20));
+  FEditTimBranch.SetBounds(UIScale(Self, 160), UIScale(Self, 46), UIScale(Self, 160), UIScale(Self, 26));
+  FLblTimPath.SetBounds(M, UIScale(Self, 84), UIScale(Self, 140), UIScale(Self, 20));
+  FEditTimPath.SetBounds(UIScale(Self, 160), UIScale(Self, 80),
+    Max(UIScale(Self, 180), IW - UIScale(Self, 160) - M), UIScale(Self, 26));
+  FCbTimSkipCI.SetBounds(M, UIScale(Self, 118),
+    Max(UIScale(Self, 200), IW - M * 2), UIScale(Self, 24));
 end;
 
 procedure TGitHubPublishForm.ApplyTheme;
@@ -693,7 +730,10 @@ begin
   if SavedTok <> '' then
     FEditToken.Text := SavedTok
   else if ResolveGitHubToken(FIni, SourceLbl) <> '' then
-    FLblConnStatus.Caption := 'Detected active login via ' + SourceLbl + '. Ready to publish.';
+  begin
+    FLblConnStatus.Caption := 'Already signed in via ' + SourceLbl + ' — ready to publish without pasting a token.';
+    FLblConnStatus.Font.Color := UISuccessTextColor;
+  end;
 
   if Link.LastPublishedAt <> '' then
     FLblLastPublished.Caption := 'Last published: ' + Link.LastPublishedAt
@@ -818,11 +858,18 @@ end;
 procedure TGitHubPublishForm.FormShowHandler(Sender: TObject);
 begin
   ApplyTheme;
+  LayoutControls;
+end;
+
+procedure TGitHubPublishForm.FormResizeHandler(Sender: TObject);
+begin
+  LayoutControls;
 end;
 
 procedure TGitHubPublishForm.PageControlChangeHandler(Sender: TObject);
 begin
   ApplyTheme;
+  LayoutControls;
 end;
 
 procedure TGitHubPublishForm.FormCloseQueryHandler(Sender: TObject;
@@ -879,7 +926,16 @@ begin
   Tok := Trim(FEditToken.Text);
   if Tok = '' then
   begin
-    MessageDlg(Caption, 'Paste a GitHub token first (or click Clear Saved Token to remove it).',
+    if TryDetectGitHubCLIToken(Tok) then
+    begin
+      FEditToken.Text := Tok;
+      SaveGitHubToken(FIni, Tok);
+      FLblConnStatus.Caption := 'Detected and saved GitHub token from gh CLI securely.';
+      FLblConnStatus.Font.Color := UISuccessTextColor;
+      RefreshTokenStatusBadge;
+      Exit;
+    end;
+    MessageDlg(Caption, 'Paste a GitHub token first (or click Get Token... to create one, or Clear Saved Token to remove it).',
       mtInformation, [mbOK], 0);
     Exit;
   end;

@@ -1,4 +1,8 @@
-﻿Version 1.1.0.100 (64-bit Edition) - 2026-11-27
+﻿Version 1.1.0.101 (64-bit Edition) - 2026-11-27
+- Fixed horizontal clipping on the Publish to GitHub dialog (Detect gh CLI, Get Token..., and footer buttons) via explicit responsive bounds calculation on tab and form layout.
+- Fixed GTK2 password placeholder rendering dots in the empty GitHub Token field, added gh CLI auto-detect fallback when clicking Save Token, and fixed "&" accelerator rendering in dialog and button captions.
+
+Version 1.1.0.100 (64-bit Edition) - 2026-11-27
 - Added Project -> Publish to GitHub... and Project settings -> GitHub Publishing to link projects directly to GitHub and publish source or destination texts (.nt/.ot/.ont, .usfm.zip, and .bbli) to GitHub Releases or branches in one click.
 - Added optional Timotheos live publish target to commit bundled AMB changes directly to the Timotheos repository for real-time updates on PC and Android.
 - Added secure OS credential-store GitHub token storage and GitHub CLI (gh) auto-detection.

@@ -114,6 +114,10 @@ const
 
   CHANGELOG_TEXT =
     
+  'Version 1.1.0.101 (64-bit Edition) - 2026-11-27' + LineEnding +
+  '- Fixed horizontal clipping in the Publish to GitHub dialog (Detect gh CLI, Get Token..., Save Settings, Publish Now, and Close buttons) across GTK2 and Windows.' + LineEnding +
+  '- Removed masked placeholder dots on the empty GitHub Token box, added gh CLI auto-detection when clicking Save Token, and fixed "&" label/button caption rendering.' + LineEnding +
+  LineEnding +
   'Version 1.1.0.100 (64-bit Edition) - 2026-11-27' + LineEnding +
   '- Added Project -> Publish to GitHub... and Project settings -> GitHub Publishing so projects can link directly to a GitHub repository and publish source or destination texts (.nt/.ot/.ont, .usfm.zip, and .bbli) to GitHub Releases or branches in one click.' + LineEnding +
   '- Added one-click Timotheos Bible app integration so publishing updated AMB modules can commit straight to the Timotheos repository and deliver real-time updates to PC and Android users.' + LineEnding +

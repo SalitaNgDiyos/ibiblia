@@ -6,7 +6,12 @@
 
 ## What's New & Fixed in v1.1.0
 
-### 0. Version 1.1.0.100 (2026-11-27) — Publish Projects Directly to GitHub & Timotheos
+### 0. Version 1.1.0.101 (2026-11-27) — Fix GitHub Publish Dialog Layout & Token UX
+
+* **Publish to GitHub Layout (`form_github_publish.pas`, `FormProjectProperties.pas`):** Replaced right/bottom LCL anchors inside tab sheets and footer panels with explicit responsive bounds computation in `LayoutControls` so the **Detect gh CLI**, **Get Token...**, **Save Settings**, **Publish Now**, **Close**, and status labels never clip past the right edge on GTK2 or Windows.
+* **Empty Token Field & UX (`form_github_publish.pas`):** Removed `FEditToken.TextHint` (which GTK2 rendered as masked `***` dots inside a password box even when empty), auto-detects signed-in `gh` CLI when clicking **Save Token** with an empty box, shows a clearer signed-in status message, and properly escapes `&` captions (`&&` and `ShowAccelChar := False`).
+
+### 0a. Version 1.1.0.100 (2026-11-27) — Publish Projects Directly to GitHub & Timotheos
 
 * **Direct GitHub Publishing (`github_publisher.pas`, `form_github_publish.pas`):** Added **Project → Publish to GitHub...** and a **GitHub Publishing** section inside **Project settings** so any `.bib` project can be linked directly to a GitHub repository and published in one click without manual file exports or GitHub uploads.
 * **Source & Destination Texts Across Formats:** Supports publishing tagged destination text, interlinear source text, or plain source text in selectable formats (**theWord** `.nt`/`.ot`/`.ont`, **USFM 3.0** `.usfm.zip`, and **e-Sword 11+** `.bbli`).

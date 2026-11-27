@@ -688,6 +688,7 @@ begin
   FGitHubStatusLabel.Parent := FGitHubGroup;
   FGitHubStatusLabel.AutoSize := False;
   FGitHubStatusLabel.WordWrap := True;
+  FGitHubStatusLabel.ShowAccelChar := False;
   FGitHubStatusLabel.SetBounds(16, 18, PageWidth - 32 - 220, 44);
   FGitHubStatusLabel.Anchors := [akLeft, akTop, akRight];
 
@@ -695,7 +696,7 @@ begin
   FGitHubButton.Parent := FGitHubGroup;
   FGitHubButton.SetBounds(PageWidth - 32 - 204 + 16, 18, 204, 34);
   FGitHubButton.Anchors := [akTop, akRight];
-  FGitHubButton.Caption := 'Configure & Publish...';
+  FGitHubButton.Caption := 'Configure && Publish...';
   FGitHubButton.OnClick := @GitHubButtonClick;
 
   FWorkflowIntroLabel := TLabel.Create(Self);
