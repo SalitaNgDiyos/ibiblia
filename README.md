@@ -4,6 +4,19 @@
 
 > **Project Origin & Independence:** **The Bible Maker** is an independent offshoot originally derived from [iBiblia 1.1.0](https://github.com/rubiot/ibiblia) by Rúbio R. C. Terra and developed independently for active Bible translation workflows. It is **not** a continuation of, nor officially affiliated with, upstream `rubiot/ibiblia`. See [NOTICE.md](NOTICE.md) and [LICENSE](LICENSE).
 
+## Start Here
+
+**What it is:** a workstation for linking a translation to the original-language Bible word by word. You pick a tagged **Source** Bible (Greek or Hebrew with Strong's numbers and parsing) and a **Destination** translation; as you link words, The Bible Maker carries the Strong's numbers and parsing over to your translation, and then exports it as a ready-to-use Bible module.
+
+**How to start:**
+
+1. **Download** the latest Windows or Linux ZIP from the [Releases page](https://github.com/SalitaNgDiyos/The-Bible-Maker/releases), extract the whole ZIP into a folder, and run the program inside it. It updates itself at every start.
+2. **Create a project** (`.tbm`): choose your Source Bible and your Destination translation (or start with an empty Destination and translate inside the app). Older iBiblia `.bib` projects open as they are.
+3. **Link words:** select a Source word, then Shift+click (or right-click) the matching Destination word. The mouse wheel steps through the Source words, and right-clicking links and moves on to the next word.
+4. **Export** with **Project → Export project...** to theWord, e-Sword, MySword, USFM or Timotheos.
+
+Press **`Shift+F1`** inside the program for the full User Guide and **`F1`** for keyboard shortcuts. The detailed feature list follows below.
+
 It includes built-in import and export support for **theWord** (`.ont`, `.ot`, `.nt`, and `.dct.twm` concordances), **Timotheos** (compatible module/concordance exports with `.order` tree companions, USFM 3.0 exact Strong's metadata, and real-time bundled AMB updates), **MySword** (`.bbl.mybible`), **non-encrypted e-Sword** (`.bblx` RTF, `.bbli` HTML, `.bbl` SQLite), **USFM 2.x/3.0** (`.usfm`, `.sfm`), and **USFX XML** (`.usfx`, `.xml` from [eBible.org](https://ebible.org/) and Simple Bible Reader), along with direct import from **SWORD / CrossWire** (`.conf` / `.zip` Bibles and dictionaries), compressed archives (`.zip`, `.tar*`, `.gz`, `.7z`, `.rar`), and text documents (`.txt`, `.rtf`, `.odt`, `.docx`) for adding or replacing Bible books.
 
 Associate words between a tagged **Source** Bible (Greek LXX/NT or Hebrew OT) and your **Destination** translation—or start with an initially empty Destination in a new translation project and write it directly inside the application. **The Bible Maker** automatically transfers Strong's numbers and morphological parsing tags, preserves unaffected associations across text edits, compares past translation choices in **Translation Memory**, formats verse markup in a **Visual WYSIWYG / Raw ONT Editor** with paragraph tags and rich translator notes, provides interactive Bible tree reordering and selective diff-highlighted book replacement, maintains an embedded per-project **Change Log** with **Backup & Restore** plus automated **Crash & Error Logging**, synchronizes verses with **theWord** and **Timotheos**, publishes directly to GitHub Releases/branches with automatic `README.md` About-page sync, delivers SHA-256 verified app updates, and exports ready-to-use Bible and concordance modules.
