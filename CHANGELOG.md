@@ -6,7 +6,13 @@
 
 ## Version History
 
-### 0. Version 2.0.0.001 (2026-11-27) — Independent Product Milestone, Custom Icon & Safe Migration
+### 0. Version 2.0.0.002 (2026-11-27) — Default Project File Extension Changed to `.tbm`
+
+* **`.tbm` Project Format (`FormNewProject.pas`, `project_setup_validation.pas`, `formprincipal.pas`, `formprincipal.lfm`, `iBiblia.lpr`):** Changed the default project extension from `.bib` to **`.tbm`** across New Project, Open, Save As, File Association, CLI launch, updater protection (`app_updater.pas`), Linux desktop MIME (`thebiblemaker.desktop` / `install-menu-entry.sh`), and English/Portuguese `.po`/`.mo` translations.
+* **`.tbm.zip` Backups (`project_backup.pas`, `project_backup_ui.pas`, `FormProjectProperties.pas`):** Changed project backup archives to **`.tbm.zip`** (storing `.tbm` inside).
+* **Full Legacy `.bib` & `.bib.zip` Compatibility:** Existing `.bib` project files and `.bib.zip` backup archives continue to open, edit, save, and restore cleanly alongside `.tbm` and `.tbm.zip`.
+
+### 0a. Version 2.0.0.001 (2026-11-27) — Independent Product Milestone, Custom Icon & Safe Migration
 
 * **Custom App Icon & Provenance (`iBiblia.ico`, `packaging/linux/TheBibleMaker.png`, `LICENSE`, `NOTICE.md`):** Designed and embedded a custom **The Bible Maker** gold-on-obsidian desktop icon across Windows and Linux, updated `iBiblia.rc` metadata to `2.0.0.001`, added root `LICENSE` + `NOTICE.md`, and replaced remaining upstream `rubiot/ibiblia` wiki/issue links across docs and error dialogs.
 * **Seamless Settings & Credential Migration (`formprincipal.pas`, `ai_credential_store.pas`):** Moved configuration to `TheBibleMaker.ini` and `~/.config/TheBibleMaker` (`TheBibleMaker.ini` & `credentials.ini`) with automatic one-time migration from `iBiblia.ini` and `~/.config/iBiblia` so saved preferences, GitHub tokens, and AI keys carry over automatically.

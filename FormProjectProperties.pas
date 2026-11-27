@@ -344,7 +344,7 @@ resourcestring
   SBackupChangeFolder = 'Change...';
   SBackupThisProject = 'Back up this project';
   SRestoreProject = 'Restore project...';
-  SBackupKeepInfo = 'Backups are zipped (.bib.zip) and can also be opened with File > Open. Backups you make are kept; of the automatic ones (made before replacing, adding or clearing text, applying a patch or applying AI results) only the newest %d of each project are kept.';
+  SBackupKeepInfo = 'Backups are zipped (.tbm.zip) and can also be opened with File > Open. Backups you make are kept; of the automatic ones (made before replacing, adding or clearing text, applying a patch or applying AI results) only the newest %d of each project are kept.';
   SRestoreConfirm = 'Restore the project from the %s?'#13#10#13#10 +
     'The current project file will be replaced by the backup. A backup of the current project is made first, so you can undo this.'#13#10#13#10 +
     'Changes not yet applied in Project settings will be discarded.';

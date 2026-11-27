@@ -1,4 +1,4 @@
-# The Bible Maker (v2.0.0.001)
+# The Bible Maker (v2.0.0.002)
 
 **The Bible Maker** *(formerly Dark-Skinned iBiblia)* is a native **64-bit Windows (`x64`) and Linux (`x86_64`)** multi-format Bible alignment, translation, interlinear tagging, and direct GitHub/Timotheos publishing workstation built by **Edmund P. Valdez (`SalitaNgDiyos`)**.
 
@@ -48,7 +48,7 @@ For downloads, manuals, and history, see:
 
 ### 4. Interactive Bible Tree: Rearrange, Delete, Add & Replace Books
 
-* **Drag-and-Drop Reordering & `.order` Companions**: Every book, chapter, and verse row in the Bible tree carries a right-edge grip handle for dragging rows into a custom arrangement (including moving verses or chapters across boundaries while preserving canonical chapter and verse numbers), saved inside the `.bib` project. Toggle grips anytime with **Tools → Rearrange books, chapters and verses**, restore standard order via right-click → **Reset the order of books, chapters and verses**, and automatically emit a companion `.order` file alongside exported Bible modules for Timotheos.
+* **Drag-and-Drop Reordering & `.order` Companions**: Every book, chapter, and verse row in the Bible tree carries a right-edge grip handle for dragging rows into a custom arrangement (including moving verses or chapters across boundaries while preserving canonical chapter and verse numbers), saved inside the `.tbm` project. Toggle grips anytime with **Tools → Rearrange books, chapters and verses**, restore standard order via right-click → **Reset the order of books, chapters and verses**, and automatically emit a companion `.order` file alongside exported Bible modules for Timotheos.
 
 * **Delete Books, Chapters, or Verses**: Right-click any book, chapter, or verse in the Bible tree and choose **Delete this book / chapter / verse...** to remove its entries after confirmation, automatically saving a `_before-delete_<date>_<time>` safety copy beside the project.
 
@@ -72,15 +72,15 @@ For downloads, manuals, and history, see:
 
 ### 6. Per-Project Change Log, Backup & Restore, and Crash / Error Tracking
 
-* **Per-Project Change Log Tracker (`Project → Project change log...`)**: Stores an embedded `change_log` inside every `.bib` project file (so history travels automatically with backups and **Save As** copies), recording timestamps, categories, summaries, and details for project creation, verse/association/status/comment saves, dictionary and settings updates (with full **Before** and **After** paths and values), whole-text imports, Add/Replace Bible books, patches, AI batch applications, deletions, backups/restores, tree reordering, and manual notes. Includes text search, category filtering, manual notes, Copy, `.txt`/`.csv` export, and a resizable **Details** viewer with `Ctrl`+wheel zooming plus **inline red/green diff highlighting on text edits** (highlighting replaced text in red under `Before` and newly applied text in green under `After` while keeping non-text entries clean).
+* **Per-Project Change Log Tracker (`Project → Project change log...`)**: Stores an embedded `change_log` inside every `.tbm` (and legacy `.bib`) project file (so history travels automatically with backups and **Save As** copies), recording timestamps, categories, summaries, and details for project creation, verse/association/status/comment saves, dictionary and settings updates (with full **Before** and **After** paths and values), whole-text imports, Add/Replace Bible books, patches, AI batch applications, deletions, backups/restores, tree reordering, and manual notes. Includes text search, category filtering, manual notes, Copy, `.txt`/`.csv` export, and a resizable **Details** viewer with `Ctrl`+wheel zooming plus **inline red/green diff highlighting on text edits** (highlighting replaced text in red under `Before` and newly applied text in green under `After` while keeping non-text entries clean).
 
-* **Project Backup & Restore (`.bib.zip`)**: Manage SQLite-verified `.bib.zip` snapshots with optional notes and a configurable backup folder in **Project → Settings → Project**. Automatic pre-operation backup prompts run before Replace, Add Books, Clear Text, Apply Patch, or Apply AI results (keeping the 2 newest automatic backups while never removing manual backups); **Restore project...** backs up the current project first so restores are undoable; and **File → Open** opens `.bib.zip` archives directly.
+* **Project Backup & Restore (`.tbm.zip`)**: Manage SQLite-verified `.tbm.zip` snapshots (and restore legacy `.bib.zip` snapshots) with optional notes and a configurable backup folder in **Project → Settings → Project**. Automatic pre-operation backup prompts run before Replace, Add Books, Clear Text, Apply Patch, or Apply AI results (keeping the 2 newest automatic backups while never removing manual backups); **Restore project...** backs up the current project first so restores are undoable; and **File → Open** opens `.tbm`, `.tbm.zip`, and legacy `.bib`/`.bib.zip` files directly.
 
 * **Automated Crash & Error Tracker (`Help → Crash & error logs...`)**: Automatically records unhandled exceptions (with stack trace, active window/control, open project, current verse, and recent activity breadcrumbs) into timestamped `.log` files under `<ConfigDir>/crash_logs/`, paired with a session watchdog that logs unexpected hard crashes on next launch. Displays a themed **iBiblia Error Report** popup (**Copy report**, **Save log as...**, **Open logs folder**, **Continue**, **Close iBiblia**) and offers **Help → Crash & error logs...** to review saved logs and create manual diagnostic reports.
 
 ### 7. Guided Project Wizard, Customizable Statuses, Themes & Experimental AI Workflows
 
-* **Guided New Project Wizard, Status Catalog & Save As (`Ctrl+Shift+S`)**: Choose between an **Association project** or a **Translation project** (starting with an empty Destination module), configure `OT`/`NT`/`ONT` scope, customize up to 12 verse statuses (names, colors, and display order), filter navigation through multi-select checkboxes in **Status Summary** (`F8` / `Shift+F8`), search all texts including Apocrypha with modeless **Find in Project** (`Ctrl+F`), and save independent `.bib` copies.
+* **Guided New Project Wizard, Status Catalog & Save As (`Ctrl+Shift+S`)**: Choose between an **Association project** or a **Translation project** (starting with an empty Destination module), configure `OT`/`NT`/`ONT` scope, customize up to 12 verse statuses (names, colors, and display order), filter navigation through multi-select checkboxes in **Status Summary** (`F8` / `Shift+F8`), search all texts including Apocrypha with modeless **Find in Project** (`Ctrl+F`), and save independent `.tbm` copies.
 
 * **Experimental AI Translation & Association (`Project → AI Options`)**: Configure OpenAI, DeepSeek, or Google Gemini models (`iBiblia.models.json`), machine-default or per-project settings, flow-specific system prompts, and reusable verse examples. Run single-verse AI suggestions or right-click a book/chapter in the Bible tree for batch processing with side-by-side review before applying, backed by Windows DPAPI local secure storage for API keys.
 
@@ -88,11 +88,11 @@ For downloads, manuals, and history, see:
 
 ### 8. Cross-Platform (Windows x64 & Linux x86_64), External Bible Sync & Automatic Updates
 
-* **Native 64-Bit Windows & Linux Editions**: Runs natively on 64-bit Windows (`x64`) and 64-bit Debian/Ubuntu Linux (`x86_64`, GTK2) using interchangeable `.bib` project files. On Linux, user settings and logs live cleanly in `~/.config/iBiblia`, desktop integration registers iBiblia automatically in the Applications Menu (`IBIBLIA_NO_MENU=1` to opt out, alongside `install-menu-entry.sh`), all dialogs and KDE title bars respect dark/light/Sepia skins, and **About** displays clickable Program Folder and Working Folder paths.
+* **Native 64-Bit Windows & Linux Editions**: Runs natively on 64-bit Windows (`x64`) and 64-bit Debian/Ubuntu Linux (`x86_64`, GTK2) using interchangeable `.tbm` (and legacy `.bib`) project files. On Linux, user settings and logs live cleanly in `~/.config/TheBibleMaker`, desktop integration registers The Bible Maker automatically in the Applications Menu (`IBIBLIA_NO_MENU=1` to opt out, alongside `install-menu-entry.sh`), all dialogs and KDE title bars respect dark/light/Sepia skins, and **About** displays clickable Program Folder and Working Folder paths.
 
 * **Bidirectional theWord 7 & Timotheos (Tanglaw) Synchronization**: Synchronize verse navigation in both directions simultaneously with **64-bit theWord 7** (Windows `WM_COPYDATA`) and **Timotheos (Tanglaw)** (Windows and Linux, supporting both Tauri 2 `v0.6.5+` and Electron `v0.5.5+`, with Apocrypha books matched by name).
 
-* **Automatic SHA-256 Verified Updates & Update Branch Selector**: Checks GitHub Releases automatically at startup or on demand via **Help → Check for updates...**, verifies archives against `SHA256SUMS.txt`, supports seamless background downloads (install on restart or on close) with rollback protection while leaving `.bib` projects and `iBiblia.ini` untouched (`IBIBLIA_NO_UPDATE=1` to opt out), and adds **Help → Update branch** to switch between **Stable (`linux-port`)** and **Neon (`Neon` branch)**.
+* **Automatic SHA-256 Verified Updates & Update Branch Selector**: Checks GitHub Releases automatically at startup or on demand via **Help → Check for updates...**, verifies archives against `SHA256SUMS.txt`, supports seamless background downloads (install on restart or on close) with rollback protection while leaving `.tbm`/`.bib` projects and settings untouched (`IBIBLIA_NO_UPDATE=1` to opt out), and adds **Help → Update branch** to switch between **Stable (latest release)** and **Neon (`Neon` branch)**.
 
 ## Keyboard & Mouse Shortcuts Summary
 
@@ -105,7 +105,7 @@ For downloads, manuals, and history, see:
 | **`Ctrl + Left-Click`** *(on associated word)* | Dissociate (unlink) an existing word association |
 | **`Ctrl + G`** *(or type a letter in the Bible tree)* | Open **Go to verse...** lookup box to jump directly to any book, chapter, or verse |
 | **`Alt + Left` / `Alt + Right`** | Navigate back / forward through visited verse history |
-| **`Ctrl + S` / `Ctrl + Shift + S`** | **Save Project** / **Save Project As...** (creates an independent `.bib` copy) |
+| **`Ctrl + S` / `Ctrl + Shift + S`** | **Save Project** / **Save Project As...** (creates an independent `.tbm` copy) |
 | **`Ctrl + F`** | Open modeless **Find in Project** dialog (search Source, Destination, Refs, Strong's, or Notes) |
 | **`F8` / `Shift + F8`** | Jump to **Next / Previous verse** matching the ticked statuses in the **Status Summary** filter |
 | **`Page Down` / `Page Up`** | Navigate to the next / previous verse in canonical order |

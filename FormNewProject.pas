@@ -136,8 +136,8 @@ resourcestring
   SChooseAName = 'Please choose a name for your project';
   SChooseAtLeastOneText = 'Please choose a source Bible text';
   SChooseDestinationText = 'Please choose a destination Bible text for an association project';
-  SChooseProjectFile = 'Please choose a .bib project file';
-  SProjectFileExtension = 'The project file must use the .bib extension';
+  SChooseProjectFile = 'Please choose a .tbm project file';
+  SProjectFileExtension = 'The project file must use the .tbm (or legacy .bib) extension';
   SProjectFileAlreadyExists = 'A project file already exists at this location';
   SOldTestament = 'Old Testament';
   SNewTestament = 'New Testament';
@@ -156,7 +156,7 @@ resourcestring
   SNewTestamentFilter = 'theWord Bible modules (*.ont, *.nt)|*.ont;*.nt';
   SOldTestamentFilter = 'theWord Bible modules (*.ont, *.ot)|*.ont;*.ot';
   SWholeBibleFilter = 'theWord Bible modules (*.ont, *.ot, *.nt)|*.ont;*.ot;*.nt';
-  SProjectFileFilter = 'iBiblia project (*.bib)|*.bib|All files|*.*';
+  SProjectFileFilter = 'The Bible Maker project (*.tbm)|*.tbm|Legacy iBiblia project (*.bib)|*.bib|All files|*.*';
   SDictionaryFilter = 'theWord dictionary modules (*.dct.twm)|*.dct.twm|All files|*.*';
   SChooseBibleModuleTitle = 'Choose a theWord Bible module';
   SChooseDictionaryModuleTitle = 'Choose a theWord dictionary module';
@@ -177,7 +177,7 @@ resourcestring
   SScenarioAssociationDescription = 'Use this when you already have a source text and a translated destination text. iBiblia will guide you through associating source syntagms with destination syntagms, so both source and destination texts are required.';
   SScenarioTranslationDescription = 'Use this when the destination text will be created inside iBiblia. Only the source text is required now; the destination text can start empty and be filled by the user.';
   SProjectNameLabel = 'Project name';
-  SProjectFileLabel = 'Project file (.bib)';
+  SProjectFileLabel = 'Project file (.tbm)';
   SScopeLabel = 'Scope';
   SSourceTextLabel = 'Source text';
   SDestinationTextLabelRequired = 'Destination text (required)';
@@ -242,7 +242,7 @@ begin
 
   FProjectSaveDialog := TSaveDialog.Create(Self);
   FProjectSaveDialog.Filter := SProjectFileFilter;
-  FProjectSaveDialog.DefaultExt := 'bib';
+  FProjectSaveDialog.DefaultExt := 'tbm';
 
   FWizard := TPageControl.Create(Self);
   FWizard.Parent := Self;
@@ -1015,7 +1015,8 @@ begin
           Fail(SChooseAName)
         else if Trim(FProjectFileEdit.Text) = '' then
           Fail(SChooseProjectFile)
-        else if not SameText(ExtractFileExt(FProjectFileEdit.Text), '.bib') then
+        else if (not SameText(ExtractFileExt(FProjectFileEdit.Text), '.tbm')) and
+                (not SameText(ExtractFileExt(FProjectFileEdit.Text), '.bib')) then
           Fail(SProjectFileExtension)
         else if FileExists(FProjectFileEdit.Text) then
           Fail(SProjectFileAlreadyExists);

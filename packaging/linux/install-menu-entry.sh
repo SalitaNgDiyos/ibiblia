@@ -21,7 +21,7 @@ Exec="$BIN" %f
 Icon=$ICON
 Terminal=false
 Categories=Education;Office;
-MimeType=application/x-ibiblia-project;
+MimeType=application/x-thebiblemaker-project;application/x-ibiblia-project;
 EOF
 chmod +x "$HOME/.local/share/applications/thebiblemaker.desktop"
 echo "The Bible Maker was added to your applications menu."

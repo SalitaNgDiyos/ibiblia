@@ -44,8 +44,8 @@ resourcestring
   STextReference1 = 'Reference 1';
   STextReference2 = 'Reference 2';
   SProjectNameRequired = 'Please choose a name for the project.';
-  SProjectFileRequired = 'Please choose where the .bib project file will be saved.';
-  SProjectFileExtension = 'The project file must use the .bib extension.';
+  SProjectFileRequired = 'Please choose where the .tbm project file will be saved.';
+  SProjectFileExtension = 'The project file must use the .tbm (or legacy .bib) extension.';
   SProjectFileExists = 'A project file already exists at this location.';
   SSourceRequired = 'Please choose the source Bible text.';
   SDestinationRequired = 'Please choose the destination Bible text for an association project.';
@@ -312,7 +312,8 @@ begin
     Exit;
   end;
 
-  if not SameText(ExtractFileExt(Draft.ProjectFileName), '.bib') then
+  if (not SameText(ExtractFileExt(Draft.ProjectFileName), '.tbm')) and
+     (not SameText(ExtractFileExt(Draft.ProjectFileName), '.bib')) then
   begin
     MessageText := SProjectFileExtension;
     Exit;

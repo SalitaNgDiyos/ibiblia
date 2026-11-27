@@ -584,8 +584,8 @@ resourcestring
   SDeleteItemFailed = 'Nothing was deleted: %s';
   SDeleteItemNothing = 'Nothing was found to delete.';
   SDeleteItemDone = '%d verse(s) deleted. A copy of the project before the deletion was kept as:' + LineEnding + '%s';
-  SProjectOpenFilter = 'iBiblia projects (*.bib, *.bib.zip)|*.bib;*.zip|Association project (*.bib)|*.bib|Zipped project / backup (*.bib.zip)|*.bib.zip;*.zip';
-  SProjectSaveFilter = 'Association project (*.bib)|*.bib';
+  SProjectOpenFilter = 'The Bible Maker projects (*.tbm, *.bib, *.tbm.zip, *.bib.zip)|*.tbm;*.bib;*.zip|The Bible Maker project (*.tbm)|*.tbm|Legacy iBiblia project (*.bib)|*.bib|Zipped project / backup (*.tbm.zip, *.bib.zip)|*.tbm.zip;*.bib.zip;*.zip';
+  SProjectSaveFilter = 'The Bible Maker project (*.tbm)|*.tbm|Legacy iBiblia project (*.bib)|*.bib';
   SArrangeTitle = 'Open project';
   SArrangeFailed = 'The order of the apocrypha books in the project could not be arranged:'#13#10'%s'#13#10#13#10'The project is opened as it was.';
   SPatchBackupReason = 'Before applying the patch';
@@ -595,8 +595,8 @@ resourcestring
   SRestoreFailed = 'The project could not be restored:'#13#10'%s'#13#10#13#10'The current project was kept.';
   SRestoreDone = 'The project was restored from the %s.'#13#10#13#10'The project as it was before is in the backup:'#13#10'%s';
   SUnzipTitle = 'Open zipped project';
-  SUnzipIntro = 'This is a zipped iBiblia project (backup). iBiblia will unpack it to a project file (.bib) and open it.'#13#10#13#10'Choose where to save the unpacked project.';
-  SUnzipNotAProject = 'This zip file does not contain an iBiblia project:'#13#10'%s';
+  SUnzipIntro = 'This is a zipped The Bible Maker project (backup). The Bible Maker will unpack it to a project file (.tbm) and open it.'#13#10#13#10'Choose where to save the unpacked project.';
+  SUnzipNotAProject = 'This zip file does not contain a The Bible Maker project:'#13#10'%s';
   SUnzipFailed = 'The project could not be unpacked:'#13#10'%s';
   SAddBooksProgress = 'Setting the verse texts...';
   SAddBooksRowsFailed = 'The new books could not be added to the project file: %s';
@@ -635,14 +635,14 @@ resourcestring
   SDefaultVerseModeAssociationHint = 'Open each verse in association mode';
   SDefaultVerseModeEditing = 'WYSIWYG editing';
   SDefaultVerseModeEditingHint = 'Open Destination in the WYSIWYG editor when navigating to a verse';
-  SRegisterFileAssociationSuccess = 'Successfully registered file association for .bib files';
-  SRegisterFileAssociationFailure = 'Failed to register file association for .bib files';
-  SUnregisterFileAssociationSuccess = 'Successfully removed file association for .bib files';
-  SUnregisterFileAssociationFailure = 'Failed to remove file association for .bib files';
-  SRegisterFileAssociation = 'Register .bib file association';
-  SUnregisterFileAssociation = 'Unregister .bib file association';
-  SRegisterFileAssociationTakeOverPrompt = 'The .bib extension is currently associated with: %s.'#13#10 +
-                                           'Do you want to take over the association for iBiblia?';
+  SRegisterFileAssociationSuccess = 'Successfully registered file association for .tbm files';
+  SRegisterFileAssociationFailure = 'Failed to register file association for .tbm files';
+  SUnregisterFileAssociationSuccess = 'Successfully removed file association for .tbm files';
+  SUnregisterFileAssociationFailure = 'Failed to remove file association for .tbm files';
+  SRegisterFileAssociation = 'Register .tbm file association';
+  SUnregisterFileAssociation = 'Unregister .tbm file association';
+  SRegisterFileAssociationTakeOverPrompt = 'The .tbm extension is currently associated with: %s.'#13#10 +
+                                           'Do you want to take over the association for The Bible Maker?';
   SRegisterFileAssociationAdminRetry = 'Failed to register file association. This operation requires administrator rights.'#13#10 +
                                        'Do you want to retry as administrator?';
   SSuggestionMode = 'Suggestion method';
@@ -4347,7 +4347,7 @@ begin
   if MessageDlg(SUnzipTitle, SUnzipIntro, mtInformation, [mbOK, mbCancel], 0) <> mrOK then
     Exit;
   Folder := ExtractFileDir(ExpandFileName(ZipFile));
-  EntryName := ExtractFileName(StringReplace(EntryName, '/', PathDelim, [rfReplaceAll]));
+  EntryName := ChangeFileExt(ExtractFileName(StringReplace(EntryName, '/', PathDelim, [rfReplaceAll])), '.tbm');
   Candidate := IncludeTrailingPathDelimiter(Folder) + EntryName;
   Index := 2;
   while FileExists(Candidate) do
@@ -4357,14 +4357,14 @@ begin
       FormatDateTime('yyyy-mm-dd_hhnn', Now);
     if Index > 2 then
       Candidate := Candidate + '_' + IntToStr(Index);
-    Candidate := Candidate + '.bib';
+    Candidate := Candidate + '.tbm';
     Inc(Index);
   end;
   Dialog := TSaveDialog.Create(nil);
   try
     Dialog.Title := SUnzipTitle;
     Dialog.Filter := SProjectSaveFilter;
-    Dialog.DefaultExt := '.bib';
+    Dialog.DefaultExt := '.tbm';
     Dialog.InitialDir := Folder;
     Dialog.FileName := ExtractFileName(Candidate);
     Dialog.Options := Dialog.Options + [ofOverwritePrompt, ofPathMustExist, ofNoChangeDir];
@@ -5303,8 +5303,8 @@ begin
     ActionSaveProjectAsUpdate(ActionSaveProjectAs);
     PreviousFileName := SavingProject.Caminho;
     SaveDialog1.InitialDir := ExtractFileDir(PreviousFileName);
-    SaveDialog1.FileName := ExtractFileName(PreviousFileName);
-    SaveDialog1.DefaultExt := '.bib';
+    SaveDialog1.FileName := ChangeFileExt(ExtractFileName(PreviousFileName), '.tbm');
+    SaveDialog1.DefaultExt := '.tbm';
     SaveDialog1.Filter := SProjectSaveFilter;
     SaveDialog1.FilterIndex := 1;
     SaveDialog1.Options := SaveDialog1.Options +
@@ -5883,7 +5883,9 @@ begin
   ContextPanel.Width := opts.ReadInteger('leiaute', 'principal.contextpanel.width', ContextPanel.Width);
   LayoutVersePanelLabels;
 
-  if (ParamCount > 0) and SameText(ExtractFileExt(ParamStr(1)), '.bib') and FileExists(ParamStr(1)) then
+  if (ParamCount > 0) and
+     (SameText(ExtractFileExt(ParamStr(1)), '.tbm') or SameText(ExtractFileExt(ParamStr(1)), '.bib')) and
+     FileExists(ParamStr(1)) then
     DoOpenProject(ParamStr(1))
   else if (ParamCount > 0) and SameText(ExtractFileExt(ParamStr(1)), '.zip') and
     FileExists(ParamStr(1)) and UnpackZippedProject(ParamStr(1), ZipStartupProject) then
@@ -7819,8 +7821,8 @@ var
 begin
   ExePath := ParamStr(0);
 
-  IsAssociated := IsFileAssociated('.bib');
-  AssociatedApp := GetAssociatedApp('.bib');
+  IsAssociated := IsFileAssociated('.tbm');
+  AssociatedApp := GetAssociatedApp('.tbm');
   IsOurs := SameExecutablePath(AssociatedApp, ExePath);
 
   if IsAssociated and (not AssociatedApp.IsEmpty) and (not IsOurs) then
@@ -7862,7 +7864,7 @@ var
   AssociatedApp: string;
   IsOurs: Boolean;
 begin
-  AssociatedApp := GetAssociatedApp('.bib');
+  AssociatedApp := GetAssociatedApp('.tbm');
   IsOurs := SameExecutablePath(AssociatedApp, ParamStr(0));
 
   if Assigned(ActionRegisterFileAssociation) then

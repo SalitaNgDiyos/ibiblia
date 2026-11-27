@@ -466,10 +466,10 @@ object MainForm: TMainForm
           Action = ActionVaccumProject
         end
         object MenuItemRegisterFileAssoc: TMenuItem
-          Caption = 'Register .bib files'
+          Caption = 'Register .tbm files'
         end
         object MenuItemUnregisterFileAssoc: TMenuItem
-          Caption = 'Unregister .bib files'
+          Caption = 'Unregister .tbm files'
         end
         object MenuItem26: TMenuItem
           Action = ActionRebuildSuggestionDatabase
@@ -774,9 +774,9 @@ object MainForm: TMainForm
     end
   end
   object OpenDialog1: TOpenDialog
-    Title = 'Open existing association project'
-    DefaultExt = '.bib'
-    Filter = 'Association project (*.bib)|*.bib'
+    Title = 'Open existing project'
+    DefaultExt = '.tbm'
+    Filter = 'The Bible Maker project (*.tbm)|*.tbm|Legacy iBiblia project (*.bib)|*.bib'
     InitialDir = '.\dados'
     Options = [ofFileMustExist, ofEnableSizing, ofViewDetail]
     Left = 421
@@ -784,9 +784,9 @@ object MainForm: TMainForm
   end
   object SaveDialog1: TSaveDialog
     Title = 'Save project as...'
-    DefaultExt = '.bib'
+    DefaultExt = '.tbm'
     FileName = 'projeto1'
-    Filter = 'Association projects (*.bib)|*.bib'
+    Filter = 'The Bible Maker projects (*.tbm)|*.tbm|Legacy iBiblia projects (*.bib)|*.bib'
     InitialDir = '.\dados'
     Left = 572
     Top = 202

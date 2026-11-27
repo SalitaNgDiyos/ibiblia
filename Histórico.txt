@@ -3,6 +3,10 @@ Independent offshoot originally derived from iBiblia by Rúbio R. C. Terra.
 Not an official continuation of upstream iBiblia (rubiot/ibiblia).
 Maintained independently at https://github.com/SalitaNgDiyos/The-Bible-Maker
 
+Version 2.0.0.002 (64-bit Edition) - 2026-11-27
+- Changed default project file extension from .bib to .tbm (and zipped backups from .bib.zip to .tbm.zip) across New Project, Open, Save As, Backup & Restore, File Association, Linux MIME types, Updater protection, docs, and English/Portuguese translations.
+- Kept full backward compatibility to open, edit, save, and restore legacy .bib and .bib.zip projects.
+
 Version 2.0.0.001 (64-bit Edition) - 2026-11-27
 - Major independent product milestone: embedded custom The Bible Maker gold-on-obsidian app icon across Windows and Linux, updated Windows version info to 2.0.0.001, added root LICENSE and NOTICE.md, and replaced remaining upstream rubiot/ibiblia wiki/issue links.
 - Added automatic one-time migration to TheBibleMaker.ini and ~/.config/TheBibleMaker (preserving iBiblia.ini and credentials.ini) and updated Linux menu integration to thebiblemaker.desktop.

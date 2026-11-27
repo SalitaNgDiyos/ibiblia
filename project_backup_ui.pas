@@ -64,8 +64,8 @@ resourcestring
   SBackupRestoreButton = 'Restore';
   SBackupOtherFile = 'Other backup file...';
   SBackupCancel = 'Cancel';
-  SBackupZipFilter = 'Zipped iBiblia projects (*.bib.zip, *.zip)|*.bib.zip;*.zip';
-  SBackupNotAProjectZip = 'This file is not a zipped iBiblia project:'#13#10'%s';
+  SBackupZipFilter = 'Zipped The Bible Maker projects (*.tbm.zip, *.bib.zip, *.zip)|*.tbm.zip;*.bib.zip;*.zip';
+  SBackupNotAProjectZip = 'This file is not a zipped The Bible Maker project:'#13#10'%s';
   SBackupDescription = 'backup of %s';
   SBackupDescriptionNote = 'backup of %s ("%s")';
 

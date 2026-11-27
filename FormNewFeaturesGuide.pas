@@ -193,7 +193,7 @@ const
     '  - Create Association or Translation projects through a guided wizard, including ' +
     'an initially empty Destination text for new translations.' + LineEnding +
     '  - Customize verse statuses (names, colors, and display order), use the contextual ' +
-    'guide banner, and save independent .bib copies with File > Save As.' + LineEnding +
+    'guide banner, and save independent .tbm copies with File > Save As.' + LineEnding +
     '  - Choose English or Portuguese interface language, 4 icon families (Connected, ' +
     'Clareza, Mosaico, Folio), and 3 toolbar icon sizes (Small 16px, Medium 22px, Large 28px).' + LineEnding + LineEnding +
     'EXPERIMENTAL AI TRANSLATION & ASSOCIATION' + LineEnding +
@@ -222,10 +222,10 @@ const
     '  - Help > Update branch switches between Stable (linux-port) and Neon (Neon branch), ' +
     'persisted in iBiblia.ini (update.channel).' + LineEnding + LineEnding +
     'PROJECT BACKUP & RESTORE' + LineEnding +
-    'In Project > Settings > Project, use "Back up this project" (.bib.zip with optional ' +
+    'In Project > Settings > Project, use "Back up this project" (.tbm.zip with optional ' +
     'note) and "Restore project..." (automatically backs up the current project first). ' +
-    'iBiblia also offers a backup prompt before Replace, Add Books, Clear Text, Apply Patch, ' +
-    'or Apply AI. File > Open accepts .bib.zip archives directly.' + LineEnding + LineEnding +
+    'The Bible Maker also offers a backup prompt before Replace, Add Books, Clear Text, Apply Patch, ' +
+    'or Apply AI. File > Open accepts .tbm, .tbm.zip, and legacy .bib/.bib.zip files.' + LineEnding + LineEnding +
     'PROJECT CHANGE LOG & CRASH LOGS' + LineEnding +
     'Project > Project change log... shows GitHub-style red/green inline diffs for text edits, ' +
     'dictionary updates, and Find & Replace batches (with Ctrl+wheel zoom and a resizable splitter). ' +

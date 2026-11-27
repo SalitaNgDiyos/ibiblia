@@ -1,4 +1,4 @@
-The Bible Maker 2.0.0.001 for Linux (64-bit)
+The Bible Maker 2.0.0.002 for Linux (64-bit)
 ============================================
 
 Built for Debian 12 (bookworm) and Debian 13 (trixie) on 64-bit PCs
@@ -10,7 +10,7 @@ How to run it
 1. Extract this folder anywhere in your home folder, for example
    ~/Apps/TheBibleMaker. Keep all the files in it together.
 2. Open the folder and double-click "iBiblia" (transition executable for
-   v2.0.0.001). If double-clicking does not start it, open a terminal in
+   v2.0.0.002). If double-clicking does not start it, open a terminal in
    the folder and type:   ./iBiblia
 3. Optional: to add The Bible Maker to your applications menu, open a
    terminal in the folder and type:   ./install-menu-entry.sh
@@ -40,7 +40,7 @@ Optional features
 
 Your settings and projects
 --------------------------
-- Your projects are the same .bib files across Windows and Linux.
+- Projects use `.tbm` (and legacy `.bib` files remain supported) across Windows and Linux.
 - Settings are saved in ~/.config/TheBibleMaker/TheBibleMaker.ini (and
   migrate automatically from ~/.config/iBiblia/iBiblia.ini or an
   adjacent iBiblia.ini on first run).

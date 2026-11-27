@@ -190,9 +190,9 @@ begin
   AssertTrue('A save callback cannot commit while the dialog is open', FDialog.SaveBlocked);
   AssertFalse('Cancel releases the guard', FProject.SaveAsInProgress);
   AssertEquals(FSourceFileName, FProject.Caminho);
-  AssertEquals('original.bib', FDialog.ConfiguredFileName);
+  AssertEquals('original.tbm', FDialog.ConfiguredFileName);
   AssertEquals(FTempDir, FDialog.ConfiguredInitialDir);
-  AssertEquals('.bib', FDialog.DefaultExt);
+  AssertEquals('.tbm', FDialog.DefaultExt);
   AssertTrue('Native overwrite confirmation is enabled', ofOverwritePrompt in FDialog.Options);
   AssertTrue('Cancel leaves the edit pending', FProject.Modificado);
   AssertEquals('Destination', ReadDestination(FSourceFileName));

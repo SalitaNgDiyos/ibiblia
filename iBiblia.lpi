@@ -21,8 +21,8 @@
     <VersionInfo>
       <UseVersionInfo Value="True"/>
       <MajorVersionNr Value="2"/>
-      <BuildNr Value="1"/>
-      <StringTable CompanyName="SalitaNgDiyos (Edmund P. Valdez)" FileDescription="The Bible Maker — Bible translation, alignment, and publishing workstation" ProductName="The Bible Maker" ProductVersion="2.0.0.001"/>
+      <BuildNr Value="2"/>
+      <StringTable CompanyName="SalitaNgDiyos (Edmund P. Valdez)" FileDescription="The Bible Maker — Bible translation, alignment, and publishing workstation" ProductName="The Bible Maker" ProductVersion="2.0.0.002"/>
     </VersionInfo>
     <BuildModes Count="6" Active="Debug">
       <Item1 Name="Debug" Default="True"/>

@@ -117,6 +117,10 @@ const
   'The Bible Maker — Independent offshoot originally derived from iBiblia (Rúbio R. C. Terra).' + LineEnding +
   'Not an official continuation of upstream iBiblia. Maintained independently at https://github.com/SalitaNgDiyos/The-Bible-Maker' + LineEnding +
   LineEnding +
+  'Version 2.0.0.002 (64-bit Edition) - 2026-11-27' + LineEnding +
+  '- Changed default project file extension from .bib to .tbm (and zipped backups from .bib.zip to .tbm.zip) across New Project, Open, Save As, Backup & Restore, File Association, Linux MIME types, Updater protection, docs, and English/Portuguese translations.' + LineEnding +
+  '- Kept full backward compatibility to open, edit, save, and restore legacy .bib and .bib.zip projects.' + LineEnding +
+  LineEnding +
   'Version 2.0.0.001 (64-bit Edition) - 2026-11-27' + LineEnding +
   '- Major independent offshoot milestone: custom The Bible Maker gold-on-obsidian app icon (iBiblia.ico & TheBibleMaker.png), MIT LICENSE + NOTICE.md provenance documentation, and cleanup of upstream rubiot/ibiblia wiki/issue links and stale repo branches.' + LineEnding +
   '- Transitioned Linux/Windows settings and Linux credential store to ~/.config/TheBibleMaker (TheBibleMaker.ini & credentials.ini) with automatic one-time migration from iBiblia.ini / ~/.config/iBiblia, and updated the Linux desktop menu entry to thebiblemaker.desktop.' + LineEnding +
@@ -808,7 +812,7 @@ begin
     ver := '';
   end;
   if (ver = '') or (ver = '1.1.0.0') or (ver = '1.1.0.1') then
-    ver := '2.0.0.001';
+    ver := '2.0.0.002';
 
   LabelVersion := TLabel.Create(Self);
   LabelVersion.Parent := Self;
@@ -1309,7 +1313,7 @@ begin
   lblHeaderTitle.Font.Name := 'Segoe UI';
   lblHeaderTitle.Font.Height := -17;
   lblHeaderTitle.Font.Style := [fsBold];
-  lblHeaderTitle.Caption := 'The Bible Maker User Guide (v1.0.0.71 – v2.0.0.001)';
+  lblHeaderTitle.Caption := 'The Bible Maker User Guide (v1.0.0.71 – v2.0.0.002)';
 
   lblHeaderSub := TLabel.Create(pnlHeader);
   lblHeaderSub.Parent := pnlHeader;
@@ -1519,7 +1523,7 @@ begin
     10: Result := '11. iBiblia 1.1.0: Guided Project Wizard, Custom Statuses, AI Workflows & Toolbar Sizes';
     11: Result := '12. iBiblia 1.1.0: Arrange, Delete and Add Books in the Tree';
     12: Result := '13. The Bible Maker: Updates, Project Change Log, Crash Logs, Backups & Linux';
-    13: Result := '14. Complete Quick-Reference Summary of All New Features (v1.0.0.70 – v2.0.0.001)';
+    13: Result := '14. Complete Quick-Reference Summary of All New Features (v1.0.0.70 – v2.0.0.002)';
   else
     Result := '';
   end;
@@ -1713,12 +1717,12 @@ begin
     10:
       Result :=
         'FEATURE OVERVIEW (iBiblia 1.1.0.0 – 1.1.0.019)' + sLineBreak +
-        'Create projects with the Guided New Project Wizard, customize project status catalogs, run experimental AI translation and association flows with batch review, save independent .bib copies via Save As, and customize interface language, icon families, and 3 toolbar icon sizes.' + sLineBreak + sLineBreak +
+        'Create projects with the Guided New Project Wizard, customize project status catalogs, run experimental AI translation and association flows with batch review, save independent .tbm copies via Save As, and customize interface language, icon families, and 3 toolbar icon sizes.' + sLineBreak + sLineBreak +
         'HOW TO USE:' + sLineBreak +
         '  1. Guided Project Creation Wizard & Custom Statuses:' + sLineBreak +
         '     • File > New Project launches a step-by-step wizard supporting both "Association project" (existing Source + Destination) and "Translation project" (Source + initially empty Destination).' + sLineBreak +
         '     • Customize up to 12 verse statuses (names, colors, and display order) in New Project or Project > Settings; the Bible TreeView, Status Summary filter box, and Destination 4-dot status strip stay synchronized automatically.' + sLineBreak +
-        '     • Use File > Save As (Ctrl+Shift+S) to save an independent .bib copy, and check the bottom-left corner of the status bar (just below the status summary box) for real-time "Saved" / "Unsaved changes" status.' + sLineBreak + sLineBreak +
+        '     • Use File > Save As (Ctrl+Shift+S) to save an independent .tbm copy, and check the bottom-left corner of the status bar (just below the status summary box) for real-time "Saved" / "Unsaved changes" status.' + sLineBreak + sLineBreak +
         '  2. Experimental AI Translation & Association Flows:' + sLineBreak +
         '     • Configure machine-default or project-specific AI providers, models, custom prompts, and verse examples in Project > AI Options (with API keys stored securely in Windows local storage).' + sLineBreak +
         '     • Run single-verse AI suggestions from the toolbar split button or right-click a book/chapter in the Bible TreeView to run batch AI Association or Translation with side-by-side review before applying.' + sLineBreak + sLineBreak +
@@ -1751,18 +1755,18 @@ begin
     12:
       Result :=
         'FEATURE OVERVIEW (iBiblia 1.1.0.048 – v1.1.0.068)' + sLineBreak +
-        'Keep iBiblia up to date automatically on both Windows and Linux with selectable Stable / Neon update channels, protect your work with verified .bib.zip backups before major edits, and run the native 64-bit Linux edition with full feature parity.' + sLineBreak + sLineBreak +
+        'Keep The Bible Maker up to date automatically on both Windows and Linux with selectable Stable / Neon update channels, protect your work with verified .tbm.zip backups before major edits, and run the native 64-bit Linux edition with full feature parity.' + sLineBreak + sLineBreak +
         'HOW TO USE:' + sLineBreak +
         '  1. Automatic Self-Updates & Update Branch (Help > Check for updates... / Help > Update branch):' + sLineBreak +
-        '     • Help > Check for updates... fetches GitHub Releases, verifies downloads against SHA256SUMS.txt, swaps files in-place with automatic rollback on error, and restarts iBiblia cleanly (your projects and settings are untouched).' + sLineBreak +
-        '     • Help > Check for updates when iBiblia starts toggles automatic startup checks (on Linux, updates download quietly in the background by default and offer a restart prompt).' + sLineBreak +
-        '     • Help > Update branch lets you switch between "Stable (linux-port)" (/releases/latest) and "Neon (Neon branch)" (rolling neon pre-release tag), saved in iBiblia.ini (update.channel). Switching branches clears any skipped version and discards pending downloads from the previous branch.' + sLineBreak + sLineBreak +
+        '     • Help > Check for updates... fetches GitHub Releases, verifies downloads against SHA256SUMS.txt, swaps files in-place with automatic rollback on error, and restarts cleanly (your projects and settings are untouched).' + sLineBreak +
+        '     • Help > Check for updates when The Bible Maker starts toggles automatic startup checks (on Linux, updates download quietly in the background by default and offer a restart prompt).' + sLineBreak +
+        '     • Help > Update branch lets you switch between "Stable (latest release)" (/releases/latest) and "Neon (Neon branch)" (rolling neon pre-release tag), saved in TheBibleMaker.ini (update.channel). Switching branches clears any skipped version and discards pending downloads from the previous branch.' + sLineBreak + sLineBreak +
         '  2. Project Backup & Restore (Project > Settings > Project tab):' + sLineBreak +
-        '     • Click "Back up this project" to create a verified .bib.zip backup (with an optional note) in your chosen backup folder.' + sLineBreak +
-        '     • Before Replace, Add Books, Clear Text, Apply Patch, or Apply AI, iBiblia offers "Back up and continue" (keeping the newest 2 automatic backups; manual backups you create are never deleted).' + sLineBreak +
-        '     • "Restore project..." lists backups by date, type, note, associated verse count, and size, and automatically backs up the current project first so any restore can be undone. File > Open also opens .bib.zip files directly.' + sLineBreak + sLineBreak +
+        '     • Click "Back up this project" to create a verified .tbm.zip backup (with an optional note) in your chosen backup folder.' + sLineBreak +
+        '     • Before Replace, Add Books, Clear Text, Apply Patch, or Apply AI, The Bible Maker offers "Back up and continue" (keeping the newest 2 automatic backups; manual backups you create are never deleted).' + sLineBreak +
+        '     • "Restore project..." lists backups by date, type, note, associated verse count, and size, and automatically backs up the current project first so any restore can be undone. File > Open accepts .tbm, .tbm.zip, and legacy .bib/.bib.zip files.' + sLineBreak + sLineBreak +
         '  3. Native 64-Bit Linux Edition:' + sLineBreak +
-        '     • Runs natively on Linux x86_64 with transparent hover bottom bars, Linux RTF dictionary popups, TTS (espeak-ng/espeak/spd-say), Timotheos sync, automatic desktop menu registration (~/.local/share/applications/ibiblia.desktop), and cloud-built GitHub Releases (SalitaNgDiyos/The-Bible-Maker).' + sLineBreak + sLineBreak +
+        '     • Runs natively on Linux x86_64 with transparent hover bottom bars, Linux RTF dictionary popups, TTS (espeak-ng/espeak/spd-say), Timotheos sync, automatic desktop menu registration (~/.local/share/applications/thebiblemaker.desktop), and cloud-built GitHub Releases (SalitaNgDiyos/The-Bible-Maker).' + sLineBreak + sLineBreak +
         '  4. Project Change Log & Crash Logs (v1.1.0.083 – v1.1.0.086):' + sLineBreak +
         '     • Project > Project change log... records dictionary changes, settings, verse text edits, and Find & Replace batches, displaying GitHub-style red/green inline diffs for text edits with Ctrl+mouse wheel zoom and a resizable Details splitter.' + sLineBreak +
         '     • Help > Crash & error logs... lets you inspect and copy diagnostic reports cleanly.';
@@ -2479,7 +2483,7 @@ var
     C.TextOut(W div 2 + 16, 42, 'ICON FAMILIES & 3 TOOLBAR ICON SIZES');
     DrawBadge(C, W div 2 + 16, 64, 'Icon Families: Connected | Clareza | Mosaico | Folio', winBg, txtCol, borderCol, False);
     DrawBadge(C, W div 2 + 16, 94, 'Toolbar Icon Sizes: Small (16px) | Medium (22px) | Large (28px)', hiBg, hiTxt, hdrCol, True);
-    DrawBadge(C, W div 2 + 16, 124, 'File > Save As (Ctrl+Shift+S) : Independent .bib Copy', ptBg, ptTxt, borderCol, True);
+    DrawBadge(C, W div 2 + 16, 124, 'File > Save As (Ctrl+Shift+S) : Independent .tbm Copy', ptBg, ptTxt, borderCol, True);
     C.Brush.Style := bsClear;
     C.Font.Style := [];
     C.Font.Color := dimCol;
@@ -2555,11 +2559,11 @@ var
     C.Font.Size := 8;
     C.Font.Style := [fsBold];
     C.Font.Color := hdrCol;
-    C.TextOut(W div 2 + 16, 42, 'PROJECT BACKUP & RESTORE (.bib.zip)');
+    C.TextOut(W div 2 + 16, 42, 'PROJECT BACKUP & RESTORE (.tbm.zip)');
     DrawBadge(C, W div 2 + 16, 64, 'Project > Settings > Project > Back up', winBg, txtCol, borderCol, False);
     DrawBadge(C, W div 2 + 16, 94, 'Auto-backup prompt: Replace / Patch / AI', ptBg, ptTxt, hdrCol, True);
     DrawBadge(C, W div 2 + 16, 124, 'Restore project... (safety backup first)', hiBg, hiTxt, borderCol, True);
-    DrawBadge(C, W div 2 + 16, 154, 'File > Open accepts .bib & .bib.zip', winBg, txtCol, borderCol, False);
+    DrawBadge(C, W div 2 + 16, 154, 'File > Open accepts .tbm, .tbm.zip & .bib', winBg, txtCol, borderCol, False);
   end;
 
   procedure DrawTopic11(C: TCanvas);
@@ -2675,7 +2679,7 @@ begin
   begin
     Caption := 'The Bible Maker — Guia de Novos Recursos (Desde v1.0.0.71)';
     if Assigned(lblHeaderTitle) then
-      lblHeaderTitle.Caption := 'Guia de Novos Recursos do The Bible Maker (v1.0.0.71 – v2.0.0.001)';
+      lblHeaderTitle.Caption := 'Guia de Novos Recursos do The Bible Maker (v1.0.0.71 – v2.0.0.002)';
     if Assigned(lblHeaderSub) then
       lblHeaderSub.Caption := 'Janela Flutuante Interativa — Mantenha aberta enquanto pratica os recursos no aplicativo.';
     if Assigned(btnPrev) then btnPrev.Caption := '< Anterior';
@@ -2687,7 +2691,7 @@ begin
   begin
     Caption := 'The Bible Maker — New Features User Guide (Since v1.0.0.71)';
     if Assigned(lblHeaderTitle) then
-      lblHeaderTitle.Caption := 'The Bible Maker User Guide (v1.0.0.71 – v2.0.0.001)';
+      lblHeaderTitle.Caption := 'The Bible Maker User Guide (v1.0.0.71 – v2.0.0.002)';
     if Assigned(lblHeaderSub) then
       lblHeaderSub.Caption := 'Floating Interactive Guide — Keep this window open while practicing features directly in The Bible Maker.';
     if Assigned(btnPrev) then btnPrev.Caption := '< Previous Topic';

@@ -1212,8 +1212,8 @@ msgid "Choose a theWord dictionary module"
 msgstr "Choose a theWord dictionary module"
 
 #: formnewproject.schooseprojectfile
-msgid "Please choose a .bib project file"
-msgstr "Please choose a .bib project file"
+msgid "Please choose a .tbm project file"
+msgstr "Please choose a .tbm project file"
 
 #: formnewproject.sdestinationtextlabeloptional
 msgid "Destination text (optional)"
@@ -1310,16 +1310,16 @@ msgid "A project file already exists at this location"
 msgstr "A project file already exists at this location"
 
 #: formnewproject.sprojectfileextension
-msgid "The project file must use the .bib extension"
-msgstr "The project file must use the .bib extension"
+msgid "The project file must use the .tbm (or legacy .bib) extension"
+msgstr "The project file must use the .tbm (or legacy .bib) extension"
 
 #: formnewproject.sprojectfilefilter
-msgid "iBiblia project (*.bib)|*.bib|All files|*.*"
-msgstr "iBiblia project (*.bib)|*.bib|All files|*.*"
+msgid "The Bible Maker project (*.tbm)|*.tbm|Legacy iBiblia project (*.bib)|*.bib|All files|*.*"
+msgstr "The Bible Maker project (*.tbm)|*.tbm|Legacy iBiblia project (*.bib)|*.bib|All files|*.*"
 
 #: formnewproject.sprojectfilelabel
-msgid "Project file (.bib)"
-msgstr "Project file (.bib)"
+msgid "Project file (.tbm)"
+msgstr "Project file (.tbm)"
 
 #: formnewproject.sprojectnamelabel
 msgid "Project name"
@@ -2140,8 +2140,8 @@ msgid "Reference2"
 msgstr "Reference2"
 
 #: formprincipal.sregisterfileassociation
-msgid "Register .bib file association"
-msgstr ""
+msgid "Register .tbm file association"
+msgstr "Register .tbm file association"
 
 #: formprincipal.sregisterfileassociationadminretry
 msgctxt "formprincipal.sregisterfileassociationadminretry"
@@ -2153,22 +2153,22 @@ msgstr ""
 "Do you want to retry as administrator?"
 
 #: formprincipal.sregisterfileassociationfailure
-msgid "Failed to register file association for .bib files"
-msgstr ""
+msgid "Failed to register file association for .tbm files"
+msgstr "Failed to register file association for .tbm files"
 
 #: formprincipal.sregisterfileassociationsuccess
-msgid "Successfully registered file association for .bib files"
-msgstr ""
+msgid "Successfully registered file association for .tbm files"
+msgstr "Successfully registered file association for .tbm files"
 
 #: formprincipal.sregisterfileassociationtakeoverprompt
 #, object-pascal-format
 msgctxt "formprincipal.sregisterfileassociationtakeoverprompt"
 msgid ""
-"The .bib extension is currently associated with: %s.\n"
-"Do you want to take over the association for iBiblia?"
+"The .tbm extension is currently associated with: %s.\n"
+"Do you want to take over the association for The Bible Maker?"
 msgstr ""
-"The .bib extension is currently associated with: %s.\n"
-"Do you want to take over the association for iBiblia?"
+"The .tbm extension is currently associated with: %s.\n"
+"Do you want to take over the association for The Bible Maker?"
 
 #: formprincipal.sresetlayouthint
 msgid "Restore the default panel layout"
@@ -2566,16 +2566,16 @@ msgid "Tree legend"
 msgstr "Tree legend"
 
 #: formprincipal.sunregisterfileassociation
-msgid "Unregister .bib file association"
-msgstr ""
+msgid "Unregister .tbm file association"
+msgstr "Unregister .tbm file association"
 
 #: formprincipal.sunregisterfileassociationfailure
-msgid "Failed to remove file association for .bib files"
-msgstr ""
+msgid "Failed to remove file association for .tbm files"
+msgstr "Failed to remove file association for .tbm files"
 
 #: formprincipal.sunregisterfileassociationsuccess
-msgid "Successfully removed file association for .bib files"
-msgstr ""
+msgid "Successfully removed file association for .tbm files"
+msgstr "Successfully removed file association for .tbm files"
 
 #: formprincipal.sverseinformationmenu
 msgid "Verse &information"
@@ -5781,8 +5781,8 @@ msgid "Open recent"
 msgstr ""
 
 #: tmainform.menuitemregisterfileassoc.caption
-msgid "Register .bib files"
-msgstr ""
+msgid "Register .tbm files"
+msgstr "Register .tbm files"
 
 #: tmainform.menuitemstatisticalsuggestion.caption
 msgid "Statistical engine"
@@ -5835,8 +5835,8 @@ msgid "Keeps theWord synchronized to iBiblia's current verse, and current word's
 msgstr ""
 
 #: tmainform.menuitemunregisterfileassoc.caption
-msgid "Unregister .bib files"
-msgstr ""
+msgid "Unregister .tbm files"
+msgstr "Unregister .tbm files"
 
 #: tmainform.opendialog1.title
 msgid "Open existing association project"

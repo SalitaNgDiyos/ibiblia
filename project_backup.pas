@@ -20,7 +20,8 @@ uses
 
 const
   AUTO_BACKUPS_KEPT = 2;
-  BACKUP_EXTENSION = '.bib.zip';
+  BACKUP_EXTENSION = '.tbm.zip';
+  LEGACY_BACKUP_EXTENSION = '.bib.zip';
 
 type
   TProjectBackupInfo = record
@@ -48,7 +49,7 @@ function ListProjectBackups(const ProjectFile, Folder: string): TProjectBackupIn
 { Reads the description of one backup (False if it is not a project zip). }
 function ReadBackupInfo(const ZipFile: string; out Info: TProjectBackupInfo): Boolean;
 
-{ True if the zip file holds an iBiblia project (.bib). }
+{ True if the zip file holds a The Bible Maker project (.tbm or legacy .bib). }
 function IsZippedProject(const ZipFile: string): Boolean;
 
 { The name of the project file inside the zip ('' if none). }
@@ -74,7 +75,7 @@ const
 resourcestring
   SBackupNoProject = 'The project file does not exist: %s';
   SBackupNoFolder = 'The backup folder does not exist: %s';
-  SBackupNotAProject = 'This zip file does not contain an iBiblia project: %s';
+  SBackupNotAProject = 'This zip file does not contain a The Bible Maker project: %s';
   SBackupExtractFailed = 'The project could not be unpacked from %s';
   SBackupDestinationExists = 'A file already exists at %s';
 
@@ -210,7 +211,7 @@ begin
   Result := UniqueBackupName(Folder, Base, Automatic);
   TempFolder := NewTempFolder(Folder);
   try
-    TempDatabase := IncludeTrailingPathDelimiter(TempFolder) + Base + '.bib';
+    TempDatabase := IncludeTrailingPathDelimiter(TempFolder) + Base + '.tbm';
     CopySQLiteDatabase(ProjectFile, TempDatabase, False);
     ValidateSQLiteDatabase(TempDatabase);
     CountProject(TempDatabase, Verses, Associated, ProjectName);
@@ -237,7 +238,7 @@ begin
     Zip := TZipper.Create;
     try
       Zip.FileName := Result;
-      Zip.Entries.AddFileEntry(TempDatabase, Base + '.bib');
+      Zip.Entries.AddFileEntry(TempDatabase, Base + '.tbm');
       Zip.Entries.AddFileEntry(TempInfo, INFO_ENTRY);
       try
         Zip.ZipAllFiles;
@@ -277,7 +278,8 @@ begin
       for Index := 0 to UnZip.Entries.Count - 1 do
       begin
         Name := UnZip.Entries[Index].ArchiveFileName;
-        if SameText(ExtractFileExt(Name), '.bib') then
+        if SameText(ExtractFileExt(Name), '.tbm') or
+           SameText(ExtractFileExt(Name), '.bib') then
           Exit(Name);
       end;
     except
@@ -363,28 +365,37 @@ end;
 procedure FindBackupFiles(const ProjectFile, Folder: string; AutomaticOnly: Boolean;
   Files: TStringList);
 var
-  Search: TSearchRec;
-  Base, Name: string;
+  Base: string;
+
+  procedure CollectWithExt(const Ext: string);
+  var
+    Search: TSearchRec;
+    Name: string;
+  begin
+    if FindFirst(IncludeTrailingPathDelimiter(Folder) + '*' + Ext,
+      faAnyFile, Search) = 0 then
+    try
+      repeat
+        Name := Search.Name;
+        if (Search.Attr and faDirectory) <> 0 then
+          Continue;
+        if SameText(Copy(Name, 1, Length(Base + AUTO_TAG)), Base + AUTO_TAG) or
+           (not AutomaticOnly and
+            SameText(Copy(Name, 1, Length(Base + MANUAL_TAG)), Base + MANUAL_TAG)) then
+          Files.Add(IncludeTrailingPathDelimiter(Folder) + Name);
+      until FindNext(Search) <> 0;
+    finally
+      FindClose(Search);
+    end;
+  end;
+
 begin
   Files.Clear;
   if (Folder = '') or not DirectoryExists(Folder) then
     Exit;
   Base := ProjectBaseName(ProjectFile);
-  if FindFirst(IncludeTrailingPathDelimiter(Folder) + '*' + BACKUP_EXTENSION,
-    faAnyFile, Search) = 0 then
-  try
-    repeat
-      Name := Search.Name;
-      if (Search.Attr and faDirectory) <> 0 then
-        Continue;
-      if SameText(Copy(Name, 1, Length(Base + AUTO_TAG)), Base + AUTO_TAG) or
-         (not AutomaticOnly and
-          SameText(Copy(Name, 1, Length(Base + MANUAL_TAG)), Base + MANUAL_TAG)) then
-        Files.Add(IncludeTrailingPathDelimiter(Folder) + Name);
-    until FindNext(Search) <> 0;
-  finally
-    FindClose(Search);
-  end;
+  CollectWithExt(BACKUP_EXTENSION);
+  CollectWithExt(LEGACY_BACKUP_EXTENSION);
 end;
 
 function ListProjectBackups(const ProjectFile, Folder: string): TProjectBackupInfoArray;

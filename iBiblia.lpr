@@ -30,10 +30,10 @@ function HandleFileAssociationCommand(out AExitCode: Integer): Boolean;
 const
   SAppTitle = 'The Bible Maker';
   SProjectFileTypeName = 'The Bible Maker Project File';
-  SRegisterFileAssociationSuccess = 'Successfully registered file association for .bib files';
-  SRegisterFileAssociationFailure = 'Failed to register file association for .bib files';
-  SUnregisterFileAssociationSuccess = 'Successfully removed file association for .bib files';
-  SUnregisterFileAssociationFailure = 'Failed to remove file association for .bib files';
+  SRegisterFileAssociationSuccess = 'Successfully registered file association for .tbm files';
+  SRegisterFileAssociationFailure = 'Failed to register file association for .tbm files';
+  SUnregisterFileAssociationSuccess = 'Successfully removed file association for .tbm files';
+  SUnregisterFileAssociationFailure = 'Failed to remove file association for .tbm files';
 var
   MessageText: string;
   Success: Boolean;
@@ -48,8 +48,8 @@ begin
   begin
     Result := True;
     Success := AssociateFileExtension(
-      '.bib',
-      'iBiblia.Project',
+      '.tbm',
+      'TheBibleMaker.Project',
       SProjectFileTypeName,
       ParamStr(0),
       ParamStr(0)
@@ -62,7 +62,7 @@ begin
   else if ParamStr(1) = '--unregister-file-assoc' then
   begin
     Result := True;
-    Success := RemoveFileAssociation('.bib', 'iBiblia.Project');
+    Success := RemoveFileAssociation('.tbm', 'TheBibleMaker.Project');
     if Success then
       MessageText := SUnregisterFileAssociationSuccess
     else

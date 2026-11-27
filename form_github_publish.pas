@@ -466,7 +466,7 @@ begin
   FLblAuthHelp.ShowAccelChar := False;
   FLblAuthHelp.Caption :=
     'Paste a GitHub Personal Access Token (ghp_... or github_pat_... with "repo" or Contents Read & Write permission) ' +
-    'once. It is stored securely in your operating system credential store and never written inside any .bib file. ' +
+    'once. It is stored securely in your operating system credential store and never written inside any .tbm / .bib file. ' +
     'If GitHub CLI (gh) is installed and signed in, you can also detect it automatically.';
 
   FLblToken := TLabel.Create(Self);

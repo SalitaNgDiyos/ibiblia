@@ -679,6 +679,7 @@ begin
         // never touch the user's settings or projects
         if SameText(ExtractFileName(Rel), 'TheBibleMaker.ini') or
            SameText(ExtractFileName(Rel), 'iBiblia.ini') or
+           SameText(ExtractFileExt(Rel), '.tbm') or
            SameText(ExtractFileExt(Rel), '.bib') then
           Continue;
         Src := StageDir + Rel;
@@ -858,7 +859,7 @@ begin
       if FileExists(Icon) then L.Add('Icon=' + Icon);
       L.Add('Terminal=false');
       L.Add('Categories=Education;Office;');
-      L.Add('MimeType=application/x-ibiblia-project;');
+      L.Add('MimeType=application/x-thebiblemaker-project;application/x-ibiblia-project;');
       L.SaveToFile(FileName);
     finally
       L.Free;
