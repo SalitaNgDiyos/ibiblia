@@ -139,7 +139,12 @@ var
 begin
   ClientWidth := 1024;
   ClientHeight := 720;
-  Position := poMainFormCenter;
+  // Without a main form (as in the automated tests) the form cannot be
+  // centred on it, and the LCL fails while looking up its monitor.
+  if Assigned(Application.MainForm) then
+    Position := poMainFormCenter
+  else
+    Position := poScreenCenter;
   Constraints.MinWidth := 880;
   Constraints.MinHeight := 640;
 
