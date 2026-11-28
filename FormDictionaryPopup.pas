@@ -107,9 +107,7 @@ uses
   {$IFDEF LCLGTK2}gtk2, glib2, gdk2, pango,{$ENDIF}
   formprincipal;
 
-{$IFNDEF FPCUNIT}
 {$R *.lfm}
-{$ENDIF}
 
 const
   MSG_ENTERSIZEMOVE = $0231;

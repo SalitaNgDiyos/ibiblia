@@ -48,7 +48,7 @@ end;
 
 procedure TZZBench.Run(WithPopup: Boolean);
 const
-  VERSES = 30;
+  VERSES = 60;
   WORDS = 30;
 var
   Dir, DB: string;
@@ -66,12 +66,19 @@ var
   T0, T1: QWord;
   Times: array of QWord;
   Line: string;
+  SavedOpts: TIniFile;
 begin
   Application.Initialize;
   if not Assigned(opts) then
     opts := TIniFile.Create(IncludeTrailingPathDelimiter(GetTempDir(False)) + 'zzbench.ini');
   if WithPopup and not Assigned(FrmDictionaryPopup) then
+  begin
+    SavedOpts := opts;
+    opts := nil;
     Application.CreateForm(TFrmDictionaryPopup, FrmDictionaryPopup);
+    opts := SavedOpts;
+    WriteLn(StdErr, 'popup comps=', FrmDictionaryPopup.ComponentCount, ' strongs=', Assigned(FrmDictionaryPopup.Strongs), ' memo=', Assigned(FrmDictionaryPopup.RichMemoStrong));
+  end;
   Dir := IncludeTrailingPathDelimiter(GetTempDir(False)) + 'zzbench' + IntToStr(GetTickCount64);
   ForceDirectories(Dir);
   DB := Dir + PathDelim + 'b.bib';
