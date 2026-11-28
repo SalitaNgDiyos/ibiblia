@@ -813,7 +813,7 @@ resourcestring
 
 implementation
 
-uses FormNewProject, FormProjectProperties, FormProjectExport, FormMergeProjects,
+uses zzprof, FormNewProject, FormProjectProperties, FormProjectExport, FormMergeProjects,
   FormExportPatch, FormApplyPatch, FormLlmOptions, FormTheWordHighlighterColors,
   llmclient, theword_syntax_highlighter, translation_memory_preview,
   FormFindInProject, FormGoToVerse, dictionary_manager, FormDefaultDictionaries, unittexttospeech, formvoicesettings,
@@ -6972,14 +6972,14 @@ begin
 end;
 
 procedure TMainForm.SyntagmClick(Sender: TSyntagm);
+var ZZT: Int64;
 {$IFDEF WINDOWS}
-var
   match: IMatch;
   wordSyncd: boolean;
 {$ENDIF}
 begin
-  UpdateStateHeader;
-  FChapterView.FocusTranslationMemoryForSyntagm(Sender);
+  ZZT := ZZNow; UpdateStateHeader; ZZAdd(6, ZZT);
+  ZZT := ZZNow; FChapterView.FocusTranslationMemoryForSyntagm(Sender); ZZAdd(7, ZZT);
   {$IFDEF WINDOWS}
   if not FSyncTheWordToIBiblia then
     exit;

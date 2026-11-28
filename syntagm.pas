@@ -154,7 +154,7 @@ type
 
 implementation
 
-uses Verse, unitskins;
+uses zzprof, Verse, unitskins;
 
 var Hint: THintWindow;
 
@@ -433,6 +433,7 @@ var
   ClickSyntagm: TSyntagm;
   verse: TVerse;
   i: integer;
+  ZZT: Int64;
 begin
   {if ssShift in Shift then
   begin
@@ -464,7 +465,7 @@ begin
      (verse.PairedVerse.Selection.Count > 0) and
      (verse.Selection.Count > 0) then
   begin
-    verse.AssociateSyntagms;
+    ZZT := ZZNow; verse.AssociateSyntagms; ZZAdd(0, ZZT);
   end;
 
   if not (ssCtrl in Shift) and (verse.PairedVerse.Selection.Count > 0) then
@@ -483,9 +484,11 @@ begin
     end;
   end;
 
-  verse.Render;
+  ZZT := ZZNow; verse.Render; ZZAdd(1, ZZT);
+  ZZT := ZZNow;
   if Assigned(TVerse(ClickSyntagm.VerseRef).OnClick) then
     TVerse(ClickSyntagm.VerseRef).OnClick(ClickSyntagm);
+  ZZAdd(2, ZZT);
 
 end;
 

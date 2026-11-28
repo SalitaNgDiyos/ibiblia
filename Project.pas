@@ -870,7 +870,7 @@ function TextTypeParticipatesInAssociations(
 
 implementation
 
-uses FormDictionaryPopup, FormVerseRules, formaiprocessing,
+uses zzprof, FormDictionaryPopup, FormVerseRules, formaiprocessing,
   apocrypha_books, theword_module_encoding, performance_debug, status_visuals, ui_style,
   project_save_staging, project_save_snapshot, sqlite_database_copy,
   unittexttospeech, project_change_log;
@@ -4329,6 +4329,7 @@ begin
 end;
 
 procedure TProject.SintagmaOnClick(Sender: TSyntagm);
+var ZZT: Int64;
 begin
   if Assigned(Sender) and Assigned(FAVersiculo[tbOrigem]) and Assigned(FAVersiculo[tbDestino]) and
      ((Sender.VerseRef = FAVersiculo[tbOrigem]) or (Sender.VerseRef = FAVersiculo[tbDestino])) then
@@ -4343,15 +4344,17 @@ begin
     if (Sender.VerseRef = FAVersiculo[tbOrigem]) and Sender.IsSelected and
        ((GetKeyState(VK_LBUTTON) and $8000) = 0) and
        ((GetKeyState(VK_RBUTTON) and $8000) = 0) then
-      SintagmaOnMouseEnter(Sender);
+      begin ZZT := ZZNow; SintagmaOnMouseEnter(Sender); ZZAdd(3, ZZT); end;
   end;
   if not FVerseMemo.TryDeactivate then
     Exit;
 
-  ReconcileChangedVerseAssociations;
+  ZZT := ZZNow; ReconcileChangedVerseAssociations; ZZAdd(4, ZZT);
 
+  ZZT := ZZNow;
   if assigned(FOnSintagmaClick) then
     FOnSintagmaClick(Sender);
+  ZZAdd(5, ZZT);
 
   if StatusAutomationEnabled and assigned(FRadioGroupSituacao) and
      assigned(FAVersiculo[tbOrigem]) and
@@ -4691,6 +4694,7 @@ var
   point: TPoint;
   s: TSyntagm;
   rtf: string;
+  ZZT: Int64; ZZS: string;
 begin
   if FSaveAsInProgress then Exit;
   if not (Sender is TTimer) then
@@ -4718,7 +4722,9 @@ begin
       (FAVersiculo[v].Syntagms.IndexOf(Candidate) >= 0) then
     begin
       s := Candidate;
+      ZZT := ZZNow;
       FDictionaryManager.CollectPopupEntries(s, Ord(v), StrongEntries, MorphologyEntries);
+      ZZAdd(8, ZZT);
 
       for EntryIndex := Low(MorphologyEntries) to High(MorphologyEntries) do
         FrmDictionaryPopup.AddMorphology(MorphologyEntries[EntryIndex].Key,
@@ -4745,11 +4751,20 @@ begin
 
       if v = tbOrigem then
       begin
+        ZZT := ZZNow;
         if EnsureAssociationMemoryFresh then
           Exit;
-        rtf := TDictionaryManager.FormatRTF(FSuggestionManager.GetTranslationAlternatives(s));
+        ZZAdd(9, ZZT);
+        ZZT := ZZNow;
+        ZZS := FSuggestionManager.GetTranslationAlternatives(s);
+        ZZAdd(10, ZZT);
+        ZZT := ZZNow;
+        rtf := TDictionaryManager.FormatRTF(ZZS);
+        ZZAdd(11, ZZT);
+        ZZT := ZZNow;
         if not rtf.IsEmpty then
           FrmDictionaryPopup.AddStrong(STranslationMemory, rtf);
+        ZZAdd(12, ZZT);
       end
       else if (v = tbDestino) and Assigned(s.Pairs) and (s.Pairs.Count > 0) then
       begin
@@ -4761,8 +4776,10 @@ begin
       end;
       if (FrmDictionaryPopup.Strongs.Count > 0) or (FrmDictionaryPopup.Morphologies.Count > 0) then
       begin
+        ZZT := ZZNow;
         if FAVersiculo[v].TryGetSyntagmScreenAnchor(s, point) then
           FrmDictionaryPopup.ShowAt(point.x, point.y);
+        ZZAdd(13, ZZT);
       end;
       break;
     end;
