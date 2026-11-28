@@ -9,6 +9,7 @@ uses
   fpcunitreport,
   testutils,
   unitskins,
+  zz_bench,
   ibibliatest,
   versiculotest,
   syntagmselectiontest,

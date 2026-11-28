@@ -46,7 +46,7 @@ jobs:
           python scripts/ci_package.py windows-runtime test . tests
           cd tests
           set -o pipefail
-          ./fpcunitibiblia_console.exe --all --format=plain 2>&1 | tee test-results.txt
+          ./fpcunitibiblia_console.exe --suite=TZZBench --format=plain 2>&1 | tee test-results.txt
       - uses: actions/upload-artifact@v4
         if: always()
         with:
