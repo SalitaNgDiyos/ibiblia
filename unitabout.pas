@@ -117,6 +117,9 @@ const
   'The Bible Maker — Independent offshoot originally derived from iBiblia (Rúbio R. C. Terra).' + LineEnding +
   'Not an official continuation of upstream iBiblia. Maintained independently at https://github.com/SalitaNgDiyos/The-Bible-Maker' + LineEnding +
   LineEnding +
+  'Version 2.0.0.005 (64-bit Edition) - 2026-11-28' + LineEnding +
+  '- Fixed: after a long session without saving (roughly 800 or more associations), the project file could stay locked, and moving to a new chapter then failed with "database is locked". The word-pair memory connection now keeps its unsaved changes in memory until you save, instead of writing them into the file early and locking it.' + LineEnding +
+  LineEnding +
   'Version 2.0.0.004 (64-bit Edition) - 2026-11-28' + LineEnding +
   '- Linux: the word popup and the automatic selection of the next source word no longer get slower the longer you work. Each popup re-applied its zoom, and the text box (RichMemo on GTK) kept a new hidden formatting entry for every zoom that was never removed. The zoom now reuses one entry.' + LineEnding +
   '- Faster word look-ups in large projects: the popup''s translation memory, the Translation memory panel and association suggestions now use an index to find a word and its tagged forms, instead of reading the whole list of source words each time (about 300 times faster on a list of 60,000).' + LineEnding +

@@ -6,7 +6,11 @@
 
 ## Version History
 
-### 0. Version 2.0.0.004 (2026-11-28) — Popup and Auto-Advance No Longer Slow Down (Linux)
+### 0. Version 2.0.0.005 (2026-11-28) — No More "Database Is Locked" in Long Sessions
+
+* **Word-pair memory connection (`SuggestionManager.pas`):** Fixed: after a long session without saving (roughly 800 or more associations), the project file could stay locked, and moving to a new chapter then failed with "database is locked". The word-pair memory connection now keeps its unsaved changes in memory until you save, instead of writing them into the file early and locking it. (SQLite `cache_spill` is now turned off on that connection before its transaction starts, plus a 2-second busy wait.)
+
+### 0a. Version 2.0.0.004 (2026-11-28) — Popup and Auto-Advance No Longer Slow Down (Linux)
 
 * **Popup zoom leak (`FormDictionaryPopup.pas`, Linux):** Linux: the word popup and the automatic selection of the next source word no longer get slower the longer you work. Each popup re-applied its zoom, and the text box (RichMemo on GTK) kept a new hidden formatting entry for every zoom that was never removed. The zoom now reuses one entry.
 * **Indexed word look-ups (`SuggestionManager.pas`):** Faster word look-ups in large projects: the popup's translation memory, the Translation memory panel and association suggestions now use an index to find a word and its tagged forms, instead of reading the whole list of source words each time (about 300 times faster on a list of 60,000).

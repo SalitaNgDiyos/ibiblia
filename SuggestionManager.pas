@@ -311,6 +311,11 @@ resourcestring
   SAssociationMemoryMissingExpectedPairs =
     'Association memory is missing expected translation pairs';
 
+type
+  { gives access to TSQLite3Connection.execsql, which runs a statement
+    outside sqldb's transaction handling }
+  TSQLite3ConnectionAccess = class(TSQLite3Connection);
+
 { A stored key is either the word key itself or the key followed by its tags
   ("key<WG...>..."). The tagged forms are exactly the keys from key + '<' up
   to, but not including, key + '=' ('=' is the character after '<'), so the
@@ -518,8 +523,20 @@ begin
   FTemporaryConnection := TSQLite3Connection.Create(nil);
   FTemporaryConnection.DatabaseName := DatabasePath;
   FTemporaryConnection.Transaction := TSQLTransaction.Create(nil);
-  FTemporaryConnection.StartTransaction;
   FTemporaryConnection.Open;
+  // This connection keeps the association memory changes of a whole session
+  // in one transaction until the project is saved. Once those changes
+  // outgrew SQLite's page cache, SQLite started writing them into the file
+  // early and kept the file locked, so after a long session without saving
+  // the project's other connections failed with "database is locked" (for
+  // example when moving to a new chapter). Keep the changes in memory until
+  // the commit instead. SQLite only honours this before the transaction
+  // starts, so it is set right after opening.
+  TSQLite3ConnectionAccess(FTemporaryConnection).execsql(
+    'pragma cache_spill = off');
+  TSQLite3ConnectionAccess(FTemporaryConnection).execsql(
+    'pragma busy_timeout = 2000');
+  FTemporaryConnection.StartTransaction;
   Create(nil, FTemporaryConnection);
 end;
 
