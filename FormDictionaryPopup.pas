@@ -616,90 +616,6 @@ begin
 end;
 {$ENDIF}
 
-{ Zoom of the popup's text boxes.
-  On Linux (GTK2) RichMemo's ZoomFactor setter creates a new anonymous
-  GtkTextTag on every call and never frees it. The popup re-applied its zoom
-  every time it was shown, so the tag table grew with each word and every
-  popup (and with it the auto-advance to the next source word) got slower the
-  longer the program ran. As for the text and paragraph styles, Linux now uses
-  one named tag per text box, updated in place. The zoom value is kept in the
-  memo's Tag (in thousandths), because RichMemo is no longer told about it.
-  Other platforms keep using RichMemo's ZoomFactor. }
-{$IFDEF LCLGTK2}
-procedure ApplyPopupZoomTag(Memo: TRichMemo);
-const
-  ZoomTagName = 'ibpop:zoom';
-var
-  List: PGList;
-  TextWidget: PGtkWidget;
-  Buffer: PGtkTextBuffer;
-  Tag: PGtkTextTag;
-  Zoom: gdouble;
-  IStart, IEnd: TGtkTextIter;
-begin
-  if (Memo = nil) or not Memo.HandleAllocated then
-    Exit;
-  List := gtk_container_get_children(PGtkContainer(PtrUInt(Memo.Handle)));
-  if List = nil then
-    Exit;
-  TextWidget := PGtkWidget(List^.data);
-  g_list_free(List);
-  if TextWidget = nil then
-    Exit;
-  Buffer := gtk_text_view_get_buffer(PGtkTextView(TextWidget));
-  if Buffer = nil then
-    Exit;
-  if Memo.Tag > 0 then
-    Zoom := Memo.Tag / 1000.0
-  else
-    Zoom := 1.0;
-  Tag := gtk_text_tag_table_lookup(gtk_text_buffer_get_tag_table(Buffer),
-    ZoomTagName);
-  if Tag = nil then
-    Tag := gtk_text_buffer_create_tag(Buffer, ZoomTagName,
-      'scale', [Zoom,
-      'scale-set', gboolean(gTRUE),
-      nil])
-  else
-    g_object_set(Tag, 'scale', [Zoom, nil]);
-  gtk_text_buffer_get_start_iter(Buffer, @IStart);
-  gtk_text_buffer_get_end_iter(Buffer, @IEnd);
-  gtk_text_buffer_apply_tag(Buffer, Tag, @IStart, @IEnd);
-end;
-{$ENDIF}
-
-function PopupZoom(Memo: TRichMemo): Double;
-begin
-  {$IFDEF LCLGTK2}
-  if Memo.Tag > 0 then
-    Result := Memo.Tag / 1000.0
-  else
-    Result := 1.0;
-  {$ELSE}
-  Result := Memo.ZoomFactor;
-  {$ENDIF}
-end;
-
-procedure SetPopupZoom(Memo: TRichMemo; AZoom: Double);
-begin
-  {$IFDEF LCLGTK2}
-  Memo.Tag := Max(1, Round(AZoom * 1000));
-  ApplyPopupZoomTag(Memo);
-  {$ELSE}
-  Memo.ZoomFactor := AZoom;
-  {$ENDIF}
-end;
-
-{ After new text is loaded the zoom has to cover it again. }
-procedure ReapplyPopupZoom(Memo: TRichMemo);
-begin
-  {$IFDEF LCLGTK2}
-  ApplyPopupZoomTag(Memo);
-  {$ELSE}
-  Memo.ZoomFactor := Memo.ZoomFactor;
-  {$ENDIF}
-end;
-
 type
   TRtfStyleState = record
     Bold: Boolean;
@@ -1459,6 +1375,91 @@ begin
   Memo.SelLength := 0;
 end;
 {$ENDIF}
+
+{ Zoom of the popup's text boxes.
+  On Linux (GTK2) RichMemo's ZoomFactor setter creates a new anonymous
+  GtkTextTag on every call and never frees it. The popup re-applied its zoom
+  every time it was shown, so the tag table grew with each word and every
+  popup (and with it the auto-advance to the next source word) got slower the
+  longer the program ran. As for the text and paragraph styles, Linux now uses
+  one named tag per text box, updated in place. The zoom value is kept in the
+  memo's Tag (in thousandths), because RichMemo is no longer told about it.
+  Other platforms keep using RichMemo's ZoomFactor. }
+{$IFDEF LCLGTK2}
+procedure ApplyPopupZoomTag(Memo: TRichMemo);
+const
+  ZoomTagName = 'ibpop:zoom';
+var
+  List: PGList;
+  TextWidget: PGtkWidget;
+  Buffer: PGtkTextBuffer;
+  Tag: PGtkTextTag;
+  Zoom: gdouble;
+  IStart, IEnd: TGtkTextIter;
+begin
+  if (Memo = nil) or not Memo.HandleAllocated then
+    Exit;
+  List := gtk_container_get_children(PGtkContainer(PtrUInt(Memo.Handle)));
+  if List = nil then
+    Exit;
+  TextWidget := PGtkWidget(List^.data);
+  g_list_free(List);
+  if TextWidget = nil then
+    Exit;
+  Buffer := gtk_text_view_get_buffer(PGtkTextView(TextWidget));
+  if Buffer = nil then
+    Exit;
+  if Memo.Tag > 0 then
+    Zoom := Memo.Tag / 1000.0
+  else
+    Zoom := 1.0;
+  Tag := gtk_text_tag_table_lookup(gtk_text_buffer_get_tag_table(Buffer),
+    ZoomTagName);
+  if Tag = nil then
+    Tag := gtk_text_buffer_create_tag(Buffer, ZoomTagName,
+      'scale', [Zoom,
+      'scale-set', gboolean(gTRUE),
+      nil])
+  else
+    g_object_set(Tag, 'scale', [Zoom, nil]);
+  gtk_text_buffer_get_start_iter(Buffer, @IStart);
+  gtk_text_buffer_get_end_iter(Buffer, @IEnd);
+  gtk_text_buffer_apply_tag(Buffer, Tag, @IStart, @IEnd);
+end;
+{$ENDIF}
+
+function PopupZoom(Memo: TRichMemo): Double;
+begin
+  {$IFDEF LCLGTK2}
+  if Memo.Tag > 0 then
+    Result := Memo.Tag / 1000.0
+  else
+    Result := 1.0;
+  {$ELSE}
+  Result := Memo.ZoomFactor;
+  {$ENDIF}
+end;
+
+procedure SetPopupZoom(Memo: TRichMemo; AZoom: Double);
+begin
+  {$IFDEF LCLGTK2}
+  Memo.Tag := Max(1, Round(AZoom * 1000));
+  ApplyPopupZoomTag(Memo);
+  {$ELSE}
+  Memo.ZoomFactor := AZoom;
+  {$ENDIF}
+end;
+
+{ After new text is loaded the zoom has to cover it again. }
+procedure ReapplyPopupZoom(Memo: TRichMemo);
+begin
+  {$IFDEF LCLGTK2}
+  ApplyPopupZoomTag(Memo);
+  {$ELSE}
+  Memo.ZoomFactor := Memo.ZoomFactor;
+  {$ENDIF}
+end;
+
 
 { TFrmDictionaryPopup }
 
