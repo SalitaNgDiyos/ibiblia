@@ -2988,6 +2988,7 @@ var
   FirstStatusId, AssociatingStatusId, LastStatusId: Integer;
   SrcAssoc, SrcTot, DstAssoc, DstTot: Integer;
   HoldingModifier, StatusOrTreeChanged, AutoAdvancedToLast: Boolean;
+  ZZT: Int64;
 begin
   if FSyncingStatusState then
     Exit;
@@ -3147,12 +3148,16 @@ begin
       FLastSyncedStatusId := CurStatusId;
       FLastSyncedComboIndex := RadioGroupStatus.ItemIndex;
 
+      ZZT := ZZNow;
       if RecalculateTreeParentStatuses then
         StatusOrTreeChanged := True;
+      ZZAdd(22, ZZT);
     end;
 
+    ZZT := ZZNow;
     if StatusOrTreeChanged and (not FUpdatingStatusReview) then
       UpdateStatusReviewPanel;
+    ZZAdd(23, ZZT);
 
     if AutoAdvancedToLast and FSaveOnLastStatus and
        (CurStatusId = LastStatusId) then
@@ -3557,8 +3562,11 @@ end;
 procedure TMainForm.UpdateStateHeader;
 var
   Associated, Total, Percent: Integer;
+  ZZT, ZZT0: Int64;
 begin
-  SyncStatusAndTreeNodes;
+  Inc(ZZAcc[27], 1000);
+  ZZT0 := ZZNow;
+  ZZT := ZZNow; SyncStatusAndTreeNodes; ZZAdd(21, ZZT);
   if not Assigned(FStateHeaderPanel) then
     Exit;
 
@@ -3574,7 +3582,7 @@ begin
   end
   else
   begin
-    CountCurrentAssociations(Associated, Total);
+    ZZT := ZZNow; CountCurrentAssociations(Associated, Total); ZZAdd(24, ZZT);
     if Total > 0 then
     begin
       Percent := Round((Associated / Total) * 100);
@@ -3619,8 +3627,9 @@ begin
   FHeaderSelectionLabel.Hint := FHeaderSelectionLabel.Caption;
   FHeaderEngineLabel.Hint := FHeaderEngineLabel.Caption;
   FHeaderModifiedLabel.Hint := FHeaderModifiedLabel.Caption;
-  LayoutStateHeader;
-  UpdateGuidePanel;
+  ZZAdd(28, ZZT0);
+  ZZT := ZZNow; LayoutStateHeader; ZZAdd(25, ZZT);
+  ZZT := ZZNow; UpdateGuidePanel; ZZAdd(26, ZZT);
 end;
 
 procedure TMainForm.UpdateMainCaption;

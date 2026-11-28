@@ -83,7 +83,7 @@ end;
 
 procedure TZZBench.WithMainForm;
 const
-  VERSES = 240;
+  VERSES = 120;
   WORDS = 30;
 var
   Dir, DB: string;
@@ -159,7 +159,7 @@ begin
     if V mod 40 = 0 then
     begin
       Line := Format('PROF v%d:', [V]);
-      for K := 0 to 20 do
+      for K := 0 to 28 do
       begin
         Line := Line + Format(' s%d=%d', [K, ZZAcc[K] div 40000]);
         ZZAcc[K] := 0;

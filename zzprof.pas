@@ -2,7 +2,7 @@ unit zzprof;
 {$mode objfpc}{$H+}
 interface
 var
-  ZZAcc: array[0..23] of Int64;
+  ZZAcc: array[0..31] of Int64;
 function ZZNow: Int64;
 procedure ZZAdd(I: Integer; Start: Int64);
 implementation
