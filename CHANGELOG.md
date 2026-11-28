@@ -6,7 +6,15 @@
 
 ## Version History
 
-### 0. Version 2.0.0.003 (2026-11-27) — Licence Changed to AGPL-3.0-or-later
+### 0. Version 2.0.0.004 (2026-11-28) — Popup and Auto-Advance No Longer Slow Down (Linux)
+
+* **Popup zoom leak (`FormDictionaryPopup.pas`, Linux):** Linux: the word popup and the automatic selection of the next source word no longer get slower the longer you work. Each popup re-applied its zoom, and the text box (RichMemo on GTK) kept a new hidden formatting entry for every zoom that was never removed. The zoom now reuses one entry.
+* **Indexed word look-ups (`SuggestionManager.pas`):** Faster word look-ups in large projects: the popup's translation memory, the Translation memory panel and association suggestions now use an index to find a word and its tagged forms, instead of reading the whole list of source words each time (about 300 times faster on a list of 60,000).
+* **Morphology tag (`ontparser.pas`):** Fixed: a lowercase <wt> word marker was read as an extra, empty morphology tag.
+* **Portuguese catalog (`languages/iBiblia.pt.po`):** Fixed: some Portuguese translations were ignored or missing (Jonas, Hebreus, Zacarias, the examples dialog, AI set-up messages).
+* **Robustness (`formflowexamples.pas`, `ai_processing_manager.pas`):** Fixed: the examples dialog could crash when no main window was open, and a missing HTTPS library now gives a clear error instead of a crash in AI processing.
+
+### 0a. Version 2.0.0.003 (2026-11-27) — Licence Changed to AGPL-3.0-or-later
 
 * **Licence (`LICENSE`, `NOTICE.md`, `README.md`, `packaging/linux/README-Linux.txt`):** The Bible Maker's own additions and changes are now licensed under **AGPL-3.0-or-later** instead of MIT. The original iBiblia code remains the copyright of Rúbio R. C. Terra and is not relicensed; third-party components keep their own licences.
 

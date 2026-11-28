@@ -1,4 +1,4 @@
-# The Bible Maker (v2.0.0.003)
+# The Bible Maker (v2.0.0.004)
 
 **The Bible Maker** *(formerly Dark-Skinned iBiblia)* is a native **64-bit Windows (`x64`) and Linux (`x86_64`)** multi-format Bible alignment, translation, interlinear tagging, and direct GitHub/Timotheos publishing workstation built by **Edmund P. Valdez (`SalitaNgDiyos`)**.
 

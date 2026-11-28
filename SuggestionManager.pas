@@ -5,7 +5,7 @@ unit SuggestionManager;
 interface
 
 uses
-  Classes, SysUtils, StrUtils, sqldb, sqlite3conn, Verse,
+  Classes, SysUtils, StrUtils, db, sqldb, sqlite3conn, Verse,
   Dialogs, LazLogger, PCRE, Syntagm, ONTTokenizer, ConcordanceExport;
 
 type
@@ -311,6 +311,18 @@ resourcestring
   SAssociationMemoryMissingExpectedPairs =
     'Association memory is missing expected translation pairs';
 
+{ A stored key is either the word key itself or the key followed by its tags
+  ("key<WG...>..."). The tagged forms are exactly the keys from key + '<' up
+  to, but not including, key + '=' ('=' is the character after '<'), so the
+  index on slor_sori_id can find them with a range instead of reading every
+  row. }
+procedure SetTaggedKeyRange(Params: TParams; const FirstName,
+  AfterName, Key: string);
+begin
+  Params.ParamByName(FirstName).AsString := Key + '<';
+  Params.ParamByName(AfterName).AsString := Key + '=';
+end;
+
 procedure TSuggestionManager.EnsureOccurrenceSchema;
 begin
   FConnection.ExecuteDirect(
@@ -322,6 +334,13 @@ begin
     'create index if not exists association_memory_occurrence_pair_idx on ' +
     'association_memory_occurrences ' +
     '(amo_source, amo_target, amo_reference)');
+  // Word lookups (suggestions, translation memory, the popup) search
+  // sintagmas_locucoes_origem by slor_sori_id. Without this index every
+  // lookup read the whole table, so each popup got slower as the project's
+  // association memory grew.
+  FConnection.ExecuteDirect(
+    'create index if not exists slor_sori_idx on ' +
+    'sintagmas_locucoes_origem (slor_sori_id, slor_ordem)');
   FConnection.ExecuteDirect(
     'create temp table if not exists association_memory_match_filter (' +
     'amo_source text not null, amo_target text not null, ' +
@@ -427,8 +446,7 @@ begin
   FSuggestionsWithoutMorphologyQuery.SQL.Text := 'select lori_locucao, ldes_locucao ' +
       'from sintagmas_locucoes_origem, traducoes, locucoes_origem, locucoes_destino ' +
       'where (slor_sori_id = :sori or (' +
-      'substr(slor_sori_id, 1, length(:sori_prefix)) = :sori_prefix and ' +
-      'substr(slor_sori_id, length(:sori_prefix) + 1, 1) = ''<'')) and ' +
+      'slor_sori_id >= :sori_first and slor_sori_id < :sori_after)) and ' +
       'slor_ordem = 0 and slor_lori_id = trad_lori_id' +
       '  and slor_lori_id = lori_id and trad_ldes_id = ldes_id and trad_ocorrencias > 0 ' +
       'order by lori_qtde_sintagmas desc, trad_ocorrencias desc';
@@ -440,8 +458,7 @@ begin
       'trad_ocorrencias ' +
       'from sintagmas_locucoes_origem, traducoes, locucoes_origem, locucoes_destino ' +
       'where (slor_sori_id = :sori or (' +
-      'substr(slor_sori_id, 1, length(:sori_prefix)) = :sori_prefix and ' +
-      'substr(slor_sori_id, length(:sori_prefix) + 1, 1) = ''<'')) and ' +
+      'slor_sori_id >= :sori_first and slor_sori_id < :sori_after)) and ' +
       'slor_ordem = 0 and slor_lori_id = trad_lori_id' +
       '  and slor_lori_id = lori_id and trad_ldes_id = ldes_id and trad_ocorrencias > 0 ' +
       'order by trad_ocorrencias desc, ldes_locucao, lori_locucao';
@@ -1151,8 +1168,8 @@ begin
     FSuggestionsWithoutMorphologyQuery.Close;
     FSuggestionsWithoutMorphologyQuery.Params.ParamByName(
       'sori').AsString := KeyWithoutMorphology;
-    FSuggestionsWithoutMorphologyQuery.Params.ParamByName(
-      'sori_prefix').AsString := KeyWithoutMorphology;
+    SetTaggedKeyRange(FSuggestionsWithoutMorphologyQuery.Params,
+      'sori_first', 'sori_after', KeyWithoutMorphology);
     FSuggestionsWithoutMorphologyQuery.Open;
     DebugLn('%d translation suggestions found without morphology', [FSuggestionsWithoutMorphologyQuery.RecordCount]);
   end;
@@ -1163,8 +1180,8 @@ begin
   Result := FTranslationMemoryQuery;
   FTranslationMemoryQuery.Close;
   FTranslationMemoryQuery.Params.ParamByName('sori').AsString := Key;
-  FTranslationMemoryQuery.Params.ParamByName(
-    'sori_prefix').AsString := Key;
+  SetTaggedKeyRange(FTranslationMemoryQuery.Params, 'sori_first',
+    'sori_after', Key);
   FTranslationMemoryQuery.Open;
 end;
 
@@ -2153,11 +2170,8 @@ begin
             SQLText := SQLText + ' or ';
           SQLText := SQLText + '(s.slor_sori_id = :key' +
             IntToStr(KeyIndex) + ' or (' +
-            'substr(s.slor_sori_id, 1, length(:key_prefix' +
-            IntToStr(KeyIndex) + ')) = :key_prefix' +
-            IntToStr(KeyIndex) + ' and ' +
-            'substr(s.slor_sori_id, length(:key_prefix' +
-            IntToStr(KeyIndex) + ') + 1, 1) = ''<''))';
+            's.slor_sori_id >= :key_first' + IntToStr(KeyIndex) +
+            ' and s.slor_sori_id < :key_after' + IntToStr(KeyIndex) + '))';
         end;
         Query.SQL.Text := SQLText + ') order by t.trad_ocorrencias desc, ' +
           'd.ldes_locucao, o.lori_locucao';
@@ -2165,9 +2179,9 @@ begin
         begin
           Query.Params.ParamByName('key' + IntToStr(KeyIndex)).AsString :=
             MissingKeys[KeyIndex];
-          Query.Params.ParamByName(
-            'key_prefix' + IntToStr(KeyIndex)).AsString :=
-            MissingKeys[KeyIndex];
+          SetTaggedKeyRange(Query.Params,
+            'key_first' + IntToStr(KeyIndex),
+            'key_after' + IntToStr(KeyIndex), MissingKeys[KeyIndex]);
         end;
         Query.Open;
         while not Query.EOF do

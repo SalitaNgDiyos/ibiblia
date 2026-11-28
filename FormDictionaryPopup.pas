@@ -616,6 +616,90 @@ begin
 end;
 {$ENDIF}
 
+{ Zoom of the popup's text boxes.
+  On Linux (GTK2) RichMemo's ZoomFactor setter creates a new anonymous
+  GtkTextTag on every call and never frees it. The popup re-applied its zoom
+  every time it was shown, so the tag table grew with each word and every
+  popup (and with it the auto-advance to the next source word) got slower the
+  longer the program ran. As for the text and paragraph styles, Linux now uses
+  one named tag per text box, updated in place. The zoom value is kept in the
+  memo's Tag (in thousandths), because RichMemo is no longer told about it.
+  Other platforms keep using RichMemo's ZoomFactor. }
+{$IFDEF LCLGTK2}
+procedure ApplyPopupZoomTag(Memo: TRichMemo);
+const
+  ZoomTagName = 'ibpop:zoom';
+var
+  List: PGList;
+  TextWidget: PGtkWidget;
+  Buffer: PGtkTextBuffer;
+  Tag: PGtkTextTag;
+  Zoom: gdouble;
+  IStart, IEnd: TGtkTextIter;
+begin
+  if (Memo = nil) or not Memo.HandleAllocated then
+    Exit;
+  List := gtk_container_get_children(PGtkContainer(PtrUInt(Memo.Handle)));
+  if List = nil then
+    Exit;
+  TextWidget := PGtkWidget(List^.data);
+  g_list_free(List);
+  if TextWidget = nil then
+    Exit;
+  Buffer := gtk_text_view_get_buffer(PGtkTextView(TextWidget));
+  if Buffer = nil then
+    Exit;
+  if Memo.Tag > 0 then
+    Zoom := Memo.Tag / 1000.0
+  else
+    Zoom := 1.0;
+  Tag := gtk_text_tag_table_lookup(gtk_text_buffer_get_tag_table(Buffer),
+    ZoomTagName);
+  if Tag = nil then
+    Tag := gtk_text_buffer_create_tag(Buffer, ZoomTagName,
+      'scale', [Zoom,
+      'scale-set', gboolean(gTRUE),
+      nil])
+  else
+    g_object_set(Tag, 'scale', [Zoom, nil]);
+  gtk_text_buffer_get_start_iter(Buffer, @IStart);
+  gtk_text_buffer_get_end_iter(Buffer, @IEnd);
+  gtk_text_buffer_apply_tag(Buffer, Tag, @IStart, @IEnd);
+end;
+{$ENDIF}
+
+function PopupZoom(Memo: TRichMemo): Double;
+begin
+  {$IFDEF LCLGTK2}
+  if Memo.Tag > 0 then
+    Result := Memo.Tag / 1000.0
+  else
+    Result := 1.0;
+  {$ELSE}
+  Result := Memo.ZoomFactor;
+  {$ENDIF}
+end;
+
+procedure SetPopupZoom(Memo: TRichMemo; AZoom: Double);
+begin
+  {$IFDEF LCLGTK2}
+  Memo.Tag := Max(1, Round(AZoom * 1000));
+  ApplyPopupZoomTag(Memo);
+  {$ELSE}
+  Memo.ZoomFactor := AZoom;
+  {$ENDIF}
+end;
+
+{ After new text is loaded the zoom has to cover it again. }
+procedure ReapplyPopupZoom(Memo: TRichMemo);
+begin
+  {$IFDEF LCLGTK2}
+  ApplyPopupZoomTag(Memo);
+  {$ELSE}
+  Memo.ZoomFactor := Memo.ZoomFactor;
+  {$ENDIF}
+end;
+
 type
   TRtfStyleState = record
     Bold: Boolean;
@@ -1421,6 +1505,10 @@ begin
     Memo.Parent.HandleNeeded;
   Memo.HandleNeeded;
   RenderRtfToRichMemoLinux(Memo, AdaptedRtf, CurrentSkin);
+  { new text: let the zoom cover it again (also after switching tabs) }
+  {$IFDEF LCLGTK2}
+  ApplyPopupZoomTag(Memo);
+  {$ENDIF}
 {$ENDIF}
 end;
 
@@ -1485,13 +1573,13 @@ begin
     ZoomS := opts.ReadInteger('leiaute', 'popup.zoom.strong', 10);
     ZoomM := opts.ReadInteger('leiaute', 'popup.zoom.morfo', 10);
     if ZoomS > 30 then
-      RichMemoStrong.ZoomFactor := EnsureRange(ZoomS / 100.0, 0.2, 5.0)
+      SetPopupZoom(RichMemoStrong, EnsureRange(ZoomS / 100.0, 0.2, 5.0))
     else if ZoomS > 0 then
-      RichMemoStrong.ZoomFactor := EnsureRange(ZoomS / 10.0, 0.2, 5.0);
+      SetPopupZoom(RichMemoStrong, EnsureRange(ZoomS / 10.0, 0.2, 5.0));
     if ZoomM > 30 then
-      RichMemoMorphology.ZoomFactor := EnsureRange(ZoomM / 100.0, 0.2, 5.0)
+      SetPopupZoom(RichMemoMorphology, EnsureRange(ZoomM / 100.0, 0.2, 5.0))
     else if ZoomM > 0 then
-      RichMemoMorphology.ZoomFactor := EnsureRange(ZoomM / 10.0, 0.2, 5.0);
+      SetPopupZoom(RichMemoMorphology, EnsureRange(ZoomM / 10.0, 0.2, 5.0));
 
     SavedW := opts.ReadInteger('leiaute', 'popup.largura', 425);
     SavedH := opts.ReadInteger('leiaute', 'popup.altura', 418);
@@ -1577,8 +1665,8 @@ begin
       opts.WriteInteger('leiaute', 'popup.morfo.altura', FMorphologyPaneHeight);
       opts.WriteInteger('leiaute', 'popup.panel2.altura', FMorphologyPaneHeight);
     end;
-    opts.WriteInteger('leiaute', 'popup.zoom.strong', Round(RichMemoStrong.ZoomFactor * 10));
-    opts.WriteInteger('leiaute', 'popup.zoom.morfo', Round(RichMemoMorphology.ZoomFactor * 10));
+    opts.WriteInteger('leiaute', 'popup.zoom.strong', Round(PopupZoom(RichMemoStrong) * 10));
+    opts.WriteInteger('leiaute', 'popup.zoom.morfo', Round(PopupZoom(RichMemoMorphology) * 10));
     opts.UpdateFile;
   except
   end;
@@ -1743,7 +1831,7 @@ begin
 
   if ssCtrl in Shift then
   begin
-    Memo.ZoomFactor := Max(Memo.ZoomFactor + Sign(WheelDelta) * 0.1, 0.1);
+    SetPopupZoom(Memo, Max(PopupZoom(Memo) + Sign(WheelDelta) * 0.1, 0.1));
     SaveLayoutToOpts;
     Result := True;
     Exit;
@@ -1784,7 +1872,7 @@ begin
     Memo := TRichMemo(Sender);
     if ssCtrl in Shift then
     begin
-      Memo.ZoomFactor := Max(Memo.ZoomFactor + Sign(WheelDelta) * 0.1, 0.1);
+      SetPopupZoom(Memo, Max(PopupZoom(Memo) + Sign(WheelDelta) * 0.1, 0.1));
       SaveLayoutToOpts;
       Handled := True;
       Exit;
@@ -2378,7 +2466,7 @@ begin
       Panel1.Visible := True;
       TabControlStrongs.TabIndex := 0;
       ShowRtf(RichMemoStrong, FStrongs[0]);
-      RichMemoStrong.ZoomFactor := RichMemoStrong.ZoomFactor;
+      ReapplyPopupZoom(RichMemoStrong);
     end
     else
     begin
@@ -2392,7 +2480,7 @@ begin
       Panel2.Visible := True;
       TabControlMorphologies.TabIndex := 0;
       ShowRtf(RichMemoMorphology, FMorphologies[0]);
-      RichMemoMorphology.ZoomFactor := RichMemoMorphology.ZoomFactor;
+      ReapplyPopupZoom(RichMemoMorphology);
       Splitter1.Visible := Panel1.Visible;
     end
     else

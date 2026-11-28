@@ -117,6 +117,13 @@ const
   'The Bible Maker — Independent offshoot originally derived from iBiblia (Rúbio R. C. Terra).' + LineEnding +
   'Not an official continuation of upstream iBiblia. Maintained independently at https://github.com/SalitaNgDiyos/The-Bible-Maker' + LineEnding +
   LineEnding +
+  'Version 2.0.0.004 (64-bit Edition) - 2026-11-28' + LineEnding +
+  '- Linux: the word popup and the automatic selection of the next source word no longer get slower the longer you work. Each popup re-applied its zoom, and the text box (RichMemo on GTK) kept a new hidden formatting entry for every zoom that was never removed. The zoom now reuses one entry.' + LineEnding +
+  '- Faster word look-ups in large projects: the popup''s translation memory, the Translation memory panel and association suggestions now use an index to find a word and its tagged forms, instead of reading the whole list of source words each time (about 300 times faster on a list of 60,000).' + LineEnding +
+  '- Fixed: a lowercase <wt> word marker was read as an extra, empty morphology tag.' + LineEnding +
+  '- Fixed: some Portuguese translations were ignored or missing (Jonas, Hebreus, Zacarias, the examples dialog, AI set-up messages).' + LineEnding +
+  '- Fixed: the examples dialog could crash when no main window was open, and a missing HTTPS library now gives a clear error instead of a crash in AI processing.' + LineEnding +
+  LineEnding +
   'Version 2.0.0.003 (64-bit Edition) - 2026-11-27' + LineEnding +
   '- Changed the licence of The Bible Maker''s own additions from MIT to AGPL-3.0-or-later (full text in LICENSE).' + LineEnding +
   '- NOTICE.md and README now state that the original iBiblia code remains the copyright of Rúbio R. C. Terra and is not relicensed.' + LineEnding +

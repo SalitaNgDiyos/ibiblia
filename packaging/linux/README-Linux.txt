@@ -1,4 +1,4 @@
-The Bible Maker 2.0.0.003 for Linux (64-bit)
+The Bible Maker 2.0.0.004 for Linux (64-bit)
 ============================================
 
 Built for Debian 12 (bookworm) and Debian 13 (trixie) on 64-bit PCs

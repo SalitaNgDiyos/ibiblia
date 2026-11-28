@@ -50,6 +50,7 @@ type
     procedure StructuredTranslationAlternativesPreserveCountsAndOrder;
     procedure PreloadedTranslationAlternativesAreCompleteAndInvalidated;
     procedure TranslationMemoryLookupDoesNotMatchTextPrefixes;
+    procedure TranslationMemoryLookupFindsTaggedFormsByRange;
     procedure TranslationMemoryModelGroupsAndMarksCurrentAlternatives;
     procedure TranslationMemoryModelUsesMetadataWithoutStrong;
     procedure TranslationMemoryModelMatchesCurrentSuffixHyphen;
@@ -988,6 +989,48 @@ begin
   Alternatives := FManager.GetTranslationAlternativeData('manifest');
   AssertEquals(1, Length(Alternatives));
   AssertEquals('manifesta', Alternatives[0].Translation);
+end;
+
+{ The lookup finds a word's tagged forms ("man<wg444>...") with an index range
+  from "man<" up to "man=". Words that only start with the same letters, or
+  whose tags sort just outside the range, must still be left out. }
+procedure TSuggestionManagerTest.
+  TranslationMemoryLookupFindsTaggedFormsByRange;
+var
+  Alternatives: TTranslationAlternativeDataArray;
+  Keys: TStringList;
+  Pass: Integer;
+begin
+  FManager.AddPair('man', 'homem');
+  FManager.AddPair('man<wg444>', 'varao');
+  FManager.AddPair('man<wg444>', 'varao');
+  FManager.AddPair('man<wtn-nsm>', 'pessoa');
+  FManager.AddPair('many<wg4183>', 'muitas');
+  FManager.AddPair('man0', 'outro');
+  FManager.AddPair('man=', 'igual');
+
+  for Pass := 1 to 2 do
+  begin
+    if Pass = 2 then
+    begin
+      // a change empties the cache, then the batch preload path is checked
+      FManager.AddPair('unrelated', 'other');
+      Keys := TStringList.Create;
+      try
+        Keys.Add('man');
+        FManager.PreloadTranslationAlternativeData(Keys);
+      finally
+        Keys.Free;
+      end;
+    end;
+    Alternatives := FManager.GetTranslationAlternativeData('man');
+    AssertEquals('the plain word and its two tagged forms', 3,
+      Length(Alternatives));
+    AssertEquals('varao', Alternatives[0].Translation);
+    AssertEquals(2, Alternatives[0].Occurrences);
+    AssertEquals('homem', Alternatives[1].Translation);
+    AssertEquals('pessoa', Alternatives[2].Translation);
+  end;
 end;
 
 procedure TSuggestionManagerTest.
