@@ -3315,6 +3315,7 @@ var
   Compact: Boolean;
   ButtonWidth, ButtonHeight, ButtonTop, TextWidth, TitleHeight,
     TextTop, TextHeight, DesiredHeight, LineHeight, WrappedLines: Integer;
+  ZZT: Int64;
 
   function CountWrappedLines(const AText: string; AMaxWidth: Integer): Integer;
   var
@@ -3348,7 +3349,9 @@ begin
     TextWidth := Max(80,
       FGuidePanel.ClientWidth - ButtonWidth - (Margin * 2) - Gap);
 
+  ZZT := ZZNow;
   WrappedLines := CountWrappedLines(FGuideTextLabel.Caption, TextWidth);
+  ZZAdd(31, ZZT);
   DesiredHeight := Margin + TitleHeight + 2 + (WrappedLines * LineHeight) +
     Margin;
   if Compact then
@@ -3649,6 +3652,7 @@ var
   Scenario: TProjectScenario;
   DestinationHasText, SelectionHasAssociation, ShowTranslationGuide: Boolean;
 
+  ZZT: Int64;
   function JoinedGuideText(const FirstLine, SecondLine, ThirdLine: string): string;
   begin
     Result := FirstLine + LineEnding + SecondLine + LineEnding + ThirdLine;
@@ -3682,9 +3686,11 @@ begin
   end
   else
   begin
+    ZZT := ZZNow;
     Scenario := CurrentGuideScenario;
     DestinationHasText := Assigned(CurrentProject.VerseObjects[tbDestino]) and
       (Trim(CurrentProject.VerseObjects[tbDestino].PlainText) <> '');
+    ZZAdd(29, ZZT);
     ShowTranslationGuide := (Scenario = psTranslationProject) and
       not DestinationHasText;
 
@@ -3734,7 +3740,7 @@ begin
   FGuidePanel.Hint := FGuideTextLabel.Caption;
   FGuideTitleLabel.Hint := FGuideTitleLabel.Caption;
   FGuideTextLabel.Hint := FGuideTextLabel.Caption;
-  LayoutGuidePanel;
+  ZZT := ZZNow; LayoutGuidePanel; ZZAdd(30, ZZT);
 end;
 
 procedure TMainForm.UpdateStatusReviewPanel;
